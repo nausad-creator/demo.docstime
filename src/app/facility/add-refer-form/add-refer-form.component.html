@@ -90,25 +90,30 @@
                     <div class="form-group">
                       <label for="dob">Date of Birth<span class="required-field"></span></label>
                       <div class="form-group inputWithIcon">
-                      <input class="form-control" maxlength=10 onkeyup="this.value=this.value.replace(/^(\d\d)(\d)$/g,'$1/$2').replace(/^(\d\d\/\d\d)(\d+)$/g,'$1/$2').replace(/[^\d\/]/g,'')" [max]="maxDate"
-                        placeholder="mm/dd/yyyy" formControlName="patientDOB" id="dob" name="patientDOB"
-                       [owlDateTime]="dt5" required>
-                        <a class="cursr" ><i [owlDateTimeTrigger]="dt5" class="ti-calendar cursr"></i></a>
-                      <owl-date-time [pickerType]="'calendar'" #dt5></owl-date-time>
-                      <small class="text-danger small" *ngIf="referCaseForm.get('patientDOB').invalid && referCaseForm.controls['patientDOB'].hasError('owlDateTimeMax')">Date should not after {{maxDate | date: 'mediumDate'}}</small>
-                      <small class="text-danger small" *ngIf="referCaseForm.controls['patientDOB'].hasError('invalidDate') && (referCaseForm.controls['patientDOB'].dirty || referCaseForm.controls['patientDOB'].touched)">Date should be MM/DD/YYYY format.</small>
-                      <small class="text-danger small" *ngIf="referCaseForm.controls['patientDOB'].hasError('emptyDOB')">Please
-                        Select DOB.</small>
+                        <input class="form-control" maxlength=10
+                          onkeyup="this.value=this.value.replace(/^(\d\d)(\d)$/g,'$1/$2').replace(/^(\d\d\/\d\d)(\d+)$/g,'$1/$2').replace(/[^\d\/]/g,'')"
+                          [max]="maxDate" placeholder="mm/dd/yyyy" formControlName="patientDOB" id="dob"
+                          name="patientDOB" [owlDateTime]="dt5" required>
+                        <a class="cursr"><i [owlDateTimeTrigger]="dt5" class="ti-calendar cursr"></i></a>
+                        <owl-date-time [pickerType]="'calendar'" #dt5></owl-date-time>
+                        <small class="text-danger small"
+                          *ngIf="referCaseForm.get('patientDOB').invalid && referCaseForm.controls['patientDOB'].hasError('owlDateTimeMax')">Date
+                          should not after {{maxDate | date: 'mediumDate'}}</small>
+                        <small class="text-danger small"
+                          *ngIf="referCaseForm.controls['patientDOB'].hasError('invalidDate') && (referCaseForm.controls['patientDOB'].dirty || referCaseForm.controls['patientDOB'].touched)">Date
+                          should be MM/DD/YYYY format.</small>
+                        <small class="text-danger small"
+                          *ngIf="referCaseForm.controls['patientDOB'].hasError('emptyDOB')">Please
+                          Select DOB.</small>
                       </div>
                     </div>
                   </div>
                   <div class="col-sm-12">
                     <label for="Insurance">Insurance</label>
                     <div class="form-group">
-                      <ng-select [closeOnSelect]="true" [addTag]="true"
-                      [addTagText]="'Add'" [searchable]="true" appearance="outline"
-                        placeholder="Enter Insurance" formControlName="insuranceName" class="custom"
-                        labelForId="Insurance" name="insuranceName">
+                      <ng-select [closeOnSelect]="true" [addTag]="true" [addTagText]="'Add'" [searchable]="true"
+                        appearance="outline" placeholder="Enter Insurance" formControlName="insuranceName"
+                        class="custom" labelForId="Insurance" name="insuranceName">
                         <ng-option *ngFor="let ins of (insuranceList$ | async)" [value]="ins.insuranceName">
                           {{ins.insuranceName}}</ng-option>
                       </ng-select>
@@ -143,16 +148,9 @@
                   <div class="col-sm-12">
                     <label for="Reason">Reason for Consultation<span class="required-field"></span></label>
                     <div class="form-group">
-                      <ng-select 
-                      [items]="reasonsList$ | async" 
-                      [multiple]="true" [closeOnSelect]="true"
-                      [searchable]="true" 
-                      [addTag]="true"
-                      [addTagText]="'Add'"
-                      bindLabel="reasonName" 
-                      class="custom2" 
-                      placeholder="Enter Reason"
-                      formControlName="reasonIDs">
+                      <ng-select [items]="reasonsList$ | async" [multiple]="true" [closeOnSelect]="true"
+                        [searchable]="true" [addTag]="true" [addTagText]="'Add'" bindLabel="reasonName" class="custom2"
+                        placeholder="Enter Reason" formControlName="reasonIDs">
                         <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
                           <div class="ng-value" *ngFor="let item of items | slice:0:2">
                             <span class="ng-value-label">{{item.reasonName}}</span>
@@ -171,8 +169,8 @@
                   <div class="col-sm-12">
                     <div class="form-group">
                       <div class="custom-control custom-checkbox">
-                        <input type="checkbox" (click)="onChangeUrgentConsult($event.target.checked)" formControlName="refercaseUrgent" class="custom-control-input"
-                          id="Consult" name="Consult">
+                        <input type="checkbox" (click)="onChangeUrgentConsult($event.target.checked)"
+                          formControlName="refercaseUrgent" class="custom-control-input" id="Consult" name="Consult">
                         <label class="custom-control-label" for="Consult">Urgent Consult</label>
                       </div>
                     </div>
@@ -188,8 +186,8 @@
                   <div class="col-sm-6" *ngIf="isNPI">
                     <label for="Insurance">Referred to NPI</label>
                     <div class="form-group">
-                      <input class="form-control" maxlength="10" formControlName="refercaseNPI" name="NPI" id="NPI" type="text"
-                        placeholder="Enter NPI">
+                      <input class="form-control" maxlength="10" formControlName="refercaseNPI" name="NPI" id="NPI"
+                        type="text" placeholder="Enter NPI">
                       <small class="text-danger text-center"
                         *ngIf="referCaseForm.controls['refercaseNPI'].hasError('pattern') && (referCaseForm.controls['refercaseNPI'].dirty || referCaseForm.controls['refercaseNPI'].touched)">Only
                         numeric
@@ -201,16 +199,21 @@
                   <div class="col-sm-6">
                     <label for="dov">Date of Visit</label>
                     <div class="form-group inputWithIcon">
-                      <input class="form-control" (keyup)="onKey($event.target.value)"  maxlength=10 onkeyup="this.value=this.value.replace(/^(\d\d)(\d)$/g,'$1/$2').replace(/^(\d\d\/\d\d)(\d+)$/g,'$1/$2').replace(/[^\d\/]/g,'')" [min]="min"
-                        placeholder="mm/dd/yyyy (Optional)" formControlName="refercaseVisitDate" id="dov" name="dov"
-                       [owlDateTime]="dt3">
-                      <a class="cursr" ><i [owlDateTimeTrigger]="dt3" class="ti-calendar cursr"></i></a>
+                      <input class="form-control" (keyup)="onKey($event.target.value)" maxlength=10
+                        onkeyup="this.value=this.value.replace(/^(\d\d)(\d)$/g,'$1/$2').replace(/^(\d\d\/\d\d)(\d+)$/g,'$1/$2').replace(/[^\d\/]/g,'')"
+                        [min]="min" placeholder="mm/dd/yyyy (Optional)" formControlName="refercaseVisitDate" id="dov"
+                        name="dov" [owlDateTime]="dt3">
+                      <a class="cursr"><i [owlDateTimeTrigger]="dt3" class="ti-calendar cursr"></i></a>
                       <owl-date-time [pickerType]="'calendar'" #dt3></owl-date-time>
-                      <small class="text-danger small" *ngIf="referCaseForm.get('refercaseVisitDate').invalid && referCaseForm.controls['refercaseVisitDate'].hasError('owlDateTimeMin')">Date should not before {{min | date: 'mediumDate'}}</small>
-                      <small class="text-danger small" *ngIf="referCaseForm.controls['refercaseVisitDate'].hasError('invalidDate') && (referCaseForm.controls['refercaseVisitDate'].dirty || referCaseForm.controls['refercaseVisitDate'].touched)">Date should be MM/DD/YYYY format.</small>
                       <small class="text-danger small"
-                          *ngIf="referCaseForm.controls['refercaseVisitDate'].hasError('required') && (referCaseForm.controls['refercaseVisitDate'].dirty || referCaseForm.controls['refercaseVisitDate'].touched)">Please
-                          select Date of Visit.</small>
+                        *ngIf="referCaseForm.get('refercaseVisitDate').invalid && referCaseForm.controls['refercaseVisitDate'].hasError('owlDateTimeMin')">Date
+                        should not before {{min | date: 'mediumDate'}}</small>
+                      <small class="text-danger small"
+                        *ngIf="referCaseForm.controls['refercaseVisitDate'].hasError('invalidDate') && (referCaseForm.controls['refercaseVisitDate'].dirty || referCaseForm.controls['refercaseVisitDate'].touched)">Date
+                        should be MM/DD/YYYY format.</small>
+                      <small class="text-danger small"
+                        *ngIf="referCaseForm.controls['refercaseVisitDate'].hasError('required') && (referCaseForm.controls['refercaseVisitDate'].dirty || referCaseForm.controls['refercaseVisitDate'].touched)">Please
+                        select Date of Visit.</small>
                     </div>
                   </div>
                   <div class="col-sm-6">
@@ -218,13 +221,15 @@
                     <div class="form-group inputWithIcon">
                       <input class="form-control" oninput="this.value = this.value.replace(/^\s+/g, '')" [min]="minTime"
                         placeholder="hh:mm am/pm (Optional)" formControlName="refercaseVisitTime" name="time" id="time"
-                         [owlDateTime]="dt4">
-                      <a class="cursr" ><i [owlDateTimeTrigger]="dt4" class="ti-time cursr"></i></a>
+                        [owlDateTime]="dt4">
+                      <a class="cursr"><i [owlDateTimeTrigger]="dt4" class="ti-time cursr"></i></a>
                       <owl-date-time [hour12Timer]="true" [pickerType]="'timer'" #dt4></owl-date-time>
                       <small class="text-danger small"
                         *ngIf="referCaseForm.controls['refercaseVisitTime'].hasError('emptyDate')">Please
                         select Date of visit first.</small>
-                      <small class="text-danger small" *ngIf="referCaseForm.get('refercaseVisitTime').invalid && referCaseForm.controls['refercaseVisitTime'].hasError('owlDateTimeMin')">Please enter valid time.</small>
+                      <small class="text-danger small"
+                        *ngIf="referCaseForm.get('refercaseVisitTime').invalid && referCaseForm.controls['refercaseVisitTime'].hasError('owlDateTimeMin')">Please
+                        enter valid time.</small>
                     </div>
                   </div>
                   <div class="col-12">
