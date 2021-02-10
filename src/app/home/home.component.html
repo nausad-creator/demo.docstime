@@ -1,0 +1,476 @@
+
+<header class="main_menu home_menu landing-menu">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-12">
+        <nav class="navbar navbar-expand-lg">
+          <a class="navbar-brand" routerLinkActive="active" style="cursor: pointer;" routerLink="/home" *ngIf="!doctor && !facility">						
+            <img [defaultImage]="'assets/img/logo.png'" class="logo-white" [lazyLoad]="'assets/img/logo.png'" [errorImage]="'assets/img/logo.png'" alt="logo" height="70">
+            <img [defaultImage]="'assets/img/logo-white.png'" class="logo-blue" [lazyLoad]="'assets/img/logo-white.png'" [errorImage]="'assets/img/logo-white.png'" alt="logo">
+            </a>
+          <a class="navbar-brand" routerLinkActive="active" style="cursor: pointer;" routerLink="/doctor/dashboard" [routerLinkActiveOptions]="{ exact: true }" *ngIf="doctor">
+            <img [defaultImage]="'assets/img/logo.png'" class="logo-white" [lazyLoad]="'assets/img/logo.png'" [errorImage]="'assets/img/logo.png'" alt="logo" height="70">
+            <img [defaultImage]="'assets/img/logo-white.png'" class="logo-blue" [lazyLoad]="'assets/img/logo-white.png'" [errorImage]="'assets/img/logo-white.png'" alt="logo"></a>
+          <a class="navbar-brand" routerLinkActive="active" style="cursor: pointer;" routerLink="/facility/facility-dashboard" [routerLinkActiveOptions]="{ exact: true }" *ngIf="facility">
+            <img [defaultImage]="'assets/img/logo.png'" class="logo-white" [lazyLoad]="'assets/img/logo.png'" [errorImage]="'assets/img/logo.png'" alt="logo" height="70">
+            <img [defaultImage]="'assets/img/logo-white.png'" class="logo-blue" [lazyLoad]="'assets/img/logo-white.png'" [errorImage]="'assets/img/logo-white.png'" alt="logo"></a>
+          <div class="loginmobile-button d-lg-none ml-auto" *ngIf="!doctor && !facility">
+            <a style="padding:7px 12px;width:auto;" class="btn_2 headerloginbtn" (click)="openAsk()" data-toggle="modal"><span class="iconify" data-icon="oi-account-login" data-inline="false"></span></a>
+          </div>
+          <div class="loginmobile-button d-lg-none ml-auto" *ngIf="doctor">
+            <a style="padding:7px 12px;width:auto;" class="btn_2 headerloginbtn" routerLink="/doctor/dashboard" [routerLinkActiveOptions]="{ exact: true }" data-toggle="modal">
+              <span class="iconify" data-icon="icomoon-free:user-tie" data-inline="false"></span></a>
+          </div>
+          <div class="loginmobile-button d-lg-none ml-auto" *ngIf="facility">
+            <a style="padding:7px 12px;width:auto;" class="btn_2 headerloginbtn" routerLink="/facility/facility-dashboard" [routerLinkActiveOptions]="{ exact: true }" data-toggle="modal">
+              <span class="iconify" data-icon="icomoon-free:user-tie" data-inline="false"></span></a>
+          </div>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span></button>
+          <div class="collapse navbar-collapse main-menu-item justify-content-end" id="navbarSupportedContent">
+            <ul class="navbar-nav align-items-center">
+              <li class="nav-item" routerLinkActive="active" style="cursor: pointer;"><a
+                  class="nav-link" routerLink="/list-practice">List Your Practice</a></li>
+              <li class="d-none d-lg-block" *ngIf="!doctor && !facility"><a class="btn_2" (click)="openAsk()" style="cursor: pointer;">Log in / Register</a></li>
+              <li class="d-none d-lg-block pl-0" *ngIf="!doctor && !facility"><a class="btn_1 ml-0 meetingbtn" (click)="openRequest()" style="cursor: pointer;">Request Demo</a></li>
+              <li class="d-none d-lg-block pl-0 list_practice" *ngIf="doctor"><a class="btn_1 ml-0 meetingbtn" style="cursor: pointer;" routerLink="/doctor/dashboard" [routerLinkActiveOptions]="{ exact: true }">
+                <i class="ti-back-left d-inline-block" style="-webkit-transform: scaleY(-1);transform: scaleY(-1);font-size:16px;vertical-align:middle;"></i> Dashboard</a></li>
+              <li class="d-none d-lg-block pl-0 list_practice" *ngIf="facility"><a class="btn_1 ml-0 meetingbtn" style="cursor: pointer;" routerLink="/facility/facility-dashboard" [routerLinkActiveOptions]="{ exact: true }">
+                <i class="ti-back-left d-inline-block" style="-webkit-transform: scaleY(-1);transform: scaleY(-1);font-size:16px;vertical-align:middle;"></i> Dashboard</a></li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </div>
+</header>
+
+  <section class="banner_part">
+    <div class="container">
+      <div class="banner-maintitle"><h1>Providers are also available for Televisit</h1></div>
+      <div class="client_review_part owl-carousel owl-loaded owl-drag banner-mainslider">
+        <div class="owl-stage-outer">
+          <div class="owl-stage">
+            <div class="owl-item">
+              <div class="row align-items-center banner-content">
+                <div class="col-lg-6 col-xl-6">
+                  <div class="banner_text">
+                    <div class="banner_text_iner">
+                      <h1 class="wow fadeInUp" data-wow-delay="0.2s">Easy physician appointments</h1>
+                      <ul>
+                        <li class="wow fadeInUp" data-wow-delay="0.1s"> Quick physician alignment round the clock.</li>
+                        <li class="wow fadeInUp" data-wow-delay="0.2s"> Complete the follow-up appointment process through automatic reminders.
+                        </li>
+                        <li class="wow fadeInUp" data-wow-delay="0.3s"> Choose top physicians based on real patient’s
+                          reviews.</li>
+                        <li class="wow fadeInUp" data-wow-delay="0.4s"> Experience elite patient experience.</li>
+                      </ul>
+                      <a href="#" class="btn_2 wow fadeInUp" data-wow-delay="0.6s">List your practice on DocsTime</a>
+                    </div>
+                  </div>
+                </div>
+  
+                <div class="col-lg-6 col-xl-6">
+                  <div class=" wow fadeInUp" data-wow-delay="0.6s">
+                    <div class="banner_text_iner1">
+                      <img [defaultImage]="'assets/img/banner_img.png'" [lazyLoad]="'assets/img/banner_img.png'"
+                        [errorImage]="'assets/img/banner_img.png'" alt="Online Doctor Appointment System">
+                    </div>
+                  </div>
+                </div>
+  
+              </div>
+            </div>
+  
+            <div class="owl-item">
+              <div class="row align-items-center banner-content">
+                <div class="col-lg-6 col-xl-6">
+                  <div class="banner_text">
+                    <div class="banner_text_iner">
+                      <h1 class="wow fadeInUp" data-wow-delay="0.2s">Refer smartly</h1>
+                      <ul>
+                        <li class="wow fadeInUp" data-wow-delay="0.1s"> Fill empty slots instantly.</li>
+                        <li class="wow fadeInUp" data-wow-delay="0.2s"> Refer to specialists in moments.</li>
+                        <li class="wow fadeInUp" data-wow-delay="0.3s"> Be a digital authority with patient reviews.</li>
+                        <li class="wow fadeInUp" data-wow-delay="0.4s"> Mobile application to manage everything on the go.
+                        </li>
+                        <li class="wow fadeInUp" data-wow-delay="0.5s"> Integrate smart Tele-Visit capabilities.</li>
+                        <li class="wow fadeInUp" data-wow-delay="0.6s"> Let the application manage insurance
+                          compatibility.</li>
+                      </ul>
+                      <a href="#" class="btn_2 wow fadeInUp" data-wow-delay="0.6s">List your practice on DocsTime</a>
+                    </div>
+                  </div>
+                </div>
+  
+                <div class="col-lg-6 col-xl-6">
+                  <div class="wow fadeInUp" data-wow-delay="0.6s">
+                    <div class="banner_text_iner1">
+                      <img [defaultImage]="'assets/img/banner_img2.png'" [lazyLoad]="'assets/img/banner_img2.png'"
+                        [errorImage]="'assets/img/banner_img2.png'" alt="Online Doctor Appointment System">
+                    </div>
+                  </div>
+                </div>
+  
+              </div>
+            </div>
+            <div class="owl-item">
+              <div class="row align-items-center banner-content">
+                <div class="col-lg-6 col-xl-6">
+                  <div class="banner_text">
+                    <div class="banner_text_iner">
+                      <h1 class="wow fadeInUp" data-wow-delay="0.2s">Access your facility from anywhere any time</h1>
+                      <ul>
+                        <li class="wow fadeInUp" data-wow-delay="0.1s"> Empanel any number of providers.</li>
+                        <li class="wow fadeInUp" data-wow-delay="0.2s"> Make unlimited referrals.</li>
+                        <li class="wow fadeInUp" data-wow-delay="0.3s"> Smart EHR/EMR integration.</li>
+                        <li class="wow fadeInUp" data-wow-delay="0.4s"> Reduce no-shows with smart reminders.</li>
+                      </ul>
+                      <a href="#" class="btn_2 wow fadeInUp" data-wow-delay="0.6s">List your practice on DocsTime</a>
+                    </div>
+                  </div>
+                </div>
+  
+                <div class="col-lg-6 col-xl-6">
+                  <div class=" wow fadeInUp" data-wow-delay="0.6s">
+                    <div class="banner_text_iner1">
+                      <img [defaultImage]="'assets/img/banner_img3.png'" [lazyLoad]="'assets/img/banner_img3.png'"
+                        [errorImage]="'assets/img/banner_img3.png'" alt="Online Doctor Appointment System">
+                    </div>
+                  </div>
+                </div>
+  
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+    </div>
+  </section>
+  
+  <section class="review_part bookapoinment-content">
+    <div class="container">
+      <div class="">
+        <!--<div class="">
+          <div class="our_ability_img appointment-img wow fadeInLeft" data-wow-delay="0.6s">
+            <img src="assets/img/Appointment.png" alt="">
+          </div>
+        </div>-->
+  
+        <div class=" wow fadeInRight" data-wow-delay="0.6s">
+          <div class="row align-items-center">
+            <div class="col-md-6">
+              <div class="our_ability_img  wow fadeInLeft" data-wow-delay="0.6s">
+                <img [defaultImage]="'assets/img/Appointment.png'" [lazyLoad]="'assets/img/Appointment.png'"
+                  [errorImage]="'assets/img/Appointment.png'" alt="Online Doctor Appointment System">
+              </div>
+            </div>
+            <div class="col-md-5">
+              <h3> Book an appointment</h3>
+              <div class="client_review_single">
+                <div class="client_review_text">
+                  <p>The patient selects an available time slot and books an appointment. You are notified instantly; and the patient gets appointment reminders by email and text.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <div class="row align-items-center">
+            <div class="col-md-5">
+              <h3> Get discovered by patients</h3>
+              <div class="client_review_single">
+                <div class="client_review_text">
+                  <ul>
+                    <li>Based on insurance, available appointment times, location, etc.</li>
+                    <li>Tele-Visits.</li>
+                    <li>Reduce no-shows and cancellations with patient reminders.</li>
+                    <li>Accurate patient reviews.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="our_ability_img wow fadeInLeft" data-wow-delay="0.6s">
+                <img [defaultImage]="'assets/img/discovered-patients.png'"
+                  [lazyLoad]="'assets/img/discovered-patients.png'" [errorImage]="'assets/img/discovered-patients.png'"
+                  alt="Online Doctor Appointment System">
+              </div>
+            </div>
+          </div>
+  
+          <div class="row align-items-center">
+            <div class="col-md-6">
+              <div class="our_ability_img wow fadeInLeft" data-wow-delay="0.6s">
+                <img [defaultImage]="'assets/img/smart-referral.png'" [lazyLoad]="'assets/img/smart-referral.png'"
+                  [errorImage]="'assets/img/smart-referral.png'" alt="Online Doctor Appointment System">
+              </div>
+            </div>
+            <div class="col-md-5">
+              <h3> Smart referral grid </h3>
+              <div class="client_review_single">
+                <div class="client_review_text">
+                  <ul>
+                    <li>Instantly refer patients to specialists.</li>
+                    <li>Paperless transaction through digital communications and EHR integration.</li>
+                    <li>Get referrals to fill your available slots.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+      </div>
+    </div>
+  </section>
+  
+  <section class="top_service padding_bottom">
+    <div class="container">
+      <div class="section_title text-center" style="font-color:#0097f6;">
+        <h2 class="wow fadeIn" data-wow-delay="0.6s"> Why shift to DocsTime?</h2>
+      </div>
+      <div class="row justify-content-between align-items-center">
+        <div class="col-md-6 col-lg-5">
+          <div class="our_ability_img text-center wow fadeInUp" data-wow-delay="0.6s">
+            <img [defaultImage]="'assets/img/top_service.png'" [lazyLoad]="'assets/img/top_service.png'"
+              [errorImage]="'assets/img/top_service.png'" alt="Online Doctor Appointment System" style="max-height:500px;">
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-7">
+          <div class="content3">
+            <div class="content2 wow fadeInUp" data-wow-delay="0.2s">
+              <div class="pt-2"><img [defaultImage]="'assets/img/1.png'" [lazyLoad]="'assets/img/1.png'"
+                  [errorImage]="'assets/img/1.png'" alt="Online Doctor Appointment System" class="icontype"> </div>
+              <div class="textcontent">
+                <div class="text">Discover the discovery grid. Make your profile discoverable amongst 331,288,117 patients
+                  instantly. Do not miss a single potential patient. Fill all your available slots almost instantly.
+                </div>
+              </div>
+            </div>
+  
+            <div class="content2 wow fadeInUp" data-wow-delay="0.4s">
+              <div class="pt-1"><img [defaultImage]="'assets/img/2.png'" [lazyLoad]="'assets/img/2.png'"
+                  [errorImage]="'assets/img/2.png'" alt="Online Doctor Appointment System" class="icontype"></div>
+              <div class="textcontent">
+                <div class="text"> Get rid of the traditional phone tagging. Forget the hassles
+                  of phone and fax forever. Let the AI empowered mobile application manage your E-Referrals. Choose from 3
+                  million providers to refer to. You focus on what really matters – "The Patients". </div>
+              </div>
+            </div>
+  
+            <div class="content2 wow fadeInUp" data-wow-delay="0.6s">
+              <div><img [defaultImage]="'assets/img/3.png'" [lazyLoad]="'assets/img/3.png'"
+                  [errorImage]="'assets/img/3.png'" alt="Online Doctor Appointment System" class="icontype"></div>
+              <div class="textcontent">
+                <div class="text">Simplify administration. Make use of smart calendars. Also, engage your patients with
+                  automated communication. Send reminders via email, text, and app notifications. Hence, let your office focus on
+                  what really matters – "Personalized human attention."</div>
+              </div>
+  
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <section class="regervation_part wow fadeInUp" data-wow-delay="0.6s">
+    <div class="container">
+      <div class="row align-items-center regervation_content">
+        <div class="col-lg-2 col-md-2"></div>
+        <div class="col-lg-8 col-md-8">
+          <div class="regervation_part_iner">
+            <form class="form-contact contact_form"  [formGroup]="joinUs" id="contactForm"
+              novalidate="novalidate">
+              <h2 class="text-center">Join DocsTime now</h2>
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="Fname" style="float:left;font-size: 16px;">Full name</label>
+                  <!--<input type="Fname" class="form-control" id="Fname">-->
+                  <input type="text" id="signonnamed" oninput="this.value = this.value.replace(/^\s+/g, '')"
+                  formControlName="joinName" class="form-control" name="signonname" autocomplete="off"
+                  placeholder="Name*" required />
+                <small class="text-danger"
+                  *ngIf="joinUs.controls['joinName'].hasError('required') && (joinUs.controls['joinName'].dirty || joinUs.controls['joinName'].touched)">Please
+                  enter name.</small>
+                <small class="text-danger" *ngIf="joinUs.controls['joinName'].hasError('maxlength')">Input
+                  fields will not be more than 40 characters.</small>
+                <small class="text-danger small"
+                  *ngIf="joinUs.controls['joinName'].hasError('pattern') && (joinUs.controls['joinName'].dirty || joinUs.controls['joinName'].touched)">Only
+                  Alphabets are allowed.</small>
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="email" style="float:left;font-size: 16px;">Email</label>
+                  <!--<input type="email" class="form-control" id="email">-->
+                  <input type="email" id="emailided" oninput="this.value = this.value.replace(/^\s+/g, '')"
+                  formControlName="joinEmail" class="form-control" name="email" autocomplete="off"
+                  placeholder="Email address*" required />
+                <small class="text-danger"
+                  *ngIf="joinUs.controls['joinEmail'].hasError('pattern') && (joinUs.controls['joinEmail'].dirty || joinUs.controls['joinEmail'].touched )">Please
+                  enter valid email.</small>
+                <small class="text-danger small"
+                  *ngIf="joinUs.controls['joinEmail'].hasError('required') && (joinUs.controls['joinEmail'].dirty || joinUs.controls['joinEmail'].touched)">Please
+                  enter email.</small>
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="phone" style="float:left;font-size: 16px;">Phone number</label>
+                  <!--<input type="phone" class="form-control" id="phone">-->
+                  <input type="text" id="mobilese" oninput="this.value = this.value.replace(/^\s+/g, '')"
+                  formControlName="joinMobile" maxlength="10" class="form-control" name="mobile" autocomplete="off"
+                  placeholder="Phone number*" required />
+                <small class="text-danger small"
+                  *ngIf=" joinUs.controls['joinMobile'].hasError('required') && (joinUs.controls['joinMobile'].dirty || joinUs.controls['joinMobile'].touched)">Please
+                  enter Phone number.</small>
+                <small class="text-danger small"
+                  *ngIf="joinUs.controls['joinMobile'].hasError('pattern') && (joinUs.controls['joinMobile'].dirty || joinUs.controls['joinMobile'].touched)">Phone
+                  number must be only 10 digits.</small>
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="form-control" style="float:left;font-size: 16px;">Your primary speciality</label>
+                  <ng-select 
+                  [closeOnSelect]="true" 
+                  appearance="outline" 
+                  [searchable]="true" 
+                  placeholder="Select speciality*"
+                  formControlName="joinSpeciality" 
+                  class="custom" 
+                  name="specialityName">
+                <ng-option *ngFor="let spec of (specialityList$ | async)" [value]="spec.specialityName">
+                    {{spec.specialityName}}</ng-option>
+                </ng-select>
+                <small class="text-danger small"
+                *ngIf="joinUs.controls['joinSpeciality'].hasError('required') && (joinUs.controls['joinSpeciality'].dirty || joinUs.controls['joinSpeciality'].touched)">Please
+                  Select speciality.</small>
+                </div>
+                <div class="form-group time_icon col-md-6">
+                  <label for="zip" style="float:left;font-size: 16px;">Address</label>
+                  <!--<input type="zip" class="form-control" id="zip">-->
+                  <input class="form-control pac-target-input" ngx-google-places-autocomplete [options]='options' #placesRef="ngx-places" (onAddressChange)="handleAddressChange($event)" oninput="this.value = this.value.replace(/^\s+/g, '')"
+                  formControlName="joinAddress" name="address" id="zipaddr" type="text" placeholder="Address*">
+                <small class="text-danger"
+                  *ngIf="joinUs.controls['joinAddress'].hasError('required') && (joinUs.controls['joinAddress'].dirty || joinUs.controls['joinAddress'].touched)">Please
+                  enter address.</small>
+                </div>
+                <div class="form-group time_icon col-md-6">
+                  <label for="city" style="float:left;font-size: 16px;">City</label>
+                  <!--<input type="zip" class="form-control" id="zip">-->
+                  <input class="form-control pac-target-input" oninput="this.value = this.value.replace(/^\s+/g, '')"
+                  formControlName="joinCity" name="address" id="city" type="text" placeholder="City*"
+                  autocomplete="off">
+                <small class="text-danger"
+                  *ngIf="joinUs.controls['joinCity'].hasError('required') && (joinUs.controls['joinCity'].dirty || joinUs.controls['joinCity'].touched)">Please
+                  enter city.</small>
+                </div>
+                <div class="form-group time_icon col-md-6">
+                  <label for="state" style="float:left;font-size: 16px;">State</label>
+                  <!--<input type="zip" class="form-control" id="zip">-->
+                  <input class="form-control pac-target-input"  oninput="this.value = this.value.replace(/^\s+/g, '')" formControlName="joinState" name="address" id="state" type="text" placeholder="State*" autocomplete="off">
+                <small class="text-danger"
+                  *ngIf="joinUs.controls['joinState'].hasError('required') && (joinUs.controls['joinState'].dirty || joinUs.controls['joinState'].touched)">Please
+                  enter state.</small>
+                </div>
+                <div class="form-group time_icon col-md-6">
+                  <label for="zipc" style="float:left;font-size: 16px;">ZIP code</label>
+                  <!--<input type="zip" class="form-control" id="zip">-->
+                  <input class="form-control pac-target-input" maxlength="5"
+                  oninput="this.value = this.value.replace(/^\s+/g, '')" formControlName="joinZip" name="address"
+                  id="zipc" type="text" placeholder="Zip code*" autocomplete="off">
+                <small class="text-danger"
+                  *ngIf="joinUs.controls['joinZip'].hasError('required') && (joinUs.controls['joinZip'].dirty || joinUs.controls['joinZip'].touched)">Please
+                  enter zip code.</small>
+                <small class="text-danger small"
+                  *ngIf="joinUs.controls['joinZip'].hasError('pattern') && (joinUs.controls['joinZip'].dirty || joinUs.controls['joinZip'].touched)">zip code must be 5 digits.</small>
+                </div>
+              </div>
+              <div class="regerv_btn text-center">
+                <button type="button" (click)="onSubmit(joinUs.value)" class="regerv_btn_iner btn">Submit</button>
+                <!--<a href="#" class="regerv_btn_iner">Submit</a>-->
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="col-lg-2 col-md-2"></div>
+      </div>
+    </div>
+  </section>
+  <!---------------------------- Testimonial -------------------->
+  <section id="testimonials" class="testimonials pt-4 ">
+    <div class="container">
+      <div class="section-title">
+        <!--<h3>Testimonials</h3>-->
+        <h2>Look what Clients have to say about us.</h2>
+        <p>Our award winning reputation & achievement is founded on exceeding the expectation of our clients.</p>
+      </div>
+      <div class="owl-carousel testimonials-carousel">
+        <div class="testimonial-items">
+          <p><img class="quoteacons" style="width: 35px;" [defaultImage]="'assets/img/quote.png'"
+              [lazyLoad]="'assets/img/quote.png'" [errorImage]="'assets/img/quote.png'" alt="quote">
+            <span style="padding-left:43px;" class="position-relative"> schedule throughout the week. I often skip my appointments because of prior
+              commitments. This has resulted in many complications in the past. However, with DocsTime I was able to
+              schedule appointments just any time of the day. I could choose my physician as a time I could manage to
+              visit. In fact, DocsTime helps you find doctors in your immediate vicinity.</span>
+            <b>– David ******</b>
+          </p>
+          <img [defaultImage]="'assets/img/user-icon.png'" [lazyLoad]="'assets/img/user-icon.png'"
+            [errorImage]="'assets/img/user-icon.png'" class="testimonial-img" alt="">
+        </div>
+        <div class="testimonial-items">
+          <p><img class="quoteacons" style="width: 35px;" [defaultImage]="'assets/img/quote.png'"
+              [lazyLoad]="'assets/img/quote.png'" [errorImage]="'assets/img/quote.png'" alt="quote">
+            <span style="padding-left:43px;" class="position-relative">I visited my PCP for abdominal pain. My doctor told me that I need to see
+              Gastroenterologist. Earlier I used to call multiple offices to schedule an appointment that suites my time.
+              First thing it was difficult to reach them on the phone right away second thing even if I am able to catch
+              hold of them I am unable to schedule the time I need. With DocsTime app I was able to get an appointment
+              with the best specialists around with in minuites. Thanks for the features provided.</span> <b>"Ellen"</b>
+          </p>
+          <img [defaultImage]="'assets/img/user-icon.png'" [lazyLoad]="'assets/img/user-icon.png'"
+            [errorImage]="'assets/img/user-icon.png'" class="testimonial-img" alt="">
+        </div>
+        <div class="testimonial-items">
+          <p><img class="quoteacons" style="width: 35px;" [defaultImage]="'assets/img/quote.png'"
+              [lazyLoad]="'assets/img/quote.png'" [errorImage]="'assets/img/quote.png'" alt="quote">
+            <span style="padding-left:43px;" class="position-relative">I visited my PCP for abdominal pain. My doctor told me that I need to see
+              Gastroenterologist. Earlier I used to call multiple offices to schedule an appointment that suites my time.
+              First thing it was difficult to reach them on the phone right away second thing even if I am able to catch
+              hold of them I am unable to schedule the time I need. With DocsTime app I was able to get an appointment
+              with the best specialists around with in minuites. Thanks for the features provided.</span> <b>"Ally"</b>
+          </p>
+          <img [defaultImage]="'assets/img/user-icon.png'" [lazyLoad]="'assets/img/user-icon.png'"
+            [errorImage]="'assets/img/user-icon.png'" class="testimonial-img" alt="">
+        </div>
+        <div class="testimonial-items">
+          <p><img class="quoteacons" style="width: 35px;" [defaultImage]="'assets/img/quote.png'"
+              [lazyLoad]="'assets/img/quote.png'" [errorImage]="'assets/img/quote.png'" alt="quote">
+            <span style="padding-left:43px;" class="position-relative">I visited my PCP for abdominal pain. My doctor told me that I need to see
+              Gastroenterologist. Earlier I used to call multiple offices to schedule an appointment that suites my time.
+              First thing it was difficult to reach them on the phone right away second thing even if I am able to catch
+              hold of them I am unable to schedule the time I need. With DocsTime app I was able to get an appointment
+              with the best specialists around with in minuites. Thanks for the features provided.</span> <b>"Ally"</b>
+          </p>
+          <img [defaultImage]="'assets/img/user-icon.png'" [lazyLoad]="'assets/img/user-icon.png'"
+            [errorImage]="'assets/img/user-icon.png'" class="testimonial-img" alt="">
+        </div>
+        <div class="testimonial-items">
+          <p><img class="quoteacons" style="width: 35px;" [defaultImage]="'assets/img/quote.png'"
+              [lazyLoad]="'assets/img/quote.png'" [errorImage]="'assets/img/quote.png'" alt="quote">
+            <span style="padding-left:43px;" class="position-relative">I visited my PCP for abdominal pain. My doctor told me that I need to see
+              Gastroenterologist. Earlier I used to call multiple offices to schedule an appointment that suites my time.
+              First thing it was difficult to reach them on the phone right away second thing even if I am able to catch
+              hold of them I am unable to schedule the time I need. With DocsTime app I was able to get an appointment
+              with the best specialists around with in minuites. Thanks for the features provided.</span> <b>"Ally"</b>
+          </p>
+          <img [defaultImage]="'assets/img/user-icon.png'" [lazyLoad]="'assets/img/user-icon.png'"
+            [errorImage]="'assets/img/user-icon.png'" class="testimonial-img" alt="Online Doctor Appointment System">
+        </div>
+      </div>
+    </div>
+  </section>
+  <app-footer></app-footer>
+
+<ngx-spinner [fullScreen]="true" color="#fff" type="" bdColor="rgba(0, 0, 0, 0.9)">
+  <div class="loader">
+    <img class="logo-icon" [defaultImage]="'assets/img/favicon.png'" [lazyLoad]="'assets/img/favicon.png'" [errorImage]="'assets/img/favicon.png'" alt="DocsTime"><span>Loading...</span>
+  </div>
+</ngx-spinner>

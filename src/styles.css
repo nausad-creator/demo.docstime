@@ -1,0 +1,12 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~ng-pick-datetime/assets/style/picker.min.css";
+@import '~@angular/cdk/overlay-prebuilt.css'; /** Add this only for non-material project */
+
+.owl-carousel .owl-stage, .owl-carousel.owl-drag .owl-item{
+  -ms-touch-action: auto;
+      touch-action: auto;
+}
+::ng-deep .cdk-overlay-container {
+    z-index: 1200 !important;
+  }
+  *{margin:0; padding:0} 

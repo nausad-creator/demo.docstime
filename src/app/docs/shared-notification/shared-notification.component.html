@@ -1,0 +1,13 @@
+<ul>
+  <li>
+    <div class="notfi-circle"><i class="ti-bell"></i></div>
+    <a [ngClass]= "(notificationType === 'refercase-created' || subStrType === 'Thank you for accepting' || subStrType === 'URGENT Thank you for ac') ? 'cursr':'noncursr'"
+      (click)="navigateToDetails(notificationReferenceKey, notificationType)">
+      <div class="notifi-text">
+        <p class="m-0" *ngIf="notificationMessageText"><span class="teme-color">{{notificationMessageText}}</span></p>
+        <div *ngIf="notificationSendDate && notificationSendTime"><a>{{(notificationSendDate | date: 'mediumDate') + ', ' + notificationSendTime}}</a></div>
+      </div>
+    </a>
+    <a style="cursor: pointer;" (click)="onClickDelete(notificationID)" class="deletebtn"><i class="ti-trash"></i></a>
+  </li>
+</ul>

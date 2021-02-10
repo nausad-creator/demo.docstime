@@ -1,0 +1,51 @@
+<div class="modal-contents modal-login">
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Referral Details</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="onClose()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+     <!-- error handler -->
+     <div class="alert alert-danger" role="alert" *ngIf="error">
+      <h5 class="alert-heading text-center">Error!</h5>
+      <p class="mb-0 text-center">{{error}}</p>
+    </div>
+    <!-- handler end -->
+    <div class="reffral-detail">
+      <div class="itme-reffarl">
+        <p>
+          {{(fullName | titlecase) + ' ' + genderAtZero + '/' + age + ' ' + 'yrs' + '' + (refSpecialityName | titlecase)}}
+        </p>
+      </div>
+      <div class="itme-reffarl">
+        <p>{{reasonName | titlecase}}</p>
+      </div>
+      <div class="itme-reffarl">
+        <p>{{(refercaseVisitDate | date : 'mediumDate') + ' ' + convertedTime}}<a
+            style="margin-left: 2px; cursor: pointer; color: #007bff" (click)="editInput = true; onClickChange()"
+            *ngIf="!editInput">Edit</a></p>
+      </div>
+      <div class="" [formGroup]="confirmForm" *ngIf="editInput">
+        <div class="form-group">
+          <label>New Date</label>
+          <input class="form" (keydown)="$event.preventDefault()" [min]="min" placeholder="mm-dd-yyyy"
+            formControlName="refercaseVisitDate" name="date" [owlDateTimeTrigger]="dt3" [owlDateTime]="dt3">
+          <owl-date-time [pickerType]="'calendar'" #dt3></owl-date-time>
+        </div>
+        <div class="form-group">
+          <label>New Time</label>
+          <input class="form" (keydown)="$event.preventDefault()" [min]="minTime" placeholder="hh:mm"
+            formControlName="refercaseVisitTime" name="time" [owlDateTimeTrigger]="dt4" [owlDateTime]="dt4">
+          <owl-date-time [hour12Timer]="true" [pickerType]="'timer'" #dt4></owl-date-time>
+          <small class="text-danger small"
+            *ngIf="confirmForm.controls['refercaseVisitTime'].hasError('emptyDate')">Please
+            select Date of visit first.</small>
+        </div>
+      </div>
+    </div>
+    <div class="p-3"> <br>
+      <button type="button" class="btn btn-primary btn-lg btn-block" (click)="onConfirm()">Yes, I Confirm</button>
+    </div>
+  </div>
+</div>

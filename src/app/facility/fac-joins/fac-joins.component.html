@@ -1,0 +1,124 @@
+<!-- breadcrumb start-->
+<section class="breadcrumb breadcrumb_bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="breadcrumb_iner">
+            <div class="breadcrumb_iner_item">
+              <h2>Join DocsTime</h2>
+              <!-- <p>Home<span>/</span>Join Docs Time</p> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- breadcrumb start-->
+  <section class="contact-section section_padding">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-3 col-md-3">
+        </div>
+        <div class="col-lg-6 col-md-6">
+          <div class="regervation_part_iner">
+            <form class="bootstrap-form needs-validation profile-form" [formGroup]="joinUs"
+              (ngSubmit)="onSubmit(joinUs.value)">
+              <!-- <h2>Join Us (DocsTime)</h2> -->
+              <div class="form-row pt-3">
+                <div class="form-group col-md-6">
+                  <input type="text" id="signonname" oninput="this.value = this.value.replace(/^\s+/g, '')"
+                    formControlName="joinName" class="form-control" name="signonname" autocomplete="off"
+                    placeholder="Name*" required />
+                  <small class="text-danger"
+                    *ngIf="joinUs.controls['joinName'].hasError('required') && (joinUs.controls['joinName'].dirty || joinUs.controls['joinName'].touched)">Please
+                    enter name.</small>
+                  <small class="text-danger" *ngIf="joinUs.controls['joinName'].hasError('maxlength')">Input
+                    fields will not be more than 40 characters.</small>
+                  <small class="text-danger small"
+                    *ngIf="joinUs.controls['joinName'].hasError('pattern') && (joinUs.controls['joinName'].dirty || joinUs.controls['joinName'].touched)">Only
+                    Alphabets are allowed.</small>
+                </div>
+                <div class="form-group col-md-6">
+                  <input type="email" id="emailid" oninput="this.value = this.value.replace(/^\s+/g, '')"
+                    formControlName="joinEmail" class="form-control" name="email" autocomplete="off"
+                    placeholder="Email address*" required />
+                  <small class="text-danger"
+                    *ngIf="joinUs.controls['joinEmail'].hasError('pattern') && (joinUs.controls['joinEmail'].dirty || joinUs.controls['joinEmail'].touched )">Please
+                    enter valid email.</small>
+                  <small class="text-danger small"
+                    *ngIf="joinUs.controls['joinEmail'].hasError('required') && (joinUs.controls['joinEmail'].dirty || joinUs.controls['joinEmail'].touched)">Please
+                    enter email.</small>
+                </div>
+                <div class="form-group col-md-6">
+                  <ng-select [closeOnSelect]="true" [searchable]="true" placeholder="Select speciality*"
+                    formControlName="joinSpeciality" class="custom" name="specialityName">
+                    <ng-option *ngFor="let spec of (specialityList$ | async)" [value]="spec.specialityName">
+                      {{spec.specialityName}}</ng-option>
+                  </ng-select>
+                  <small class="text-danger small"
+                  *ngIf="joinUs.controls['joinSpeciality'].hasError('required') && (joinUs.controls['joinSpeciality'].dirty || joinUs.controls['joinSpeciality'].touched)">Please
+                    Select speciality.</small>
+                </div>
+                <div class="form-group col-md-6">
+                  <input type="text" id="mobile" oninput="this.value = this.value.replace(/^\s+/g, '')"
+                    formControlName="joinMobile" maxlength="10" class="form-control" name="mobile" autocomplete="off"
+                    placeholder="Phone number*" required />
+                  <small class="text-danger small"
+                    *ngIf=" joinUs.controls['joinMobile'].hasError('required') && (joinUs.controls['joinMobile'].dirty || joinUs.controls['joinMobile'].touched)">Please
+                    enter Phone number.</small>
+                  <small class="text-danger small"
+                    *ngIf="joinUs.controls['joinMobile'].hasError('pattern') && (joinUs.controls['joinMobile'].dirty || joinUs.controls['joinMobile'].touched)">Phone
+                    number must be only 10 digits.</small>
+                </div>
+                <div class="form-group col-md-6">
+                  <input class="form-control pac-target-input" oninput="this.value = this.value.replace(/^\s+/g, '')"
+                    formControlName="joinAddress" name="address" id="autoGoogle" type="text" placeholder="Address*"
+                    ngx-google-places-autocomplete [options]='options' #placesRef="ngx-places" (onAddressChange)="handleAddressChange($event)">
+                  <small class="text-danger"
+                    *ngIf="joinUs.controls['joinAddress'].hasError('required') && (joinUs.controls['joinAddress'].dirty || joinUs.controls['joinAddress'].touched)">Please
+                    enter address.</small>
+                </div>
+                <div class="form-group col-md-6">
+                  <input class="form-control pac-target-input" oninput="this.value = this.value.replace(/^\s+/g, '')"
+                    formControlName="joinCity" name="address" id="city" type="text" placeholder="City*"
+                    autocomplete="off">
+                  <small class="text-danger"
+                    *ngIf="joinUs.controls['joinCity'].hasError('required') && (joinUs.controls['joinCity'].dirty || joinUs.controls['joinCity'].touched)">Please
+                    enter city.</small>
+                </div>
+                <div class="form-group col-md-6">
+                  <input class="form-control pac-target-input" oninput="this.value = this.value.replace(/^\s+/g, '')"
+                    formControlName="joinState" name="address" id="state" type="text" placeholder="State*"
+                    autocomplete="off">
+                  <small class="text-danger"
+                    *ngIf="joinUs.controls['joinState'].hasError('required') && (joinUs.controls['joinState'].dirty || joinUs.controls['joinState'].touched)">Please
+                    enter state.</small>
+                </div>
+                <div class="form-group col-md-6">
+                  <input class="form-control pac-target-input" maxlength="5"
+                    oninput="this.value = this.value.replace(/^\s+/g, '')" formControlName="joinZip" name="address"
+                    id="zipc" type="text" placeholder="Zip code*" autocomplete="off">
+                  <small class="text-danger"
+                    *ngIf="joinUs.controls['joinZip'].hasError('required') && (joinUs.controls['joinZip'].dirty || joinUs.controls['joinZip'].touched)">Please
+                    enter zip code.</small>
+                  <small class="text-danger small"
+                    *ngIf="joinUs.controls['joinZip'].hasError('pattern') && (joinUs.controls['joinZip'].dirty || joinUs.controls['joinZip'].touched)">zip code must be 5 digits.</small>
+                </div>
+                <div class="form-group col-md-12 col-lg-12">
+                  <textarea class="form-control" id="Textarea" rows="4" name="joinMessage" formControlName="joinMessage"
+                    placeholder="Message" requiresd></textarea>
+                  <div class="valid-feedback">Looks good!</div>
+                  <div class="invalid-feedback">Looks bad!</div>
+                </div>
+              </div>
+              <div class="regervation_part text-center" style="background:none;">
+                <button type="submit" class="btn regerv_btn_iner">Submit</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-3">
+        </div>
+      </div>
+    </div>
+  </section>

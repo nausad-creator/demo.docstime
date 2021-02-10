@@ -1,0 +1,74 @@
+<body class="dashbord-section">
+  <div class="spacetop"></div>
+  <section class="section-dashbord">
+    <div class="container">
+      <div class="">
+        <div class="title-dashbord d-flex pt-3">
+          <h4 class="text-dark mb-0">Notifications</h4>
+        </div>
+        <br>
+        <div class="section-purcels lefprolist" data-scroll-index="2">
+          <div class="notificationlist" *ngIf="notification.length>0">
+            <div
+            infinite-scroll
+            [infiniteScrollDistance]="scrollDistance"
+            [infiniteScrollThrottle]="throttle"
+            [scrollWindow]="true"
+            (scrolled)="onScrollEnd()">
+            <div *ngFor="let notify of notification">
+              <app-shared-notification [notificationID]="notify.notificationID"
+                [notificationMessageText]="notify.notificationMessageText"
+                [notificationReadStatus]="notify.notificationReadStatus"
+                [notificationSendDate]="notify.notificationSendDate"
+                [notificationSendTime]="notify.notificationSendTime"
+                [notificationReferenceKey]="notify.notificationReferenceKey"
+                [notificationType]="notify.notificationType"
+                [wholeObj]="notify"
+                (update)="onUpdateList()"
+                (navigate)="navigateToDetails($event)"></app-shared-notification>
+            </div>
+          </div>
+          </div>
+          <div class="row" style="min-height: 200px;" *ngIf="(notificationLists$ | async)?.length > 0 && (notificationLists$ | async)?.length <= 3">
+            <div class="">
+              <div class="text-center">
+                <p></p>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="(notificationLists$ | async)?.length > 0 && (notificationLists$ | async)?.length <= 2" style="height: 250px;">
+            <div>
+              <p></p>
+            </div>
+          </div>
+          <div *ngIf="(notificationLists$ | async)?.length > 0 && (notificationLists$ | async)?.length <= 5" style="height: 150px;">
+            <div>
+              <p></p>
+            </div>
+          </div>
+          <div *ngIf="(notificationLists$ | async)?.length > 0 && (notificationLists$ | async)?.length <= 7" style="height: 100px;">
+            <div>
+              <p></p>
+            </div>
+          </div>
+          <div *ngIf="(notificationLists$ | async) === null">
+            <div style="margin-top: 40px; height: 500px;">
+              <p class="text-center">Loading...</p>
+            </div>
+          </div>
+          <div *ngIf="(notificationLists$ | async) === undefined">
+            <div style="margin-top: 40px; height: 480px;">
+              <div class="row">
+                <div class="col">
+                  <img class="img-center pt-3 pt-lg-5" src="assets/img/no-data.png" alt="No-Data">
+                  <p class="text-center" style="padding-right:32px;">No Record Found.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <br>
+</body>

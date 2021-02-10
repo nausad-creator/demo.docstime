@@ -1,0 +1,17 @@
+<div class="appointmen-list card mb-3">
+    <div class="row align-items-center">
+        <div class="col-md-12 text-appont">
+            <a (click)="onClickView(wholeObject)" style="cursor: pointer;color: #007bff" class="d-flex align-items-center">
+                <div class="img-candate">
+                    <img [defaultImage]="'assets/img/user-icon.png'" [lazyLoad]="url" [errorImage]="'assets/img/user-icon.png'"
+                        alt="candidate">
+                </div>
+                <div class="nameCandate">
+                    <h5 class="mt-2 mb-1" *ngIf="doctorFullName">{{preFixDRstr === 'DR.' ? (doctorFullName | titlecase) : 'Dr. ' + (doctorFullName | titlecase)}}</h5>
+                    <p class="text-dark mb-0" *ngIf="specialityName && specialityName !== null && specialityName !== undefined">
+                        <span>{{specialityName}}</span></p>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>

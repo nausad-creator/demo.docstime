@@ -1,0 +1,148 @@
+<div class="modal-contents modal-login">
+  <div class="modal-body">
+    <!-- error handler -->
+    <div class="alert alert-danger" role="alert" *ngIf="error">
+      <h5 class="alert-heading text-center">Error!</h5>
+      <p class="mb-0 text-center">{{error}}</p>
+    </div>
+    <div class="alert alert-danger" role="alert" *ngIf="alreadyExistNpi">
+      <h5 class="alert-heading text-center">Error!</h5>
+      <p class="mb-1 text-center">{{alreadyExistNpi}}</p>
+      <p class="mb-1 text-center">To login into your account please<a style="cursor: pointer; color: #007bff;"
+          (click)="changeToLogin()" id="alrealyError">&nbsp;Click here</a></p>
+      <p class="mb-0 text-center">If you haven't registered with your NPI number yet and you are seeing the message,
+        please contact our administration for further questions.<a style="cursor: pointer; color: #007bff;"
+          (click)="navigateToContactUsFromPopUp(); closeModal(223)" id="alrealyError">&nbsp;Click here</a>&nbsp;to Contact us.</p>
+    </div>
+    <!-- handler end -->
+    <ul class="nav md-pills nav-justified pills-info">
+      <li class="nav-item">
+        <a class="nav-link border-bottom" style="cursor: pointer; color: #007bff;" [ngClass]="{'active': login}"
+          (click)="login = true">Login</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link border-bottom" style="cursor: pointer; color: #007bff;" [ngClass]="{'active': !login}"
+          (click)="login = false">Register</a>
+      </li>
+    </ul>
+    <div class="tab-content py-0">
+
+      <div class="tab-pane fade" [ngClass]="{'show': login, 'active': login}">
+        <div class="text-center pt-3">
+          <img [defaultImage]="'assets/img/login-screen-icon.png'" [lazyLoad]="'assets/img/login-screen-icon.png'"
+            [errorImage]="'assets/img/login-screen-icon.png'" alt="login img" height="150"></div>
+        <form class="text-center" [formGroup]="logIn" (ngSubmit)="onClickLogin(logIn.value)">
+          <input type="hidden" id="security" name="security" value="c55502f913" />
+          <input type="hidden" name="_wp_http_referer" value="/wp-admin/admin-ajax.php?p=45930" />
+          <br>
+          <div>
+            <label for="username" style="float: left; font-size: 14px;">Username or e-mail<span
+                class="required-field"></span></label>
+            <input type="text" id="username" formControlName="emailOrNumber" placeholder="Enter username or e-mail"
+              class="form-control" name="username" />
+            <small class="text-danger"
+              *ngIf="logIn.controls['emailOrNumber'].hasError('required') && (logIn.controls['emailOrNumber'].dirty || logIn.controls['emailOrNumber'].touched)">This
+              field is required</small>
+            <small class="text-danger"
+              *ngIf="logIn.controls['emailOrNumber'].hasError('pattern') && (logIn.controls['emailOrNumber'].dirty || logIn.controls['emailOrNumber'].touched)">Please
+              enter valid email address or phone number</small>
+          </div>
+          <br />
+          <div class="">
+            <label for="password" style="float: left; font-size: 14px;">Password<span
+                class="required-field"></span></label>
+            <div class="inputWithIcon">
+              <input type="password" [type]=" hide ? 'password' : 'text' " id="password" placeholder="Enter password"
+                class="form-control" formControlName="password" name="password" autocomplete="off" />
+              <a class="cursr" (click)="myFunction()"><i class="fas "
+                  [ngClass]="{'fa-eye': !hide, 'fa-eye-slash': hide}"></i></a>
+              <small class="text-danger"
+                *ngIf="logIn.controls['password'].hasError('required') && (logIn.controls['password'].dirty || logIn.controls['password'].touched)">This
+                field is required</small>
+            </div>
+          </div>
+          <div class="mt-2">
+            <p class="grey-text pb-1">Already have verification code? <a style="cursor: pointer; color: #007bff;"
+                (click)="openSetPassModal(); closeModal(223)" id="alrealyHaveInLogin">Click</a></p>
+          </div>
+          <div class="input-group pt-3 pb-3">
+            <div class="custom-checkbox custom-control col-6 text-left">
+              <input type="checkbox" formControlName="terms" name="remember" id="remember"
+                class="custom-control-input" />
+              <label for="remember" class="custom-control-label">Remember Me</label>
+            </div>
+            <label for="forgot-password" class="col-6">
+              <a (click)="openForgotPassModal(); closeModal(223)" style="cursor: pointer; color: #007bff;"
+                class="ml-6">Forgot
+                Password?</a>
+            </label>
+          </div>
+          <div class="p-3">
+            <button type="submit" [disabled]="logIn.invalid" class="btn btn-primary btn-lg btn-block">Log In</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="tab-pane fade in" [ngClass]="{'show': !login, 'active': !login}">
+        <form class="bootstrap-form needs-validation" (ngSubmit)="onSubmitNPI(npiForm.value)" [formGroup]="npiForm">
+          <input type="hidden" id="signonsecurity" name="signonsecurity" value="5d290bdd97" />
+          <input type="hidden" name="_wp_http_referer" value="" />
+          <br><br>
+          <div class="form-group">
+            <label for="NPI" class="text-uppercase text-primary">National Provoder Identifier (NPI)<span
+                class="required-field"></span></label>
+            <input type="text" id="NPI" maxlength="10" placeholder="Enter NPI" formControlName="npi"
+              class="form-control" name="NPI" />
+            <small class="text-danger text-center"
+              *ngIf="npiForm.controls['npi'].hasError('required') && (npiForm.controls['npi'].dirty || npiForm.controls['npi'].touched)">This
+              field is required</small>
+            <small class="text-danger text-center"
+              *ngIf="npiForm.controls['npi'].hasError('pattern') && (npiForm.controls['npi'].dirty || npiForm.controls['npi'].touched)">Accept
+              only
+              numeric
+              value & NPI
+              Number must be only 10 digit.</small>
+          </div>
+          <div class="" style="margin-top: -10px;">
+            <p class="grey-text pb-1">Don't have NPI handy? <a style="cursor: pointer; color: #007bff;"
+              (click)="navigateToContactUsOnNPIenquery(); closeModal(223)" id="alrealyHaveInLogin">Contact Us</a></p>
+          </div>
+          <div class="form-group">
+            <label for="NPI" class="text-uppercase text-primary">Mobile Number</label>
+            <input type="text" id="mobileNumber" maxlength="10" placeholder="Enter mobile number" formControlName="mobileNumber"
+              class="form-control" name="mobileNumber" />
+            <small class="text-danger text-center"
+              *ngIf="npiForm.controls['mobileNumber'].hasError('pattern') && (npiForm.controls['mobileNumber'].dirty || npiForm.controls['mobileNumber'].touched)">Mobile number must be only 10 digit.</small>
+          </div>
+          <div class="form-group">
+            <ngx-recaptcha2 #captchaElem 
+            [siteKey]="siteKey"
+            (reset)="handleReset()" 
+            (expire)="handleExpire()"
+            (load)="handleLoad()" 
+            (success)="handleSuccess($event)" 
+            [useGlobalDomain]="false" [size]="size"
+            [hl]="lang" [theme]="theme" [type]="type" formControlName="recaptcha">
+            </ngx-recaptcha2>
+            <small class="text-danger small"
+              *ngIf="npiForm.controls['recaptcha'].hasError('required')">This
+              field is required</small>
+          </div>
+          <!-- <div class="">
+            <p class="grey-text pb-3">Already have an account? <a style="cursor: pointer; color: #007bff;"
+                (click)="login = true" id="changetabbutton">Login</a></p>
+          </div> -->
+          <div class="p-3">
+            <button type="submit" class="btn btn-primary btn-lg btn-block">Continue</button>
+          </div>
+          <div class="">
+            <p class="grey-text text-center">Already have an account? <a style="cursor: pointer; color: #007bff;"
+                (click)="login = true" id="changetabbutton">Login</a></p>
+          </div>
+        </form>
+      </div>
+
+
+    </div>
+  </div>
+</div>

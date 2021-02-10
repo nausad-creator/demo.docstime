@@ -1,0 +1,10 @@
+.small {
+    font-size: 0.8em;
+  }
+  .cursr {
+    cursor: pointer;
+  }
+  .required-field::before {
+    content: "*";
+    color: red;
+  }

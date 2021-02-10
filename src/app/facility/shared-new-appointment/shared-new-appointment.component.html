@@ -1,0 +1,29 @@
+<div class="appointmen-list card mb-3">
+  <div class="d-flex text-appont" style="cursor: pointer;" (click)="onClickView(wholeOBject)">
+    <a class="referred-btn">
+      <h5 class="m-0 text-dark">{{fullName | titlecase}}</h5></a>
+      <p class="m-0 text-dark ml-auto">{{genderAtZero + '/' + age + ' ' + 'yrs' + '' + (refSpecialityName | titlecase)}}</p>
+  </div>
+    <div class="row align-items-center">
+      <div class="col-md-5 text-appont" style="cursor: pointer;" (click)="onClickView(wholeOBject)">
+          <p class="m-0">{{reasonName | titlecase}}</p>
+          <a class="d-flex align-items-center" style="cursor:pointer;color:#007bff;">
+            <div class="img-candate mr-2"><img alt="candidate" [defaultImage]="'assets/img/user-icon.png'" [lazyLoad]="url" [errorImage]="'assets/img/user-icon.png'"
+              alt="candidate" height="50"></div>
+            <div class="nameCandate">
+              <h5 class=" mb-0 ng-star-inserted" *ngIf="doctorFullName">{{preFixDRstr === 'DR.' ? (doctorFullName | titlecase) : 'Dr. ' + (doctorFullName | titlecase)}}</h5>
+              <p class="text-dark mb-0 ng-star-inserted" *ngIf="specialityName">{{specialityName | titlecase}}</p>
+            </div>
+          </a>
+      </div>
+      <div class="col-md-3 icons-dated" style="cursor: pointer;" (click)="onClickView(wholeOBject)">
+        <p class="m-0" *ngIf="refercaseVisitDate"><i class="ti-calendar"></i> {{refercaseVisitDate | date : 'mediumDate'}}</p>
+        <p class="m-0" *ngIf="refercaseVisitTime"><i class="ti-time"></i>{{convertedTime}}</p>
+      </div>
+      <div class="col-md-4 text-xl-right btnsgrp-appointment" *ngIf="refercaseStatus === 'Pending'">
+        <p class="text-dark sb-text mb-2" *ngIf="refercaseUrgent === 'Yes'">Urgent Consult</p>
+        <a style="cursor: pointer;" class="btn btn-outline-primary" (click)="openModalConfirm()">Confirm</a>
+        <a style="cursor: pointer;" class="btn btn-outline-primary" (click)="openModalReject()">Reject</a>
+      </div>
+    </div>
+  </div> 

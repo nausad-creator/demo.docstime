@@ -1,0 +1,72 @@
+<div class="tab-pane fade show active" id="Upcoming" role="tabpanel" aria-labelledby="home-tab">
+  <div class="appointmen-content" *ngIf="scheduledAll.length>0">
+    <div infinite-scroll [infiniteScrollDistance]="scrollDistance" [infiniteScrollThrottle]="throttle"
+      [scrollWindow]="true" (scrolled)="onScrollEndScheduled()">
+      <div class="details-list" *ngFor="let appoint of scheduledAll">
+        <app-share-scheduled-appointments 
+          [patientFirstName]="appoint.patientFirstName ? appoint.patientFirstName : ''"
+          [patientLastName]="appoint.patientLastName ? appoint.patientLastName : ''"
+          [reasonName]="appoint.reasonName ? appoint.reasonName : appoint.reasonNames ? appoint.reasonNames : ''"
+          [patientGender]="appoint.patientGender ? appoint.patientGender : ''" 
+          [refDocName]="appoint.refDocName ? appoint.refDocName : ''"
+          [age]="appoint.age ? appoint.age : '0'"
+          [refercaseUrgent]="appoint.refercaseUrgent ? appoint.refercaseUrgent : ''"
+          [wholeObject]="appoint" 
+          [refSpecialityName]="appoint.insuranceNames ? appoint.insuranceNames : ''"
+          [specialityName]="appoint.refSpecialityName ? appoint.refSpecialityName : ''"
+          [refercaseVisitDate]="appoint.refercaseVisitDate ? appoint.refercaseVisitDate : ''"
+          [refercaseVisitTime]="appoint.refercaseVisitTime !== null && appoint.refercaseVisitTime !== Undefined && appoint.refercaseVisitTime !== '' ? appoint.refercaseVisitTime : ''"
+          [refercaseStatus]="appoint.refercaseStatus ? appoint.refercaseStatus : ''" (view)="showReferralClick($event)">
+        </app-share-scheduled-appointments>
+      </div>
+    </div>
+    <div class="row" style="min-height: 50px;" *ngIf="scheduledAll.length > 0 && scheduledAll.length === 6">
+      <div class="">
+        <div class="text-center">
+          <p></p>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="min-height: 100px;" *ngIf="scheduledAll.length > 0 && scheduledAll.length === 5">
+      <div class="">
+        <div class="text-center">
+          <p></p>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="min-height: 200px;" *ngIf="scheduledAll.length > 0 && scheduledAll.length === 4">
+      <div class="">
+        <div class="text-center">
+          <p></p>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="min-height: 300px;" *ngIf="scheduledAll.length > 0 && scheduledAll.length <= 3">
+      <div class="">
+        <div class="text-center">
+          <p></p>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="scheduledAll.length > 0 && scheduledAll.length <= 2">
+      <div style="height: 350px;">
+        <p></p>
+      </div>
+    </div>
+  </div>
+  <div class="" style="margin-top: 40px; height: 550px;" *ngIf="(scheduledUpcomming$ | async) === null">
+    <div class="row">
+      <div class="col">
+        <p class="text-center">Loading...</p>
+      </div>
+    </div>
+  </div>
+  <div class="" style="margin-top: 40px; height: 510px" *ngIf="(scheduledUpcomming$ | async) === undefined">
+    <div class="row">
+      <div class="col">
+        <img class="img-center pt-3 pt-lg-5" src="assets/img/no-data.png" alt="No-Data">
+        <p class="text-center" style="padding-right:32px;">No Record Found.</p>
+      </div>
+    </div>
+  </div>
+</div>

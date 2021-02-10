@@ -1,0 +1,40 @@
+/* .iconify {
+  width: 30px;
+  height: 30px;
+} */
+.iconify {
+    color: #d2a32e;
+  }
+  .cursr {
+    cursor: pointer;
+  }
+  .inputWithIcon input [type="password"] {
+    padding-right: 40px;
+  }
+  
+  .inputWithIcon {
+    position: relative;
+  }
+  
+  .inputWithIcon i {
+    position: absolute;
+    right: 0px;
+    top: 32px;
+    padding: 9px 12px;
+  }
+  .required-field::before {
+    content: "*";
+    color: red;
+  }
+  .modal-contents {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    pointer-events: auto;
+    background-color: #fff;
+    background-clip: padding-box;
+    /* border: 1px solid rgba(0, 0, 0, .2); */
+    border-radius: .3rem;
+    outline: 0;
+}

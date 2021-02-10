@@ -1,0 +1,29 @@
+
+<div class="appointmen-list card mb-3"  style="cursor: pointer;" (click)="onClickViewPrivious(wholeObject)">
+    <div class="d-flex text-appont">
+      <a class="referred-btn">
+        <h5 class="m-0 text-dark">{{fullName | titlecase}}</h5></a>
+      <p class="m-0 text-dark ml-auto">{{genderAtZero + '/' + age + ' ' + 'yrs' + '' + (refSpecialityName | titlecase)}}</p>
+    </div>
+      <div class="row align-items-center">
+        <div class="col-md-5 text-appont">
+            <p class="m-0">{{reasonName | titlecase}}</p>
+            <a class="d-flex align-items-center" style="cursor:pointer;color:#007bff;">
+              <div class="img-candate mr-2"><img alt="candidate" [defaultImage]="'assets/img/user-icon.png'" [lazyLoad]="url" [errorImage]="'assets/img/user-icon.png'"
+                alt="candidate" height="50"></div>
+              <div class="nameCandate">
+                <h5 class=" mb-0 ng-star-inserted" *ngIf="doctorFullName">{{preFixDRstr === 'DR.' ? (doctorFullName | titlecase) : 'Dr. ' + (doctorFullName | titlecase)}}</h5>
+                <p class="text-dark mb-0 ng-star-inserted" *ngIf="specialityName">{{specialityName | titlecase}}</p>
+              </div>
+            </a>
+        </div>
+        <div class="col-md-3 icons-dated">
+          <p class="m-0" *ngIf="refercaseVisitDate"><i class="ti-calendar"></i> {{refercaseVisitDate | date : 'mediumDate'}}</p>
+          <p class="m-0" *ngIf="refercaseVisitTime"><i class="ti-time"></i>{{convertedTime}}</p>
+        </div>
+        <div class="col-md-4 text-xl-right btnsgrp-appointment" *ngIf="refercaseStatus === 'Accepted' || refercaseStatus === 'Completed'">
+            <div class="text-primary"><img src="assets/img/done.svg" alt="" height="15px">Completed</div>
+          </div>
+      </div>
+    </div> 
+  

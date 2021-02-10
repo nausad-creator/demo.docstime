@@ -1,0 +1,32 @@
+<body class="dashbord-section">
+  <div class="spacetop"></div>
+  <section class="section-dashbord">
+    <div class="container">
+      <div class="row">
+        <div class="col-xl-8 col-lg-8 appointment-conten order-2 order-lg-1 pt-3">
+          <ul class="nav nav-tabs custom-tabsnew border-0" id="myTab" role="tablist">
+            <li class="nav-item"><a class="nav-link btn-outline-primary" id="home-tab" routerLink="upcomming" routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+                aria-controls="Upcoming" aria-selected="true">Upcoming</a></li>
+            <li class="nav-item"><a class="nav-link btn-outline-primary" id="profile-tab" routerLink="previous" routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+                aria-controls="profile" aria-selected="false">Previous</a></li>
+            <li class="nav-item"><a class="nav-link btn-outline-primary" id="cancelled-tab" routerLink="cancelled" routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+                aria-controls="cancelled" aria-selected="false">Rejected</a></li>
+          </ul>
+          <div class="tab-content pt-3" id="myTabContent">
+            <router-outlet></router-outlet>
+          </div>
+        </div>
+
+        <div class="col-xl-4 col-lg-4 uploadfile-conten order-1 order-lg-2 card" style="border-radius:0;">
+          <div class=" wow zoomIn pt-3" data-wow-delay="0.2s">
+            <app-share-datetimepicker [from]="'My-schedule'"></app-share-datetimepicker>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <br>
+</body>

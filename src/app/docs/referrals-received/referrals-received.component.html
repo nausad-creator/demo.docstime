@@ -1,0 +1,72 @@
+<body class="dashbord-section">
+  <div class="spacetop"></div>
+  <section class="section-dashbord overflow-hidden">
+    <div class="container">
+      <div class="row">
+        <div class="col-xl-8 col-lg-8 appointment-conten order-2 order-lg-1 pt-3">
+          <div class="appointmen-content appoinment-show appointmen-referral" *ngIf="all.length>0">
+            <div
+            infinite-scroll
+            [infiniteScrollDistance]="scrollDistance"
+            [infiniteScrollThrottle]="throttle"
+            [scrollWindow]="true"
+            (scrolled)="onScrollEnd()">
+            <div class="details-list" *ngFor="let appoint of all">
+              <app-share-referral-received [patientFirstName]="appoint.patientFirstName ? appoint.patientFirstName : ''"
+                [patientLastName]="appoint.patientLastName ? appoint.patientLastName : ''"
+                [reasonName]="appoint.reasonName ? appoint.reasonName : appoint.reasonNames ? appoint.reasonNames : ''"
+                [patientGender]="appoint.patientGender ? appoint.patientGender : ''"
+                [age]="appoint.age ? appoint.age : '0'" [refercaseID]="appoint.refercaseID ? appoint.refercaseID : ''"
+                [facilityID]="appoint.facilityID ? appoint.facilityID : ''"
+                [refDocName]="appoint.refDocName ? appoint.refDocName : ''"
+                [refercaseUrgent]="appoint.refercaseUrgent ? appoint.refercaseUrgent : ''"
+                [refSpecialityName]="appoint.insuranceNames ? appoint.insuranceNames : ''"
+                [specialityName]="appoint.refSpecialityName ? appoint.refSpecialityName : ''"
+                [refercaseVisitDate]="appoint.refercaseVisitDate ? appoint.refercaseVisitDate : ''"
+                [refercaseVisitTime]="appoint.refercaseVisitTime !== null && appoint.refercaseVisitTime !== Undefined && appoint.refercaseVisitTime !== '' ? appoint.refercaseVisitTime : ''"
+                [refercaseStatus]="appoint.refercaseStatus ? appoint.refercaseStatus : ''" [wholeObject]="appoint"
+                (view)="showReferralClick($event)"
+                (updateView)="forceReload()">
+              </app-share-referral-received>
+            </div>
+          </div>
+            <div class="row" style="min-height: 300px;" *ngIf="all.length > 0 && all.length <= 3">
+              <div class="">
+                <div class="text-center">
+                  <p></p>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="all.length > 0 && all.length <= 2" style="height: 350px;">
+              <div>
+                <p></p>
+              </div>
+            </div>
+          </div>
+          <div class="" style="margin-top: 40px; height: 550px;" *ngIf="(scheduledAll$ | async) === null">
+            <div class="row">
+              <div class="col">
+                <p class="text-center">Loading...</p>
+              </div>
+            </div>
+          </div>
+          <div class="" style="margin-top: 40px; height: 530px" *ngIf="(scheduledAll$ | async) === undefined">
+            <div class="row">
+              <div class="col">
+                <img class="img-center pt-3 pt-lg-5" src="assets/img/no-data.png" alt="No-Data">
+                <p class="text-center" style="padding-right:32px;">No Record Found.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="col-xl-4 col-lg-4 uploadfile-conten order-1 order-lg-2 card" style="border-radius:0;">
+          <div class=" wow zoomIn pt-3" data-wow-delay="0.2s">
+            <app-share-datetimepicker [from]="'Received'"></app-share-datetimepicker>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <br>
+</body>

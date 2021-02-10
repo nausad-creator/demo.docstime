@@ -1,0 +1,100 @@
+<!--::header Docs part start::-->
+<header class="main_menu home_menu dashbord-header">
+    <div class="container">
+      <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand" routerLink="facility-dashboard">
+          <img [defaultImage]="'assets/img/logo-white.png'" [lazyLoad]="'assets/img/logo-white.png'" [errorImage]="'assets/img/logo-white.png'" alt="logo" height="70"></a>
+        <div class="mobile-users d-lg-none ml-auto">
+          <ul class="navbar-nav">
+            <li class="nav-item position-relative pr-3 align-self-center" routerLinkActive="active">
+              <a class="nav-link" (click)="onClickBadge()" routerLink="facility-notifications" style="cursor: pointer;"><i
+                  class="ti-bell"></i>
+                <div [class.notify]="count > 0"><span [class.point]="count > 0" *ngIf="count > 0">{{count}}</span></div>
+              </a></li>
+            <li class="nav-item dropdown profiledropdown position-relative">
+              <a class="nav-link dropdown-toggle title" id="navbarDropdownMenuLink3" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <!--<span class="usernames">Glen Johnson</span>-->
+                <img [defaultImage]="'assets/img/user.png'" [lazyLoad]="url" [errorImage]="'assets/img/user.png'" class="img-user rounded-circle cursr" alt="My photo">
+              </a>
+              <div class="dropdown-menu scale-up-left position-absolute" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item cursr" routerLinkActive="active" routerLink="facility-doctors-list">Doctors</a>
+                <a class="dropdown-item cursr" routerLinkActive="active" routerLink="facility-my-profile">My Profile</a>
+                <a class="dropdown-item cursr" routerLinkActive="active" routerLink="facility-notification-settings">Notification Settings</a>
+                <a class="dropdown-item cursr" routerLinkActive="active" routerLink="facility-change-password">Change Password</a>
+                <a class="dropdown-item cursr" (click)="logOut()">Logout</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span> </button>
+        <div class="collapse navbar-collapse main-menu-item justify-content-end" id="navbarSupportedContent">
+          <ul class="navbar-nav align-items-center">
+            <li class="nav-item" routerLinkActive="active"><a class="nav-link" routerLink="facility-dashboard">Home</a></li>
+            <!--<li class="nav-item"><a class="nav-link" href="#">My Appoinments</a></li>-->
+            <li class="nav-item" routerLinkActive="active"><a class="nav-link" routerLink="facility-my-schedule">My Schedule</a></li>
+            <li class="nav-item" routerLinkActive="active"><a class="nav-link" routerLink="facility-referral-received">Referrals Received
+              <span class="count"
+              *ngIf="pendingCount > 0">{{pendingCount}}</span></a></li>
+            <li class="nav-item" routerLinkActive="active"><a class="nav-link" routerLink="facility-referral-sent">Referrals Sent</a></li>
+          </ul>
+          <ul class="navbar-nav align-items-center ml-auto">
+            <li class="nav-item" routerLinkActive="active"><a class="nav-link refer-button" routerLink="facility-add-refer-case" style="cursor: pointer;">Refer A Patient</a></li>
+            <!-- <li class="nav-item d-none d-lg-block"><a class="nav-link p-0" style="font-size:18px;"><share-popup-button>Share</share-popup-button></a></li> -->
+            <li>
+              <share-popup-button 
+              [include]="['facebook','twitter','linkedin','pinterest','reddit','mix','vk','telegram','messenger','whatsapp','email','line']"
+              [showIcon]="true"
+              [theme]="'circles-dark'"
+              [showText]="false"
+              [size]="5"
+              [icon]="faCoffee"
+              [title]="'DocsRefer'"
+              [description]="'Checkout this free new app for scheduling and sending/receiving referrals. I find it really useful for my practice and patients. Tap the link or QR code to see if this helps you as well. http://onelink.to/xm5yrw For more info go to www.docstime.com'"
+              [url]="'https://www.docstime.com'"
+              [image] ="qr"
+              [autoSetMeta]="false"
+              ></share-popup-button></li>
+            <li class="nav-item d-none d-lg-block" routerLinkActive="active">
+              <a class="nav-link" (click)="onClickBadge()" routerLink="facility-notifications" style="cursor: pointer;"><i class="ti-bell"></i>
+                <div [class.notify]="count > 0"><span [class.point]="count > 0" *ngIf="count > 0">{{count}}</span></div>
+              </a></li>
+            <li class="nav-item dropdown profiledropdown d-none d-lg-block">
+              <a class="nav-link dropdown-toggle title" id="navbarDropdownMenuLink3" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <span class="usernames" *ngIf="facData.facilityuserFullName">{{facData.facilityuserFullName | titlecase}}</span>
+                <img [defaultImage]="'assets/img/user.png'" [lazyLoad]="url" [errorImage]="'assets/img/user.png'" class="img-user rounded-circle cursr" alt="My photo">
+              </a>
+              <div class="dropdown-menu scale-up-left" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item cursr" routerLinkActive="active" routerLink="facility-doctors-list">Doctors</a>
+                <a class="dropdown-item cursr" routerLinkActive="active" routerLink="facility-my-profile">My Profile</a>
+                <a class="dropdown-item cursr" routerLinkActive="active" routerLink="facility-notification-settings">Notification Settings</a>
+                <a class="dropdown-item cursr" routerLinkActive="active" routerLink="facility-change-password">Change Password</a>
+                <a >
+                  <share-popup-button 
+                  [include]="['facebook','twitter','linkedin','pinterest','reddit','mix','vk','telegram','messenger','whatsapp','email','line']"
+                  [showIcon]="false"
+                  [showText]="true"
+                  [size]="5"
+                  [icon]="faCoffee"
+                  [title]="'DocsRefer'"
+                  [description]="'Checkout this free new app for scheduling and sending/receiving referrals. I find it really useful for my practice and patients. Tap the link or QR code to see if this helps you as well. http://onelink.to/xm5yrw For more info go to www.docstime.com'"
+                  [url]="'https://www.docstime.com'"
+                  [image] ="qr"
+                  [autoSetMeta]="false"
+                  ></share-popup-button></a>
+                <a class="dropdown-item cursr" (click)="logOut()">Logout</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </header>
+  <ngx-spinner [fullScreen]="true" color="#fff" type="" bdColor="rgba(0, 0, 0, 0.9)">
+    <div class="loader">
+      <img class="logo-icon" [defaultImage]="'assets/img/favicon.png'" [lazyLoad]="'assets/img/favicon.png'" [errorImage]="'assets/img/favicon.png'" alt="DocsTime"><span>Loading...</span>
+    </div>
+  </ngx-spinner>

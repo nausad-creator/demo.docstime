@@ -1,0 +1,11 @@
+.img-candate {
+    margin-right: 15px;
+  }
+  .img-candate img {
+    height: 50px;
+    width: 50px;
+    border-radius: 50px;
+  }
+  .sb-text {
+    font-weight: bold;
+  }

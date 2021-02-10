@@ -1,0 +1,134 @@
+
+<div class="modal-contents">
+  <!-- Modal Header -->
+  <div class="modal-header">
+    <h4 class="modal-title">Request Demo</h4>
+    <button type="button" (click)="onClose()" class="close" data-dismiss="modal">&times;</button>
+  </div>
+  <!-- Modal body -->
+  <div class="modal-body">
+    <form class="bootstrap-form needs-validation" [formGroup]="requestForm" (ngSubmit)="onSubmit(requestForm.value)"
+      novalidate>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <!--<label for="signonname" class="text-uppercase text-primary">Date</label>-->
+          <!-- (keyup.enter)="changeDate(start.value, 'start')"
+          (blur)="changeDateBlur(start.value, 'start')" -->
+          <input formControlName="meetingDate" class="form-control" [min]="min"
+          maxlength=10 onkeyup="this.value=this.value.replace(/^(\d\d)(\d)$/g,'$1/$2').replace(/^(\d\d\/\d\d)(\d+)$/g,'$1/$2').replace(/[^\d\/]/g,'')" name="date"
+            [owlDateTime]="dt4" id="date" placeholder="mm/dd/yyyy*">
+          <span class="addons cursr"><i [owlDateTimeTrigger]="dt4" class="ti-calendar cursr"></i></span>
+          <owl-date-time [pickerType]="'calendar'" #dt4></owl-date-time>
+          <!-- <small class="text-danger small"
+            *ngIf="requestForm.controls['meetingDate'].hasError('required') && (requestForm.controls['meetingDate'].dirty || requestForm.controls['meetingDate'].touched)">Please
+            enter valid Date.</small> -->
+          <small class="text-danger small" *ngIf="requestForm.get('meetingDate').invalid && requestForm.controls['meetingDate'].hasError('owlDateTimeMin')">Date should not before {{min | date: 'mediumDate'}}</small>
+          <small class="text-danger small" *ngIf="requestForm.controls['meetingDate'].hasError('invalidDate') && (requestForm.controls['meetingDate'].dirty || requestForm.controls['meetingDate'].touched)">Date should be MM/DD/YYYY format.</small>
+          <small class="text-danger small" *ngIf="requestForm.controls['meetingDate'].hasError('emptyDate')">Please
+            enter Date.</small>
+        </div>
+        <div class="form-group col-md-6">
+          <!--<label for="signonname" class="text-uppercase text-primary">Time</label>-->
+          <input class="form-control" oninput="this.value = this.value.replace(/^\s+/g, '')" [min]="minTime" placeholder="hh:mm am/pm" formControlName="meetingTime" name="time"
+            id="time" [owlDateTime]="dt5">
+          <span class="addons cursr"><i [owlDateTimeTrigger]="dt5" class="ti-time cursr"></i></span>
+          <owl-date-time [hour12Timer]="true" [startAt]="startAt" [stepMinute]="15" [pickerType]="'timer'" #dt5></owl-date-time>
+          <small class="text-danger small" *ngIf="requestForm.controls['meetingTime'].hasError('emptyDate')">Please
+            select Date first.</small>
+          <small class="text-danger small" *ngIf="requestForm.controls['meetingTime'].hasError('emptyTime')">Please
+              enter Time.</small>
+              <small class="text-danger small" *ngIf="requestForm.get('meetingTime').invalid && requestForm.controls['meetingTime'].hasError('owlDateTimeMin')">Please enter valid time.</small>    
+        </div>
+      </div>
+      <div class="form-group">
+        <!--<label for="signonname" class="text-uppercase text-primary">Your Name</label>-->
+        <input type="text" id="signo" oninput="this.value = this.value.replace(/^\s+/g, '')"
+          formControlName="meetingName" class="form-control" name="signonname" autocomplete="off"
+          placeholder="Name*" required />
+        <small class="text-danger"
+          *ngIf="requestForm.controls['meetingName'].hasError('required') && (requestForm.controls['meetingName'].dirty || requestForm.controls['meetingName'].touched)">Please
+          enter name.</small>
+        <small class="text-danger" *ngIf="requestForm.controls['meetingName'].hasError('maxlength')">Input
+          fields will not be more than 40 characters.</small>
+        <small class="text-danger small"
+          *ngIf="requestForm.controls['meetingName'].hasError('pattern') && (requestForm.controls['meetingName'].dirty || requestForm.controls['meetingName'].touched)">Only
+          Alphabets are allowed.</small>
+      </div>
+      <div class="form-group">
+        <!--<label for="email" class="text-uppercase text-primary">Email Address</label>-->
+        <input type="email" id="email" oninput="this.value = this.value.replace(/^\s+/g, '')"
+          formControlName="meetingEmail" class="form-control" name="email" autocomplete="off"
+          placeholder="Email address*" required />
+        <small class="text-danger"
+          *ngIf="requestForm.controls['meetingEmail'].hasError('pattern') && (requestForm.controls['meetingEmail'].dirty || requestForm.controls['meetingEmail'].touched )">Please
+          enter valid email.</small>
+        <small class="text-danger small"
+          *ngIf="requestForm.controls['meetingEmail'].hasError('required') && (requestForm.controls['meetingEmail'].dirty || requestForm.controls['meetingEmail'].touched)">Please
+          enter email.</small>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <!--<label for="mobile" class="text-uppercase text-primary">Mobile Number</label>-->
+          <input type="text" id="mobile" oninput="this.value = this.value.replace(/^\s+/g, '')"
+            formControlName="meetingMobile" maxlength="10" class="form-control" name="mobile" autocomplete="off"
+            placeholder="Phone number*" required />
+          <small class="text-danger small"
+            *ngIf=" requestForm.controls['meetingMobile'].hasError('required') && (requestForm.controls['meetingMobile'].dirty || requestForm.controls['meetingMobile'].touched)">Please
+            enter Phone number.</small>
+          <small class="text-danger small"
+            *ngIf="requestForm.controls['meetingMobile'].hasError('pattern') && (requestForm.controls['meetingMobile'].dirty || requestForm.controls['meetingMobile'].touched)">Phone
+            number must be only 10 digits.</small>
+        </div>
+        <div class="form-group col-md-6">
+          <!--<label for="Fax" class="text-uppercase text-primary">Fax Number</label>-->
+          <input type="text" maxlength="10" id="Fax" oninput="this.value = this.value.replace(/^\s+/g, '')"
+            formControlName="meetingFax" class="form-control" name="Fax" autocomplete="off"
+            placeholder="Fax number"/>
+          <small class="text-danger small"
+            *ngIf="requestForm.controls['meetingFax'].hasError('pattern') && (requestForm.controls['meetingFax'].dirty || requestForm.controls['meetingFax'].touched)">Fax
+            number must be only 10 digit.</small>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <!--<label for="Gender" class="text-uppercase text-primary">Loacation </label>		-->
+          <input class="form-control pac-target-input" oninput="this.value = this.value.replace(/^\s+/g, '')"
+            formControlName="meetingAddress" name="address" id="autoGoogle" type="text" placeholder="Address*"
+            ngx-google-places-autocomplete [options]='options' #placesRef="ngx-places" (onAddressChange)="handleAddressChange($event)">
+          <small class="text-danger"
+            *ngIf="requestForm.controls['meetingAddress'].hasError('required') && (requestForm.controls['meetingAddress'].dirty || requestForm.controls['meetingAddress'].touched)">Please
+            enter address.</small>
+        </div>
+        <div class="form-group col-md-6">
+          <input class="form-control pac-target-input" oninput="this.value = this.value.replace(/^\s+/g, '')"
+            formControlName="meetingCity" name="city" id="cityName" type="text" placeholder="City*" autocomplete="off">
+          <small class="text-danger"
+            *ngIf="requestForm.controls['meetingCity'].hasError('required') && (requestForm.controls['meetingCity'].dirty || requestForm.controls['meetingCity'].touched)">Please
+            enter city.</small>
+        </div>
+        <div class="form-group col-md-6">
+          <input class="form-control pac-target-input" oninput="this.value = this.value.replace(/^\s+/g, '')"
+            formControlName="meetingState" name="state" id="stateName" type="text" placeholder="State*" autocomplete="off">
+          <small class="text-danger"
+            *ngIf="requestForm.controls['meetingState'].hasError('required') && (requestForm.controls['meetingState'].dirty || requestForm.controls['meetingState'].touched)">Please
+            enter state.</small>
+        </div>
+        <div class="form-group col-md-6">
+          <input class="form-control pac-target-input" maxlength="5"
+            oninput="this.value = this.value.replace(/^\s+/g, '')" formControlName="meetingZip" name="zip" id="zipcode"
+            type="text" placeholder="Zip code*" autocomplete="off">
+          <small class="text-danger"
+            *ngIf="requestForm.controls['meetingZip'].hasError('required') && (requestForm.controls['meetingZip'].dirty || requestForm.controls['meetingZip'].touched)">Please
+            enter zip code.</small>
+          <small class="text-danger small"
+            *ngIf="requestForm.controls['meetingZip'].hasError('pattern') && (requestForm.controls['meetingZip'].dirty || requestForm.controls['meetingZip'].touched)">zip code must be 5 digits.</small>
+        </div>
+      </div>
+      <div class="p-3">
+        <button type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>
+        <!-- <button type="button" (click)="openToastr(requestForm.value.meetingDate, requestForm.value.meetingTime)" class="button button-contactForm btn_1">Open Toastr</button> -->
+      </div>
+    </form>
+  </div>
+</div>

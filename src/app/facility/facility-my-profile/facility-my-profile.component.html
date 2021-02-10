@@ -1,0 +1,181 @@
+<body class="dashbord-section">
+  <div class="spacetop"></div>
+  <section class="section-dashbord">
+    <div class="container">
+      <div class="title-dashbord d-flex pt-3 pb-3">
+        <h4 class="text-dark mb-0">My Profile</h4>
+      </div>
+
+      <div class="card p-3">
+        <div class=" appointment-conten ">
+          <ul class="nav nav-tabs custom-tabs border-0" id="myTab" role="tablist">
+            <li class="nav-item"><a class="nav-link active" id="home-tab" data-toggle="tab" href="#Personal" role="tab"
+                aria-controls="Upcoming" aria-selected="true">Profile</a></li>
+            <li class="nav-item"><a class="nav-link" id="profile-tab" data-toggle="tab" href="#Professional" role="tab"
+                aria-controls="profile" aria-selected="false">Facility Info</a></li>
+          </ul>
+          <hr>
+
+          <div class="tab-content pt-3" id="myTabContent">
+            <div class="tab-pane fade show active" id="Personal" role="tabpanel" aria-labelledby="home-tab">
+              <div class="">
+                <form class="text-left profile-form" [formGroup]="basicProfile">
+                  <div class="row">
+                    <div class="col-lg-3 col-md-12">
+                      <div class="fi-profile-photo">
+                        <span class="imagebox cursr"><label for="photoupload">
+                          <img id="blah-b" class="cursr" [defaultImage]="'assets/img/user-icon.png'" [lazyLoad]="url" [errorImage]="'assets/img/user-icon.png'" alt=""></label></span>
+                        <label for="photoupload" class="fi-custom-upladfile cursr">
+                          <input (change)="onSelectFile($event)" multiple="" accept="image/*" id="photoupload"
+                            name="photoupload" type="file"><span class="photoupload-link cursr">Upload Photo</span>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="col-lg-9 col-md-12 align-self-center">
+                      <div class="row">
+                        <div class="form-group col-md-6">
+                          <label>Name<span class="required-field"></span></label>
+                          <input type="text" id="defaultName" formControlName="facilityFullName" name="facilityFullName"
+                            class="form-control" placeholder="Enter Name" value="" readonly>
+                        </div>
+                        <div class="form-group col-md-6">
+                          <label>Facility Name<span class="required-field"></span></label>
+                          <input type="text" id="facilityName" formControlName="facilityName" name="facilityName"
+                            class="form-control" placeholder="Facility Name" required>
+                            <small class="text-danger small"
+                            *ngIf="basicProfile.controls['facilityName'].hasError('required') && (basicProfile.controls['facilityName'].dirty || basicProfile.controls['facilityName'].touched)">Please
+                            enter facility name.</small>
+                        </div>
+                        <div class="form-group col-md-4">
+                          <label>Email Address<span class="required-field"></span></label>
+                          <input type="email" id="EmailAddress" formControlName="facilityuserEmail"
+                            name="facilityuserEmail" placeholder="Enter email" class="form-control" value="">
+                          <small class="text-danger small"
+                            *ngIf="basicProfile.controls['facilityuserEmail'].hasError('pattern') && (basicProfile.controls['facilityuserEmail'].dirty || basicProfile.controls['facilityuserEmail'].touched )">Please
+                            enter valid Email ID</small>
+                          <small class="text-danger small"
+                            *ngIf="basicProfile.controls['facilityuserEmail'].hasError('required') && (basicProfile.controls['facilityuserEmail'].dirty || basicProfile.controls['facilityuserEmail'].touched)">Please
+                            enter Email ID</small>
+                        </div>
+                        <div class="form-group col-md-4">
+                          <!-- <select name="userCountryCode" formControlName="userCountryCode"
+                                (change)="onChangeCode($event.target.value)" class="countrycode select-css cursr"
+                                required>
+                                <option class="option" *ngFor="let option of countryCodeOptions" [value]="option.code">
+                                  {{option.code}}</option>
+                              </select> -->
+                          <label>Mobile Number<span class="required-field"></span></label>
+                          <input type="text" id="MobileNumber" maxlength="10" pattern="[1-9]{1}[0-9]{9}"
+                            formControlName="facilityuserMobile" name="facilityuserMobile"
+                            placeholder="Enter mobile number" class="form-control" value="">
+                          <small class="text-danger small"
+                            *ngIf=" basicProfile.controls['facilityuserMobile'].hasError('required') && (basicProfile.controls['facilityuserMobile'].dirty || basicProfile.controls['facilityuserMobile'].touched)">Please
+                            enter mobile number</small>
+                          <small class="text-danger small"
+                            *ngIf="basicProfile.controls['facilityuserMobile'].hasError('pattern') && (basicProfile.controls['facilityuserMobile'].dirty || basicProfile.controls['facilityuserMobile'].touched)">Mobile
+                            Number must be only 10 digit</small>
+                        </div>
+                        <div class="form-group col-md-4">
+                          <label class="active">Gender<span class="required-field"></span></label>
+                          <input type="text" id="facilityuserGender" formControlName="facilityuserGender"
+                            placeholder="Enter fax-number" name="facilityuserGender" class="form-control" value="" readonly>
+                          <small class="text-danger small"
+                            *ngIf="basicProfile.controls['facilityuserGender'].hasError('required') && (basicProfile.controls['facilityuserGender'].dirty || basicProfile.controls['facilityuserGender'].touched)">Please
+                            Enter Gender.</small>
+                        </div>
+                        <div class="form-group col-md-12">
+                          <label>About Facility</label>
+                          <textarea type="text" placeholder="About...?" formControlName="facilityAbout" name="facilityAbout"
+                            id="facilityAbout" class="form-control"></textarea>
+                        </div>
+                        <!-- <div class="form-group col-md-6">
+                          <label>Date of Birth<span class="required-field"></span></label>
+                          <input class="form-control" (keydown)="$event.preventDefault()" [max]="maxDate" placeholder="dd-mm-yy" formControlName="facilityuserDOB"
+                            name="date" [owlDateTimeTrigger]="dt3" [owlDateTime]="dt3">
+                          <owl-date-time [pickerType]="'calendar'" #dt3></owl-date-time>
+                        </div> -->
+                      </div>
+                      <div class="regerv_btn"><a (click)="onUpdateBasicClick(basicProfile.value)"
+                          class="btn btn-primary cursr">Update</a>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="Professional" role="tabpanel" aria-labelledby="profile-tab">
+              <div class="">
+                <form class="text-left profile-form" [formGroup]="profProfile">
+                  <div class="row">
+                    <div class="col-lg-12 col-md-12 align-self-center">
+                      <div class="row">
+                        <div class="form-group col-lg-4 col-md-6">
+                          <label>Name<span class="required-field"></span></label>
+                          <input type="text" id="nipi" placeholder="Enter Name" formControlName="facilityName" name="facilityName"
+                            class="form-control">
+                          <small class="text-danger small"
+                            *ngIf="profProfile.controls['facilityName'].hasError('required') && (profProfile.controls['facilityName'].dirty || profProfile.controls['facilityName'].touched)">Please
+                            enter name.</small>
+                        </div>
+                        <div class="form-group col-lg-4 col-md-6">
+                          <label>Email Address<span class="required-field"></span></label>
+                          <input type="text" id="primaryID" formControlName="facilityEmail" name="facilityEmail"
+                            placeholder="Enter facility Email" class="form-control" value="">
+                          <small class="text-danger small"
+                            *ngIf="profProfile.controls['facilityEmail'].hasError('pattern') && (profProfile.controls['facilityEmail'].dirty || profProfile.controls['facilityEmail'].touched )">Please
+                            enter valid email.</small>
+                          <small class="text-danger small"
+                            *ngIf="profProfile.controls['facilityEmail'].hasError('required') && (profProfile.controls['facilityEmail'].dirty || profProfile.controls['facilityEmail'].touched)">Please
+                            enter email.</small>
+                        </div>
+                        <div class="form-group col-lg-4 col-md-6">
+                          <!-- mobile-withcountry position-relative -->
+                          <!-- <select name="userCountryCode" formControlName="userCountryCode"
+                                (change)="onChangeCode($event.target.value)" class="countrycode select-css cursr"
+                                required>
+                                <option class="option" *ngFor="let option of countryCodeOptions" [value]="option.code">
+                                  {{option.code}}</option>
+                              </select> -->
+                          <label>Mobile Number<span class="required-field"></span></label>
+                          <input type="text" id="secondaryID" formControlName="facilityContactNumber"
+                            name="facilityContactNumber" placeholder="Enter Mobile number" class="form-control"
+                            value="">
+                          <small class="text-danger small"
+                            *ngIf=" profProfile.controls['facilityContactNumber'].hasError('required') && (profProfile.controls['facilityContactNumber'].dirty || profProfile.controls['facilityContactNumber'].touched)">Please
+                            enter mobile number</small>
+                          <small class="text-danger small"
+                            *ngIf="profProfile.controls['facilityContactNumber'].hasError('pattern') && (profProfile.controls['facilityContactNumber'].dirty || profProfile.controls['facilityContactNumber'].touched)">Mobile
+                            Number must be only 10 digit</small>
+                        </div>
+                        <div class="form-group col-lg-4 col-md-6">
+                          <label>Speciality<span class="required-field"></span></label>
+                          <input type="text" id="secondaryID" formControlName="facilitypeciality"
+                            name="facilitypeciality" placeholder="Enter Speciality number" class="form-control"
+                            value="" readonly>
+                        </div>
+                        <div class="form-group col-lg-4 col-md-6">
+                          <label>Address<span class="required-field"></span></label>
+                          <input type="text" id="secondaryID" formControlName="facilityAddress" name="facilityAddress"
+                            placeholder="Enter facility Address" class="form-control" value="">
+                          <small class="text-danger small"
+                            *ngIf="profProfile.controls['facilityAddress'].hasError('required') && (profProfile.controls['facilityAddress'].dirty || profProfile.controls['facilityAddress'].touched)">Please
+                            Enter Address.</small>
+                        </div>
+                      </div>
+                      <div class="regerv_btn" style="margin-top: 10px;"><a
+                          (click)="onUpdateProfessionalClick(profProfile.value)"
+                          class="btn btn-primary cursr">Update</a>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <br>
+</body>

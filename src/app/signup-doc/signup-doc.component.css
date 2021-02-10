@@ -1,0 +1,71 @@
+.iconify {
+    width: 16px;
+    height: 16px;
+  }
+  /* p {
+    font-family: Lato;
+  } */
+  
+  .hoverable {
+    position: relative;
+    display: block;
+    cursor: pointer;
+  }
+  .hoverable .hover-text {
+    position: absolute;
+    display: none;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+  }
+  .hoverable .background {
+    position: absolute;
+    display: none;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: rgba(255, 255, 255, 0.5);
+    pointer-events: none;
+    border-radius: 50%;
+    z-index: 1;
+  }
+  .hoverable:hover .hover-text {
+    display: block;
+  }
+  .hoverable:hover .background {
+    display: block;
+  }
+  
+  #fileInput {
+    display: none;
+  }
+  .cursr {
+    cursor: pointer;
+  }
+  .mat-progress-bar-fill::after {
+    background-color: #28a745;
+  }
+  .required-field::before {
+    content: "*";
+    color: red;
+  }
+  .mobile-withcountry .code {
+    border: none;
+    position: absolute;
+    top: 36.5px;
+    left: 3px;
+  }
+  .modal-contents {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    pointer-events: auto;
+    background-color: #fff;
+    background-clip: padding-box;
+    /* border: 1px solid rgba(0, 0, 0, .2); */
+    border-radius: .3rem;
+    outline: 0;
+}

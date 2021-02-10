@@ -1,0 +1,11 @@
+<div class="item">
+  <a style="cursor: pointer;" (click)="onClickView(wholeOBject)" class="usersdeta-items d-flex">
+    <div class="lefttext">
+      <h4 class="mb-0">{{(fullName | titlecase) + ' ' + genderAtZero + '/' + age + ' ' + 'yrs' + '' + (refSpecialityName | titlecase)}}</h4>
+      <p class="mb-0">{{reasonName | titlecase}}</p>
+    </div>
+    <div class="rightttie ml-auto">
+      <div class="circle" *ngIf="refercaseVisitTime">{{convertedTime}}</div>
+    </div>
+  </a>
+</div>

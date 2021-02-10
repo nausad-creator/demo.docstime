@@ -1,0 +1,179 @@
+<div class="modal-contents modal-login">
+  <div class="modal-body">
+    <!-- error handler -->
+    <div class="alert alert-danger" role="alert" *ngIf="error">
+      <h5 class="alert-heading text-center">Error!</h5>
+      <p class="mb-0 text-center">{{error}}</p>
+    </div>
+    <!-- handler end -->
+    <ul class="nav md-pills nav-justified pills-info">
+      <li class="nav-item">
+        <a class="nav-link border-bottom" style="cursor: pointer; color: #007bff;" [ngClass]="{'active': login}"
+          (click)="login = true">Login</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link border-bottom" style="cursor: pointer; color: #007bff;" [ngClass]="{'active': !login}"
+          (click)="login = false">Join</a>
+      </li>
+    </ul>
+    <div class="tab-content py-0">
+
+      <div class="tab-pane fade" [ngClass]="{'show': login, 'active': login}" id="login" role="tabpanel">
+        <div class="text-center pt-3">
+          <img [defaultImage]="'assets/img/login-screen-icon.png'" [lazyLoad]="'assets/img/login-screen-icon.png'" [errorImage]="'assets/img/login-screen-icon.png'" alt="login img" height="150"></div>
+        <form class="text-center" [formGroup]="logIn" (ngSubmit)="onClickLogin(logIn.value)">
+          <input type="hidden" id="security" name="security" value="c55502f913" />
+          <input type="hidden" name="_wp_http_referer" value="/wp-admin/admin-ajax.php?p=45930" />
+          <br>
+          <div>
+            <label for="username" style="float: left; font-size: 14px;">Username or e-mail<span
+                class="required-field"></span></label>
+            <input type="text" id="username" placeholder="Enter username or e-mail" formControlName="facilityuserEmail"
+              class="form-control" name="username" />
+            <small class="text-danger"
+              *ngIf="logIn.controls['facilityuserEmail'].hasError('required') && (logIn.controls['facilityuserEmail'].dirty || logIn.controls['facilityuserEmail'].touched)">This
+              field is required</small>
+            <small class="text-danger"
+              *ngIf="logIn.controls['facilityuserEmail'].hasError('pattern') && (logIn.controls['facilityuserEmail'].dirty || logIn.controls['facilityuserEmail'].touched)">Please
+              enter valid email address or phone number</small>
+          </div>
+          <br />
+          <div class="">
+            <label for="password" style="float: left; font-size: 14px;">Password<span
+                class="required-field"></span></label>
+            <div class="inputWithIcon">
+              <input type="password" [type]=" hide ? 'password' : 'text' " id="password" placeholder="Enter password"
+                class="form-control" formControlName="facilityuserPassword" name="password" autocomplete="off" />
+              <a class="cursr" (click)="myFunction()"><i class="fas "
+                  [ngClass]="{'fa-eye': !hide, 'fa-eye-slash': hide}"></i></a>
+              <small class="text-danger"
+                *ngIf="logIn.controls['facilityuserPassword'].hasError('required') && (logIn.controls['facilityuserPassword'].dirty || logIn.controls['facilityuserPassword'].touched)">This
+                field is required</small>
+            </div>
+          </div>
+          <div class="input-group pt-3 pb-3">
+            <div class="custom-checkbox custom-control col-6 text-left">
+              <input type="checkbox" formControlName="terms" name="remember" id="remember"
+                class="custom-control-input" />
+              <label for="remember" class="custom-control-label">Remember Me</label>
+            </div>
+            <label for="forgot-password" class="col-6">
+              <a style="cursor: pointer; color: #007bff" (click)="openForgetModal(); closeModal(99)" class="ml-6">Forgot
+                Password?</a>
+            </label>
+          </div>
+          <div class="p-3">
+            <button type="submit" [disabled]="logIn.invalid" class="btn btn-primary btn-lg btn-block">Log In</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="tab-pane fade in" [ngClass]="{'show': !login, 'active': !login}" id="join" role="tabpanel">
+        <form id="register" [formGroup]="joinUs" (ngSubmit)="onJoinUS(joinUs.value)" class="" method="post">
+          <input type="hidden" id="signonsecurity" name="signonsecurity" value="5d290bdd97" /><input type="hidden"
+            name="_wp_http_referer" value="" />
+          <br>
+          <div class="my-3">
+            <div class="wp-social-login-widget">
+              <div class="wp-social-login-connect-with text-center">
+                <h3>Join Us (DocsTime)</h3>
+              </div>
+              <div class="wp-social-login-widget-clearing"></div>
+            </div>
+          </div>
+
+          <div>
+            <label for="signonname" style="float: left; font-size: 14px;">Facility Name<span
+                class="required-field"></span></label>
+            <input type="text" formControlName="facilityName" placeholder="Enter facility name" id="signonname"
+              class="form-control" name="signonname" />
+            <small class="text-danger"
+              *ngIf="joinUs.controls['facilityName'].hasError('required') && (joinUs.controls['facilityName'].dirty || joinUs.controls['facilityName'].touched)">Please
+              enter facility name.</small>
+            <small class="text-danger" *ngIf="joinUs.controls['facilityName'].hasError('maxlength')">Input
+              fields will not be more than 40 characters.</small>
+            <small class="text-danger small"
+              *ngIf="joinUs.controls['facilityName'].hasError('pattern') && (joinUs.controls['facilityName'].dirty || joinUs.controls['facilityName'].touched)">Only Alphabets are allowed.</small>
+          </div>
+          <br />
+          <div>
+            <label for="email" style="float: left; font-size: 14px;">Email Address<span
+                class="required-field"></span></label>
+            <input type="email" formControlName="facilityEmail" placeholder="Enter email address" id="email"
+              class="form-control" name="email" email>
+            <small class="text-danger"
+              *ngIf="joinUs.controls['facilityEmail'].hasError('pattern') && (joinUs.controls['facilityEmail'].dirty || joinUs.controls['facilityEmail'].touched )">Please
+              enter valid email.</small>
+            <small class="text-danger small"
+              *ngIf="joinUs.controls['facilityEmail'].hasError('required') && (joinUs.controls['facilityEmail'].dirty || joinUs.controls['facilityEmail'].touched)">Please
+              enter email.</small>
+          </div>
+          <br />
+          <div>
+            <label for="signonpassword" style="float: left; font-size: 14px;">Phone Number<span
+                class="required-field"></span></label>
+            <input type="text" maxlength="10" formControlName="facilityPhone" placeholder="Enter phone number"
+              id="signonpassword" class="form-control" name="signonpassword" autocomplete="off" />
+            <small class="text-danger small"
+              *ngIf=" joinUs.controls['facilityPhone'].hasError('required') && (joinUs.controls['facilityPhone'].dirty || joinUs.controls['facilityPhone'].touched)">Please
+              enter mobile number.</small>
+            <small class="text-danger small"
+              *ngIf="joinUs.controls['facilityPhone'].hasError('pattern') && (joinUs.controls['facilityPhone'].dirty || joinUs.controls['facilityPhone'].touched)">Mobile
+              number must be only 10 digit.</small>
+          </div>
+          <br />
+          <div>
+            <label for="password2" style="float: left; font-size: 14px;">Facility Zip Code<span
+                class="required-field"></span></label>
+            <input type="text" maxlength="5" formControlName="facilityZip" placeholder="Enter facility zip code"
+              id="password2" class="form-control" name="password2" autocomplete="off" />
+            <small class="text-danger"
+              *ngIf="joinUs.controls['facilityZip'].hasError('required') && (joinUs.controls['facilityZip'].dirty || joinUs.controls['facilityZip'].touched)">Please
+              enter zip code.</small>
+            <small class="text-danger small"
+              *ngIf="joinUs.controls['facilityZip'].hasError('pattern') && (joinUs.controls['facilityZip'].dirty || joinUs.controls['facilityZip'].touched)">zip code must be 5 digits.</small>
+          </div>
+          <br />
+          <div>
+            <label for="password3" style="float: left; font-size: 14px;">Fax Number</label>
+            <input type="text" maxlength="10" formControlName="faxNumber" placeholder="Enter fax number" id="password3"
+              class="form-control" name="password2" autocomplete="off" />
+            <small class="text-danger small"
+              *ngIf="joinUs.controls['faxNumber'].hasError('pattern') && (joinUs.controls['faxNumber'].dirty || joinUs.controls['faxNumber'].touched)">Fax
+              number must be only 10 digit.</small>
+          </div>
+          <br />
+          <!-- <div class="col-md-12"> -->
+            <div class="form-group">
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" formControlName="termsAndPrivacy" class="custom-control-input" id="Consult1"
+                  name="Consult1" checked="checked" required>
+                <label class="custom-control-label" for="Consult1">I have read and accept DocsTime's <a
+                    style="cursor: pointer;" (click)="onNavigateTerms(); closeModal(99)">Terms & conditions</a> and <a
+                    style="cursor: pointer;" (click)="onNavigatePolicy(); closeModal(99)">Privacy Policy</a> </label>
+              </div>
+              <small class="text-danger small"
+                *ngIf=" joinUs.controls['termsAndPrivacy'].hasError('required') && (joinUs.controls['termsAndPrivacy'].dirty || joinUs.controls['termsAndPrivacy'].touched)">Please
+                select this checkbox.</small>
+            </div>
+            <div class="form-group">
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" formControlName="hippa" class="custom-control-input" id="Consult2" name="Consult2"
+                  checked="checked" required>
+                <label class="custom-control-label" for="Consult2"> I have read and accept DocsTime's <a
+                    style="cursor: pointer;" (click)="onNavigatePolicy(); closeModal(99)"> HIPAA Authorization </a> </label>
+              </div>
+              <small class="text-danger small"
+                *ngIf=" joinUs.controls['hippa'].hasError('required') && (joinUs.controls['hippa'].dirty || joinUs.controls['hippa'].touched)">Please
+                select this checkbox.</small>
+            </div>
+          <!-- </div> -->
+          <!-- <br> -->
+          <div class="p-3">
+            <button type="submit" class="btn btn-primary btn-lg btn-block">Join</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,39 @@
+<div class="modal-contents modal">
+    <!-- Modal Header -->
+    <div class="modal-header">
+      <h4 class="modal-title">Verification</h4>
+      <button type="button" (click)="onCloseVerification()" class="close" data-dismiss="modal">&times;</button>
+    </div>
+    <!-- Modal body -->
+    <div class="modal-body">
+      <!-- error handler -->
+      <div class="alert alert-danger" role="alert" *ngIf="error">
+        <h5 class="alert-heading text-center">Error!</h5>
+        <p class="mb-0 text-center">{{error}}</p>
+      </div>
+      <!-- handler end -->
+      <form class="bootstrap-form needs-validation LoginForm" [formGroup]="verificationForm"
+        (ngSubmit)="onSubmitOTP(verificationForm.value)" novalidate>
+        <p *ngIf="message">{{message}}</p>
+        <br><br>
+        <div class="form-group">
+          <label for="verification" class="text-uppercase text-primary">Verification<span class="required-field"></span></label>
+          <input type="text" maxlength="4" (keydown.space)="$event.preventDefault()" formControlName="otp" class="form-control" id="verification"
+            name="verification" placeholder="Enter verification code">
+          <small class="text-danger"
+            *ngIf="verificationForm.controls['otp'].hasError('required') && verificationForm.controls['otp'].dirty">This
+            field is required</small>
+          <small class="text-danger" *ngIf="verificationForm.controls['otp'].hasError('pattern')">Accept
+            only
+            numeric
+            value.</small>
+        </div>
+        <a (click)="onResendClick()" style="color: blue; cursor: pointer; float: right; margin-right: 24px;"
+          class="text-blue">Resend OTP</a>
+        <br>
+        <div class="p-3">
+          <button type="submit" class="btn btn-primary btn-lg btn-block button-contactForm">Continue</button>
+        </div>
+      </form>
+    </div>
+  </div>

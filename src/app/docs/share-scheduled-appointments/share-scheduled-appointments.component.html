@@ -1,0 +1,22 @@
+<div class="appointmen-list card mb-3" style="cursor: pointer;" (click)="onClickViewUpcomming(wholeObject)">
+    <div class="d-flex text-appont" style="cursor: pointer;">
+        <a style="cursor: pointer;" class="referred-btn"><h5 class="m-0 text-dark">{{fullName | titlecase}}</h5></a>
+        <p class="m-0 text-dark ml-auto">{{genderAtZero + '/' + age + ' ' + 'yrs' + '' + (refSpecialityName | titlecase)}}</p>
+      </div>
+    <div class="row align-items-center">
+        <div class="col-md-5 text-appont">
+            <p class="m-0">{{reasonName | titlecase}}</p>
+            <p *ngIf="refDocName">Referred By:<br> <span class="text-dark">{{preFixDRstr === 'DR.' ? (refDocName | titlecase) : 'Dr. ' + (refDocName | titlecase)}}
+                <br>{{specialityName | titlecase}}
+              </span></p>
+        </div>
+        <div class="col-md-3 icons-dated">
+            <p class="m-0" *ngIf="refercaseVisitDate"><i class="ti-calendar"></i> {{refercaseVisitDate | date : 'mediumDate'}}</p>
+            <p class="m-0" *ngIf="refercaseVisitTime"><i class="ti-time"></i> {{convertedTime}}</p>
+        </div>
+        <div class="col-md-4 text-xl-right btnsgrp-appointment" *ngIf="refercaseStatus === 'Accepted'">
+            <p class="text-dark sb-text mb-2" *ngIf="refercaseUrgent === 'Yes'">Urgent Consult</p>
+            <div class="text-success"><img src="assets/img/check-icon.svg" alt="" height="15px"> Confirmed</div>
+          </div>
+    </div>
+</div>

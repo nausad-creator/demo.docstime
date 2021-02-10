@@ -1,0 +1,137 @@
+<body class="dashbord-section">
+    <div class="spacetop"></div>
+    <section class="section-dashbord">
+          <div class="container">
+              <div class="">
+          <div class="title-dashbord d-flex pt-3">
+            <h4 class="text-dark mb-0">Notification Settings</h4>
+          </div>
+
+          <div class="appointment-conten pt-3">
+            <div class=""> 																	
+              <form class="text-left profile-form">
+                <div class="row">										
+                  <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+                    <div class="card">
+                      <div class="card-header"><h5 class="mb-0">App Notifications</h5></div>
+                      <div class="switchgroup card-body">											
+                        <div class="swtitem d-flex align-items-center">
+                          <label for="swc1" class="mb-0">Appointments </label>
+                          <label class="switch ml-auto">
+                            <input id="swc1" type="checkbox" (change)="onChangeAppointmentPush($event.target.value)"
+                            [checked]="docData.doctorAppointmentPush === 'Yes'" [value]="docData.doctorAppointmentPush" >
+                            <span class="slider"></span>
+                          </label>											
+                        </div>										
+                        <div class="swtitem d-flex align-items-center">
+                          <label for="swc2" class="mb-0">Referred Cases</label>
+                          <label class="switch ml-auto">
+                            <input id="swc2" (change)="onChangeRefferedCasePush($event.target.value)"
+                            [checked]="docData.doctorReferredCasePush === 'Yes'" [value]="docData.doctorReferredCasePush" type="checkbox">
+                            <span class="slider"></span>
+                          </label>											
+                        </div>
+                        <div class="swtitem d-flex align-items-center">
+                          <label for="swc3" class="mb-0">Appointment Rating</label>
+                          <label class="switch ml-auto">
+                            <input id="swc3" (change)="onChangeRatingPush($event.target.value)"
+                            [checked]="docData.doctorRatingPush === 'Yes'" [value]="docData.doctorRatingPush" type="checkbox">
+                            <span class="slider"></span>
+                          </label>											
+                        </div>
+                        <div class="swtitem d-flex align-items-center">
+                          <label for="swc4" class="mb-0">Admin Announcement</label>
+                          <label class="switch ml-auto">
+                            <input id="swc4" (change)="onChangeAdminPush($event.target.value)"
+                            [checked]="docData.doctorAdminPush === 'Yes'" [value]="docData.doctorAdminPush" type="checkbox" >
+                            <span class="slider"></span>
+                          </label>											
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+                    <div class="card">
+                      <div class="card-header"><h5 class="mb-0">Email Notifications</h5></div>
+                      <div class="switchgroup card-body">											
+                        <div class="swtitem d-flex align-items-center">
+                          <label for="swc1" class="mb-0">Appointments </label>
+                          <label class="switch ml-auto">
+                            <input id="swc1" type="checkbox" checked="checked">
+                            <span class="slider"></span>
+                          </label>											
+                        </div>										
+                        <div class="swtitem d-flex align-items-center">
+                          <label for="swc2" class="mb-0">Referred Cases</label>
+                          <label class="switch ml-auto">
+                            <input id="swc2" type="checkbox">
+                            <span class="slider"></span>
+                          </label>											
+                        </div>
+                        <div class="swtitem d-flex align-items-center">
+                          <label for="swc3" class="mb-0">Appointment Rating</label>
+                          <label class="switch ml-auto">
+                            <input id="swc3" type="checkbox">
+                            <span class="slider"></span>
+                          </label>											
+                        </div>
+                        <div class="swtitem d-flex align-items-center">
+                          <label for="swc4" class="mb-0">Admin Announcement</label>
+                          <label class="switch ml-auto">
+                            <input id="swc4" type="checkbox" checked="checked">
+                            <span class="slider"></span>
+                          </label>											
+                        </div>											
+                        
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+                    <div class="card">
+                      <div class="card-header"><h5 class="mb-0">SMS Notifications</h5></div>
+                      <div class="switchgroup card-body">											
+                        <div class="swtitem d-flex align-items-center">
+                          <label for="swc1" class="mb-0">Appointments </label>
+                          <label class="switch ml-auto">
+                            <input id="swc1" type="checkbox" checked="checked">
+                            <span class="slider"></span>
+                          </label>											
+                        </div>										
+                        <div class="swtitem d-flex align-items-center">
+                          <label for="swc2" class="mb-0">Referred Cases</label>
+                          <label class="switch ml-auto">
+                            <input id="swc2" type="checkbox">
+                            <span class="slider"></span>
+                          </label>											
+                        </div>
+                        <div class="swtitem d-flex align-items-center">
+                          <label for="swc3" class="mb-0">Appointment Rating</label>
+                          <label class="switch ml-auto">
+                            <input id="swc3" type="checkbox">
+                            <span class="slider"></span>
+                          </label>											
+                        </div>
+                        <div class="swtitem d-flex align-items-center">
+                          <label for="swc4" class="mb-0">Admin Announcement</label>
+                          <label class="switch ml-auto">
+                            <input id="swc4" type="checkbox" checked="checked">
+                            <span class="slider"></span>
+                          </label>											
+                        </div>
+                      
+                      </div>
+                    </div>
+                  </div>
+                </div>		
+              </form>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </section>
+    <br>
+    </body>
+    
+    
+    

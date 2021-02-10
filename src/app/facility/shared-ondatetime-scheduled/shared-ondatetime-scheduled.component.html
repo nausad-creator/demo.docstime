@@ -1,0 +1,162 @@
+<a style="cursor: pointer;" (click)="onNavigateViewDasboard(wholeObj)" *ngIf="from === 'Dashboard'">
+  <div class="time-list">
+      <img src="assets/img/warning-icon.svg" alt="" height="15px" *ngIf="refercaseStatus === 'Pending'">
+      <img src="assets/img/check-icon.svg" alt="" height="15px" *ngIf="refercaseStatus === 'Accepted'">
+      <span class="mb-0" *ngIf="convertedTime">{{convertedTime}}</span>
+      <div class="selected-label" [ngClass]="{'yellow-light': refercaseStatus === 'Pending', 'blue-light': refercaseStatus === 'Accepted'}">
+        <div class="row align-items-center">
+          <div class="col-md-7">
+            <p class="m-0 text-dark" *ngIf="fullName">{{fullName | titlecase}}</p>
+            <p class="m-0" *ngIf="reasonName">{{reasonName | titlecase}}</p>
+          </div>
+          <div class="col-md-5">
+              <p class="m-0 text-action">{{refercaseStatus === 'Accepted' ? 'Confirmed' : refercaseStatus}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+</a>
+<a style="cursor: pointer;" (click)="onNavigateViewMySchedule(wholeObj)" *ngIf="from === 'My-schedule'">
+  <div class="time-list">
+      <img src="assets/img/warning-icon.svg" alt="" height="15px" *ngIf="refercaseStatus === 'Pending'">
+      <img src="assets/img/check-icon.svg" alt="" height="15px" *ngIf="refercaseStatus === 'Accepted'">
+      <span class="mb-0" *ngIf="convertedTime">{{convertedTime}}</span>
+      <div class="selected-label" [ngClass]="{'yellow-light': refercaseStatus === 'Pending', 'blue-light': refercaseStatus === 'Accepted'}">
+        <div class="row align-items-center">
+          <div class="col-md-7">
+            <p class="m-0 text-dark" *ngIf="fullName">{{fullName | titlecase}}</p>
+            <p class="m-0" *ngIf="reasonName">{{reasonName | titlecase}}</p>
+          </div>
+          <div class="col-md-5">
+              <p class="m-0 text-action">{{refercaseStatus === 'Accepted' ? 'Confirmed' : refercaseStatus}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+</a>
+<a style="cursor: pointer;" (click)="onNavigateViewSent(wholeObj)" *ngIf="from === 'Sent'">
+  <div class="time-list">
+      <img src="assets/img/warning-icon.svg" alt="" height="15px" *ngIf="refercaseStatus === 'Pending'">
+      <img src="assets/img/check-icon.svg" alt="" height="15px" *ngIf="refercaseStatus === 'Accepted'">
+      <span class="mb-0" *ngIf="convertedTime">{{convertedTime}}</span>
+      <div class="selected-label" [ngClass]="{'yellow-light': refercaseStatus === 'Pending', 'blue-light': refercaseStatus === 'Accepted'}">
+        <div class="row align-items-center">
+          <div class="col-md-7">
+            <p class="m-0 text-dark" *ngIf="fullName">{{fullName | titlecase}}</p>
+            <p class="m-0" *ngIf="reasonName">{{reasonName | titlecase}}</p>
+          </div>
+          <div class="col-md-5">
+              <p class="m-0 text-action">{{refercaseStatus === 'Accepted' ? 'Confirmed' : refercaseStatus}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+</a>
+<a style="cursor: pointer;" (click)="onNavigateViewReceived(wholeObj)" *ngIf="from === 'Received'">
+  <div class="time-list">
+      <img src="assets/img/warning-icon.svg" alt="" height="15px" *ngIf="refercaseStatus === 'Pending'">
+      <img src="assets/img/check-icon.svg" alt="" height="15px" *ngIf="refercaseStatus === 'Accepted'">
+      <span class="mb-0" *ngIf="convertedTime">{{convertedTime}}</span>
+      <div class="selected-label" [ngClass]="{'yellow-light': refercaseStatus === 'Pending', 'blue-light': refercaseStatus === 'Accepted'}">
+        <div class="row align-items-center">
+          <div class="col-md-7">
+            <p class="m-0 text-dark" *ngIf="fullName">{{fullName | titlecase}}</p>
+            <p class="m-0" *ngIf="reasonName">{{reasonName | titlecase}}</p>
+          </div>
+          <div class="col-md-5">
+              <p class="m-0 text-action">{{refercaseStatus === 'Accepted' ? 'Confirmed' : refercaseStatus}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+</a>
+<a style="cursor: pointer;" (click)="onClickInsideView(wholeObj)" *ngIf="!from">
+  <div class="time-list">
+      <img src="assets/img/warning-icon.svg" alt="" height="15px" *ngIf="refercaseStatus === 'Pending'">
+      <img src="assets/img/check-icon.svg" alt="" height="15px" *ngIf="refercaseStatus === 'Accepted'">
+      <span class="mb-0" *ngIf="convertedTime">{{convertedTime}}</span>
+      <div class="selected-label" [ngClass]="{'yellow-light': refercaseStatus === 'Pending', 'blue-light': refercaseStatus === 'Accepted'}">
+        <div class="row align-items-center">
+          <div class="col-md-7">
+            <p class="m-0 text-dark" *ngIf="fullName">{{fullName | titlecase}}</p>
+            <p class="m-0" *ngIf="reasonName">{{reasonName | titlecase}}</p>
+          </div>
+          <div class="col-md-5">
+              <p class="m-0 text-action">{{refercaseStatus === 'Accepted' ? 'Confirmed' : refercaseStatus}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+</a>
+<a style="cursor: pointer;" (click)="onClickInsideAddCace(wholeObj)" *ngIf="from === 'addCase'">
+  <div class="time-list">
+      <img src="assets/img/warning-icon.svg" alt="" height="15px" *ngIf="refercaseStatus === 'Pending'">
+      <img src="assets/img/check-icon.svg" alt="" height="15px" *ngIf="refercaseStatus === 'Accepted'">
+      <span class="mb-0" *ngIf="convertedTime">{{convertedTime}}</span>
+      <div class="selected-label" [ngClass]="{'yellow-light': refercaseStatus === 'Pending', 'blue-light': refercaseStatus === 'Accepted'}">
+        <div class="row align-items-center">
+          <div class="col-md-7">
+            <p class="m-0 text-dark" *ngIf="fullName">{{fullName | titlecase}}</p>
+            <p class="m-0" *ngIf="reasonName">{{reasonName | titlecase}}</p>
+          </div>
+          <div class="col-md-5">
+              <p class="m-0 text-action">{{refercaseStatus === 'Accepted' ? 'Confirmed' : refercaseStatus}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+</a>
+<a style="cursor: pointer;" (click)="onClickInsidereReferCace(wholeObj)" *ngIf="from === 'reReferCase'">
+  <div class="time-list">
+      <img src="assets/img/warning-icon.svg" alt="" height="15px" *ngIf="refercaseStatus === 'Pending'">
+      <img src="assets/img/check-icon.svg" alt="" height="15px" *ngIf="refercaseStatus === 'Accepted'">
+      <span class="mb-0" *ngIf="convertedTime">{{convertedTime}}</span>
+      <div class="selected-label" [ngClass]="{'yellow-light': refercaseStatus === 'Pending', 'blue-light': refercaseStatus === 'Accepted'}">
+        <div class="row align-items-center">
+          <div class="col-md-7">
+            <p class="m-0 text-dark" *ngIf="fullName">{{fullName | titlecase}}</p>
+            <p class="m-0" *ngIf="reasonName">{{reasonName | titlecase}}</p>
+          </div>
+          <div class="col-md-5">
+              <p class="m-0 text-action">{{refercaseStatus === 'Accepted' ? 'Confirmed' : refercaseStatus}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+</a>
+<a style="cursor: pointer;" (click)="onClickInsideSchedulReferCace(wholeObj)" *ngIf="from === 'scheduleReRefer'">
+  <div class="time-list">
+      <img src="assets/img/warning-icon.svg" alt="" height="15px" *ngIf="refercaseStatus === 'Pending'">
+      <img src="assets/img/check-icon.svg" alt="" height="15px" *ngIf="refercaseStatus === 'Accepted'">
+      <span class="mb-0" *ngIf="convertedTime">{{convertedTime}}</span>
+      <div class="selected-label" [ngClass]="{'yellow-light': refercaseStatus === 'Pending', 'blue-light': refercaseStatus === 'Accepted'}">
+        <div class="row align-items-center">
+          <div class="col-md-7">
+            <p class="m-0 text-dark" *ngIf="fullName">{{fullName | titlecase}}</p>
+            <p class="m-0" *ngIf="reasonName">{{reasonName | titlecase}}</p>
+          </div>
+          <div class="col-md-5">
+              <p class="m-0 text-action">{{refercaseStatus === 'Accepted' ? 'Confirmed' : refercaseStatus}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+</a>
+<a style="cursor: pointer;" (click)="onClickInsideDoctorsViewCace(wholeObj)" *ngIf="from === 'doctorsList'">
+  <div class="time-list">
+      <img src="assets/img/warning-icon.svg" alt="" height="15px" *ngIf="refercaseStatus === 'Pending'">
+      <img src="assets/img/check-icon.svg" alt="" height="15px" *ngIf="refercaseStatus === 'Accepted'">
+      <span class="mb-0" *ngIf="convertedTime">{{convertedTime}}</span>
+      <div class="selected-label" [ngClass]="{'yellow-light': refercaseStatus === 'Pending', 'blue-light': refercaseStatus === 'Accepted'}">
+        <div class="row align-items-center">
+          <div class="col-md-7">
+            <p class="m-0 text-dark" *ngIf="fullName">{{fullName | titlecase}}</p>
+            <p class="m-0" *ngIf="reasonName">{{reasonName | titlecase}}</p>
+          </div>
+          <div class="col-md-5">
+              <p class="m-0 text-action">{{refercaseStatus === 'Accepted' ? 'Confirmed' : refercaseStatus}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+</a>
