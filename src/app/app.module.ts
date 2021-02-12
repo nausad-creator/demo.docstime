@@ -70,7 +70,7 @@ const cookieConfig: NgcCookieConsentConfig = {
     dismiss: 'Got it!',
     deny: 'Refuse cookies',
     link: 'Learn more',
-    href: 'https://www.docstime.com/content/privacy-policy',
+    href: `${environment.apiBaseUrl}/content/privacy-policy`,
     policy: 'Privacy Policy'
   }
 };
