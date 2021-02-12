@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-share-schedule-appointments',
@@ -26,7 +27,7 @@ export class ShareScheduleAppointmentsComponent implements OnInit {
   fullName: string;
   convertedTime: string;
   preFixDRstr: string;
-  baseUrl = 'https://demo.docstime.com/backend/web/uploads';
+  baseUrl = `${environment.apiBaseUrl}/backend/web/uploads`;
   url: string;
   constructor(private cd: ChangeDetectorRef) { }
 

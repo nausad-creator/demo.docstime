@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { HomeService } from 'src/app/home.service';
+import { environment } from 'src/environments/environment';
 import { ConfirmedReceivedModalComponent } from '../confirmed-received-modal/confirmed-received-modal.component';
 import { RejectReceivedModalComponent } from '../reject-received-modal/reject-received-modal.component';
 
@@ -36,7 +37,7 @@ export class SharedNewAppointmentComponent implements OnInit {
   convertedTime: string;
   bsModalRef: BsModalRef;
   preFixDRstr: string;
-  baseUrl = 'https://demo.docstime.com/backend/web/uploads';
+  baseUrl = `${environment.apiBaseUrl}/backend/web/uploads`;
   url: string;
   constructor(
     private modalService: BsModalService,

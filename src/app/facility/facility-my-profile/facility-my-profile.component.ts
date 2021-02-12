@@ -5,6 +5,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { HomeService } from 'src/app/home.service';
+import { environment } from 'src/environments/environment';
 import { FacilityService } from '../facility.service';
 
 @Component({
@@ -18,7 +19,7 @@ export class FacilityMyProfileComponent implements OnInit {
   facData: any;
   url: string;
   maxSize = 2048000;
-  baseUrl = 'https://demo.docstime.com/backend/web/uploads';
+  baseUrl = `${environment.apiBaseUrl}/backend/web/uploads`;
   selectedFiles: File;
   basicProfile: FormGroup;
   profProfile: FormGroup;

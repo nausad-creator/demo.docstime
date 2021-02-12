@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { environment } from 'src/environments/environment';
 import { ConfirmedReceivedModalComponent } from '../confirmed-received-modal/confirmed-received-modal.component';
 import { RejectReceivedModalComponent } from '../reject-received-modal/reject-received-modal.component';
 
@@ -34,7 +35,7 @@ export class ShareReferralReceivedComponent implements OnInit {
   convertedTime: string;
   preFixDRstr: string;
   bsModalRef: BsModalRef;
-  baseUrl = 'https://demo.docstime.com/backend/web/uploads';
+  baseUrl = `${environment.apiBaseUrl}/backend/web/uploads`;
   url: string;
   constructor(
     private modalService: BsModalService,

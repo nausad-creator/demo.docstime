@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap/modal';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-dortor-view',
@@ -14,7 +15,7 @@ export class DortorViewComponent implements OnInit {
   imageUrl: string;
   modalRef: BsModalRef;
   detailsForm: FormGroup;
-  baseUrl = 'https://demo.docstime.com/backend/web/uploads';
+  baseUrl = `${environment.apiBaseUrl}/backend/web/uploads`;
   countryCodeOptions = [
     { code: '+91', flag: 'assets/img/flag_india_1.png' },
     { code: '+129', flag: 'assets/img/flag_uae_1.png' },

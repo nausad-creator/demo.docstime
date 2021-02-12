@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-shared-list-doctors',
@@ -15,7 +16,7 @@ export class SharedListDoctorsComponent implements OnInit {
   @Output() view: EventEmitter<any> = new EventEmitter();
   url = '';
   preFixDRstr: string;
-  baseUrl = 'https://demo.docstime.com/backend/web/uploads';
+  baseUrl = `${environment.apiBaseUrl}/backend/web/uploads`;
   constructor(private cd: ChangeDetectorRef) { }
 
   ngOnInit(): void {

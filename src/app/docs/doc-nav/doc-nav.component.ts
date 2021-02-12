@@ -6,6 +6,7 @@ import { mergeMap } from 'rxjs/operators';
 import { HomeService } from 'src/app/home.service';
 import { DocsService } from '../docs.service';
 import { faShareAlt } from '@fortawesome/free-solid-svg-icons';
+import { environment } from 'src/environments/environment';
 const currentDate = new Date();
 @Component({
   selector: 'app-doc-nav',
@@ -30,7 +31,7 @@ export class DocNavComponent implements OnInit, DoCheck, OnDestroy {
     doctorFullName: '',
     doctorProfileImage: ''
   };
-  baseUrl = 'https://demo.docstime.com/backend/web/uploads';
+  baseUrl = `${environment.apiBaseUrl}/backend/web/uploads`;
   url: string;
   routeUrl: string;
   constructor(

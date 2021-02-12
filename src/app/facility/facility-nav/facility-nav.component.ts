@@ -6,6 +6,7 @@ import { mergeMap } from 'rxjs/operators';
 import { HomeService } from 'src/app/home.service';
 import { FacilityService } from '../facility.service';
 import { faShareAlt } from '@fortawesome/free-solid-svg-icons';
+import { environment } from 'src/environments/environment';
 const currentDate = new Date();
 @Component({
   selector: 'app-facility-nav',
@@ -29,7 +30,7 @@ export class FacilityNavComponent implements OnInit, DoCheck, OnDestroy  {
     facilityuserProfileImage: ''
   };
   subscription: Subscription;
-  baseUrl = 'https://demo.docstime.com/backend/web/uploads';
+  baseUrl = `${environment.apiBaseUrl}/backend/web/uploads`;
   url: string;
   @Output() loggedOutFacility: EventEmitter<any> = new EventEmitter();
   constructor(

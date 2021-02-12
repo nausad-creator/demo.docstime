@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { HomeService } from 'src/app/home.service';
 import { DocsService } from '../docs.service';
 import * as moment from 'moment';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-my-profile',
@@ -17,7 +18,7 @@ export class MyProfileComponent implements OnInit {
   docData: any;
   url: string;
   maxSize = 2048000;
-  baseUrl = 'https://demo.docstime.com/backend/web/uploads';
+  baseUrl = `${environment.apiBaseUrl}/backend/web/uploads`;
   selectedFiles: File;
   basicProfile: FormGroup;
   profProfile: FormGroup;

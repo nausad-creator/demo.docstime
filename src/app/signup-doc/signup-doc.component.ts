@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
+import { environment } from 'src/environments/environment';
 import { ConfirmationPopUpComponent } from '../confirmation-pop-up/confirmation-pop-up.component';
 import { DocsService } from '../docs/docs.service';
 import { HomeService } from '../home.service';
@@ -23,7 +24,7 @@ export class SignupDocComponent implements OnInit {
   error: string;
   name: string;
   maxSize = 2048000;
-  baseUrl = 'https://demo.docstime.com/backend/web/uploads';
+  baseUrl = `${environment.apiBaseUrl}/backend/web/uploads`;
   selectedFiles: File;
   event: EventEmitter<any> = new EventEmitter();
   countryCodeOptions = [

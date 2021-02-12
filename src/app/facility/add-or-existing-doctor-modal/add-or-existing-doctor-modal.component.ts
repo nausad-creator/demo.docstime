@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { DocsService } from 'src/app/docs/docs.service';
 import { DoctorOtpVerificationComponent } from 'src/app/doctor-otp-verification/doctor-otp-verification.component';
 import { HomeService } from 'src/app/home.service';
+import { environment } from 'src/environments/environment';
 import { AddDoctorResetPasswordModalComponent } from '../add-doctor-reset-password-modal/add-doctor-reset-password-modal.component';
 
 @Component({
@@ -28,7 +29,7 @@ export class AddOrExistingDoctorModalComponent implements OnInit {
   mobileForCheck: string;
   name: string;
   maxSize = 2048000;
-  baseUrl = 'https://demo.docstime.com/backend/web/uploads';
+  baseUrl = `${environment.apiBaseUrl}/backend/web/uploads`;
   selectedFiles: File;
   degreeList$: Observable<Array<any>>;
   specialityList$: Observable<Array<any>>;

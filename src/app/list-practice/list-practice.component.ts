@@ -254,10 +254,10 @@ import { UsersModalComponent } from '../users-modal/users-modal.component';
             <li>Plan your check up any time of the day.</li> -->
           </ul>
           <div class="download-btns">
-            <a (click)="openIosStore()" class="wow fadeInUp cursr" data-wow-delay="0.6s">
+            <a (click)="openIosStore()" target="_blank" class="wow fadeInUp cursr" data-wow-delay="0.6s">
               <img [defaultImage]="'assets/img/appstore.png'" [lazyLoad]="'assets/img/appstore.png'"
                 [errorImage]="'assets/img/appstore.png'" alt="appstore"></a>
-            <a (click)="openAndroidStore()" class="wow fadeInUp cursr" style="margin-left: 6px;" data-wow-delay="0.8s">
+            <a (click)="openAndroidStore()" target="_blank" class="wow fadeInUp cursr" style="margin-left: 6px;" data-wow-delay="0.8s">
               <img [defaultImage]="'assets/img/playstore.png'" [lazyLoad]="'assets/img/playstore.png'"
                 [errorImage]="'assets/img/playstore.png'" alt="playstore"></a>
           </div>
@@ -424,11 +424,11 @@ export class ListPracticeComponent implements OnInit {
     this.cd.markForCheck();
   }
   openAndroidStore = () => {
-    window.open('https://play.google.com/store/apps/details?id=com.DocsFacility', 'UNIQUE_WINDOW1');
-    window.open('https://play.google.com/store/apps/details?id=com.DocsRefer', 'MORE_UNIQUE_WINDOW5');
+    window.open('https://play.google.com/store/apps/details?id=com.DocsFacility', '_blank_UNIQUE_WINDOW1');
+    window.open('https://play.google.com/store/apps/details?id=com.DocsRefer', '_blank_MORE_UNIQUE_WINDOW5');
   }
   openIosStore = () => {
-    window.open('https://apps.apple.com/us/app/docsfacility/id1523636906', 'IOS_STORE_FACILITY');
-    window.open('https://apps.apple.com/us/app/docsrefer/id1523636918', 'IOS_STORE_REFER');
+    window.open('https://apps.apple.com/us/app/docsfacility/id1523636906', '_blank_IOS_STORE_FACILITY');
+    window.open('https://apps.apple.com/us/app/docsrefer/id1523636918', '_blank_IOS_STORE_REFER');
   }
 }

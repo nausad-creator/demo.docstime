@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import { BsModalRef } from 'ngx-bootstrap/modal';
@@ -8,7 +8,6 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { HomeService } from '../home.service';
 import { LocationService } from '../location.service';
-import { DateValidator } from './dateValidation';
 
 @Component({
   selector: 'app-request-modal',
@@ -26,7 +25,7 @@ export class RequestModalComponent implements OnInit {
     componentRestrictions: { country: 'USA' }
   };
   @ViewChild('placesRef') placesRef: GooglePlaceDirective;
-  // public date = document.getElementById('date');
+  @ViewChild('dateInput', { static: true }) dateTyped: ElementRef;
   constructor(
     private bsModalRef: BsModalRef,
     private fb: FormBuilder,
@@ -42,7 +41,7 @@ export class RequestModalComponent implements OnInit {
         pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)])],
       meetingMobile: [null, Validators.compose([Validators.required, Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')])],
       meetingFax: [null, Validators.compose([Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')])],
-      meetingDate: ['', Validators.compose([DateValidator()])],
+      meetingDate: [''],
       meetingTime: [''],
       meetingAddress: ['', Validators.compose([Validators.required])],
       meetingZip: [null, Validators.compose([Validators.required, Validators.pattern('^((\\+91-?)|0)?[0-9]{5}$')])],
@@ -155,44 +154,16 @@ export class RequestModalComponent implements OnInit {
   onSubmit = (post: any) => {
     this.markFormTouched(this.requestForm);
     if (!post.meetingDate && !post.meetingTime) {
+      this.requestForm.get('meetingDate').setErrors({ emptyDate: true });
       this.requestForm.get('meetingTime').patchValue('', { emitEvent: false });
-      this.requestForm.get('meetingDate').patchValue('', { emitEvent: false });
-      this.requestForm.get('meetingTime').clearValidators();
-      this.requestForm.get('meetingDate').clearValidators();
-      this.requestForm.get('meetingDate').updateValueAndValidity({
-        onlySelf: true,
-        emitEvent: false
-      });
-      this.requestForm.get('meetingTime').updateValueAndValidity({
-        onlySelf: true,
-        emitEvent: false
-      });
-      this.requestForm.get('meetingDate').setErrors({
-        emptyDate: true,
-      });
-      this.requestForm.get('meetingTime').setErrors({
-        emptyTime: true,
-      });
+      this.requestForm.get('meetingTime').updateValueAndValidity({ emitEvent: false });
+      this.requestForm.get('meetingTime').setErrors({ emptyTime: true });
     } else if (post.meetingDate && !post.meetingTime) {
       this.requestForm.get('meetingTime').patchValue('', { emitEvent: false });
-      this.requestForm.get('meetingTime').clearValidators();
-      this.requestForm.get('meetingTime').updateValueAndValidity({
-        onlySelf: true,
-        emitEvent: false
-      });
-      this.requestForm.get('meetingTime').setErrors({
-        emptyTime: true,
-      });
+      this.requestForm.get('meetingTime').updateValueAndValidity({ emitEvent: false });
+      this.requestForm.get('meetingTime').setErrors({ emptyTime: true });
     } else if (!post.meetingDate && post.meetingTime) {
-      this.requestForm.get('meetingDate').patchValue('', { emitEvent: false });
-      this.requestForm.get('meetingDate').clearValidators();
-      this.requestForm.get('meetingDate').updateValueAndValidity({
-        onlySelf: true,
-        emitEvent: false
-      });
-      this.requestForm.get('meetingDate').setErrors({
-        emptyDate: true,
-      });
+      this.requestForm.get('meetingDate').setErrors({ emptyDate: true });
     } else {
       if (this.requestForm.valid && this.findInvalidControls().length === 0) {
         const data = {
@@ -256,7 +227,8 @@ export class RequestModalComponent implements OnInit {
     this.toastr.success(`<h5>Your Appointment is confirmed on ${moment(date).format('dddd, MMMM Do YYYY')} at ${moment(time, 'h:mm:ss A').format('hh:mm a')}.</h5>You will get notifications with details.`
       , '', {
       positionClass: 'toast-center-center-request',
-      timeOut: 6000,
+      closeButton: true,
+      timeOut: 9000,
       enableHtml: true,
     });
   }
@@ -276,47 +248,50 @@ export class RequestModalComponent implements OnInit {
         }
       }, err => console.error(err));
   }
-
-  // checkValue = (str, max) => {
-  //   if (str.charAt(0) !== '0' || str === '00') {
-  //     let num = +str;
-  //     if (isNaN(num) || num <= 0 || num > max) { num = 1; }
-  //     str = num > +(max.toString().charAt(0)) && num.toString().length === 1 ? '0' + num : num.toString();
-  //   }
-  //   return str;
-  // }
-// const date = document.getElementById('date');
-    // date.addEventListener('input', () => {
-    //   let input = (document.getElementById('date') as HTMLInputElement).value;
-    //   console.log(input);
-    //   if (/\D\/$/.test(input)) { input = input.substr(0, input.length - 3); }
-    //   const values = input.split('/').map((v) => v.replace(/\D/g, ''));
-    //   if (values[0]) { values[0] = this.checkValue(values[0], 12); }
-    //   if (values[1]) { values[1] = this.checkValue(values[1], 31); }
-    //   const output = values.map((v, i) => v.length === 2 && i < 2 ? v + ' / ' : v);
-    //   const actualValue = output.join('').substr(0, 14);
-    //   console.log(actualValue);
-    // });
-
-    // date.addEventListener('blur', () => {
-    //   const input = (document.getElementById('date') as HTMLInputElement).value;
-    //   const values = input.split('/').map((v, i) => v.replace(/\D/g, ''));
-    //   let output = '';
-
-    //   if (values.length === 3) {
-    //     const year = values[2].length !== 4 ? +(values[2]) + 2000 : +(values[2]);
-    //     const month = +(values[0]) - 1;
-    //     const day = +(values[1]);
-    //     const d = new Date(year, month, day);
-    //     if (!isNaN(+d)) {
-    //       document.getElementById('date').innerText = d.toString();
-    //       const dates = [d.getMonth() + 1, d.getDate(), d.getFullYear()];
-    //       output = dates.map((v) => {
-    //           v = v;
-    //           return v.toString().length === 1 ? '0' + v : v;
-    //         }).join(' / ');
-    //     }
-    //   }
-    //   console.log(output);
-    // });
+  onKeyDate = (value: string) => {
+    let input = value;
+    if (/\D\/$/.test(input)) { input = input.substr(0, input.length - 3); }
+    const values = input.split('/').map((v) => v.replace(/\D/g, ''));
+    if (values[0]) { values[0] = this.checkValue(values[0], 12); }
+    if (values[1]) { values[1] = this.checkValue(values[1], 31); }
+    const output = values.map((v, i) => v.length === 2 && i < 2 ? v + ' / ' : v);
+    this.dateTyped.nativeElement.value = output.join('').substr(0, 14);
+  }
+  checkValue = (str: string, max: number) => {
+    if (str.charAt(0) !== '0' || str === '00') {
+      let num = +str;
+      if (isNaN(num) || num <= 0 || num > max) { num = 1; }
+      str = num > +(max.toString().charAt(0)) && num.toString().length === 1 ? '0' + num : num.toString();
+    }
+    return str;
+  }
+  onBlur = (value: string) => {
+    const input = value;
+    const values = input.split('/').map((v) => v.replace(/\D/g, ''));
+    let output = '';
+    if (values.length === 3) {
+      const year = values[2].length !== 4 ? +(values[2]) + 2000 : +(values[2]);
+      const month = +(values[0]) - 1;
+      const day = +(values[1]);
+      const d = new Date(year, month, day);
+      if (!isNaN(+d)) {
+        document.getElementById('date').innerText = d.toString();
+        const dates = [d.getMonth() + 1, d.getDate(), d.getFullYear()];
+        output = dates.map((v) => {
+          v = v;
+          return v.toString().length === 1 ? '0' + v : v;
+        }).join(' / ');
+      }
+    }
+    if (output) {
+      this.dateTyped.nativeElement.value = output.replace(/\s/g, '');
+      this.cd.markForCheck();
+    }
+    if (!output) {
+      this.dateTyped.nativeElement.value = '';
+      this.requestForm.get('meetingDate').patchValue('', { emitEvent: false });
+      this.requestForm.get('meetingDate').updateValueAndValidity({ emitEvent: false });
+      this.cd.markForCheck();
+    }
+  }
 }
