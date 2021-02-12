@@ -90,7 +90,8 @@
                     <div class="form-group">
                       <label for="dob">Date of Birth<span class="required-field"></span></label>
                       <div class="form-group inputWithIcon">
-                        <input class="form-control" maxlength=10 onkeyup="this.value=this.value.replace(/^(\d\d)(\d)$/g,'$1/$2').replace(/^(\d\d\/\d\d)(\d+)$/g,'$1/$2').replace(/[^\d\/]/g,'')"
+                        <input class="form-control" maxlength=14 #dateOfBirth (keyup)="onTypeDOB(dateOfBirth.value)"
+                        (blur)="onBlurDOB(dateOfBirth.value)"
                           [max]="maxDate" placeholder="mm/dd/yyyy" formControlName="patientDOB" id="dob"
                           name="patientDOB" [owlDateTime]="dt5" required>
                         <a class="cursr"><i [owlDateTimeTrigger]="dt5" class="ti-calendar cursr"></i></a>
@@ -98,9 +99,6 @@
                         <small class="text-danger small"
                           *ngIf="referCaseForm.get('patientDOB').invalid && referCaseForm.controls['patientDOB'].hasError('owlDateTimeMax')">Date
                           should not after {{maxDate | date: 'mediumDate'}}</small>
-                        <small class="text-danger small"
-                          *ngIf="referCaseForm.controls['patientDOB'].hasError('invalidDate') && (referCaseForm.controls['patientDOB'].dirty || referCaseForm.controls['patientDOB'].touched)">Date
-                          should be MM/DD/YYYY format.</small>
                         <small class="text-danger small"
                           *ngIf="referCaseForm.controls['patientDOB'].hasError('emptyDOB')">Please
                           Select DOB.</small>
@@ -197,8 +195,8 @@
                   <div class="col-sm-6">
                     <label for="dov">Date of Visit</label>
                     <div class="form-group inputWithIcon">
-                      <input class="form-control" (keyup)="onKey($event.target.value)"
-                      maxlength=10 onkeyup="this.value=this.value.replace(/^(\d\d)(\d)$/g,'$1/$2').replace(/^(\d\d\/\d\d)(\d+)$/g,'$1/$2').replace(/[^\d\/]/g,'')" [min]="min"
+                      <input class="form-control" maxlength=14 #visitDate (keyup)="onTypeVisitDate(visitDate.value)"
+                      (blur)="onBlurVisitDate(visitDate.value)" [min]="min"
                         placeholder="mm/dd/yyyy (Optional)" formControlName="refercaseVisitDate" id="dov" name="dov"
                         [owlDateTime]="dt3">
                       <a class="cursr"><i [owlDateTimeTrigger]="dt3" class="ti-calendar cursr"></i></a>
@@ -206,11 +204,8 @@
                       <small class="text-danger small"
                         *ngIf="referCaseForm.get('refercaseVisitDate').invalid && referCaseForm.controls['refercaseVisitDate'].hasError('owlDateTimeMin')">Date
                         should not before {{min | date: 'mediumDate'}}</small>
-                      <small class="text-danger small"
-                        *ngIf="referCaseForm.controls['refercaseVisitDate'].hasError('invalidDate') && (referCaseForm.controls['refercaseVisitDate'].touched)">Date
-                        should be MM/DD/YYYY format.</small>
-                      <small class="text-danger small"
-                        *ngIf="referCaseForm.controls['refercaseVisitDate'].hasError('required') && (referCaseForm.controls['refercaseVisitDate'].dirty || referCaseForm.controls['refercaseVisitDate'].touched)">Please
+                        <small class="text-danger small"
+                        *ngIf="referCaseForm.controls['refercaseVisitDate'].hasError('emptyDate')">Please
                         select Date of Visit.</small>
                     </div>
                   </div>

@@ -285,6 +285,9 @@ export class RequestModalComponent implements OnInit {
     }
     if (output) {
       this.dateTyped.nativeElement.value = output.replace(/\s/g, '');
+      this.requestForm.get('meetingDate')
+        .setValue(new Date(+output.split('/')[2], +output.split('/')[0] - 1, +output.split('/')[1]), { emitEvent: false });
+      this.requestForm.get('meetingDate').updateValueAndValidity({ emitEvent: false });
       this.cd.markForCheck();
     }
     if (!output) {

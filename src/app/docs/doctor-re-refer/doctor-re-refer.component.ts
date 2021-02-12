@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import * as moment from 'moment';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -11,8 +11,6 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { AlertModalComponent } from '../alert-modal/alert-modal.component';
-import { DateValidator } from 'src/app/request-modal/dateValidation';
-import { DateValidatorDoctor } from '../datevalidator';
 import { DocStore } from '../doc-store.service';
 
 @Component({
@@ -38,6 +36,8 @@ export class DoctorReReferComponent implements OnInit {
   isReffered = 'No';
   genders = ['Male', 'Female'];
   peopleInput$ = new Subject<string>();
+  @ViewChild('dateOfBirth', { static: true }) dateOfBirth: ElementRef;
+  @ViewChild('visitDate', { static: true }) visitDate: ElementRef;
   constructor(
     private docService: DocsService,
     private service: HomeService,
@@ -77,24 +77,24 @@ export class DoctorReReferComponent implements OnInit {
       patientFirstName: [JSON.parse(this.store.reRefer).patientFirstName ? JSON.parse(this.store.reRefer).patientFirstName : '',
       Validators.compose([Validators.maxLength(60), Validators.minLength(3), Validators.required])],
       patientDOB: [JSON.parse(this.store.reRefer).patientDOB ? moment(`${JSON.parse(this.store.reRefer).patientDOB}`).toDate() :
-      '', Validators.compose([Validators.required, DateValidatorDoctor()])],
+        '', Validators.compose([Validators.required])],
       patientCountryCode: ['+1'],
       patientMobile: [JSON.parse(this.store.reRefer).patientMobile ? JSON.parse(this.store.reRefer).patientMobile : '', Validators.compose([
         Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')
       ])],
       patientGender: [JSON.parse(this.store.reRefer).patientGender ?
-         JSON.parse(this.store.reRefer).patientGender : null, Validators.compose([Validators.required])],
+        JSON.parse(this.store.reRefer).patientGender : null, Validators.compose([Validators.required])],
       facilityID: ['0'],
       specialityID: [null, Validators.compose([Validators.required])],
       insuranceName: [JSON.parse(this.store.reRefer).insuranceNames ?
-         JSON.parse(this.store.reRefer).insuranceNames : null, Validators.compose([])],
+        JSON.parse(this.store.reRefer).insuranceNames : null, Validators.compose([])],
       reasonID: ['0'],
       reasonIDs: ['', Validators.compose([Validators.required])],
       reasonNames: [''],
       refercaseUrgent: [false],
       refercaseNPI: [null, Validators.compose([Validators.pattern('^[0-9]{10}$')])],
       refercaseDescription: [''],
-      refercaseVisitDate: ['', Validators.compose([DateValidatorDoctor()])],
+      refercaseVisitDate: [''],
       refercaseVisitTime: [''],
       doctorID: [''],
       refercaseHospitalAdmission: [false]
@@ -130,15 +130,15 @@ export class DoctorReReferComponent implements OnInit {
     this.referCaseForm.get('refercaseHospitalAdmission').valueChanges.pipe()
       .subscribe((val) => val ? this.modalService.show(AlertModalComponent,
         { id: 97, animated: false, ignoreBackdropClick: true, keyboard: false, class: 'modal-sm modal-dialog-centered' }
-        ) : '');
+      ) : '');
     this.referCaseForm.get('specialityID').valueChanges.pipe()
       .subscribe((val) => {
-        if (val){
-          if (val.length > 1){
+        if (val) {
+          if (val.length > 1) {
             this.isNPI = false;
           }
-          if (val.length === 1){
-            this.referCaseForm.get('refercaseNPI').patchValue('', {emitEvent: false});
+          if (val.length === 1) {
+            this.referCaseForm.get('refercaseNPI').patchValue('', { emitEvent: false });
             this.isNPI = true;
           }
         }
@@ -155,11 +155,6 @@ export class DoctorReReferComponent implements OnInit {
       this.referCaseForm.get('refercaseVisitTime').setErrors(null);
       this.referCaseForm.get('refercaseVisitTime').updateValueAndValidity({ emitEvent: false });
       this.cd.markForCheck();
-    }
-  }
-  onKey = (event: string) => {
-    if (!event){
-      this.referCaseForm.get('refercaseVisitDate').patchValue('', {onlySelf: true, emitEvent: false});
     }
   }
   getSpeciality = () => {
@@ -182,33 +177,32 @@ export class DoctorReReferComponent implements OnInit {
   }
   onChangeHospital = ($event: boolean) => {
     if ($event) {
-      this.referCaseForm.get('specialityID').patchValue(null, {emitEvent: false});
+      this.referCaseForm.get('specialityID').patchValue(null, { emitEvent: false });
       this.referCaseForm.get('specialityID').patchValue([{
         specialityCreatedDate: '2020-11-02 06:49:34',
         specialityID: '231',
         specialityName: 'Hospitalist',
         specialityRemarks: '',
         specialityStatus: 'Active'
-      }], {emitEvent: false});
-      this.referCaseForm.get('specialityID').disable({emitEvent: false});
+      }], { emitEvent: false });
+      this.referCaseForm.get('specialityID').disable({ emitEvent: false });
       this.isNPI = false;
-      this.referCaseForm.get('specialityID').updateValueAndValidity({emitEvent: false});
+      this.referCaseForm.get('specialityID').updateValueAndValidity({ emitEvent: false });
     } else {
-      this.referCaseForm.get('specialityID').patchValue(null, {emitEvent: false});
-      this.referCaseForm.get('specialityID').enable({emitEvent: false});
-      this.referCaseForm.get('refercaseNPI').patchValue('', {emitEvent: false});
+      this.referCaseForm.get('specialityID').patchValue(null, { emitEvent: false });
+      this.referCaseForm.get('specialityID').enable({ emitEvent: false });
+      this.referCaseForm.get('refercaseNPI').patchValue('', { emitEvent: false });
       this.isNPI = true;
-      this.referCaseForm.get('specialityID').updateValueAndValidity({emitEvent: false});
+      this.referCaseForm.get('specialityID').updateValueAndValidity({ emitEvent: false });
     }
   }
   onChangeUrgentConsult = ($event: boolean) => {
-    if ($event) {
-      this.referCaseForm.get('refercaseVisitDate').setValidators([Validators.required]);
-      this.referCaseForm.get('refercaseVisitDate').updateValueAndValidity({ emitEvent: false });
+    if ($event && !this.referCaseForm.get('refercaseVisitDate').value) {
+      this.referCaseForm.get('refercaseVisitDate').setErrors({ emptyDate: true });
     } else {
-      this.referCaseForm.get('refercaseVisitDate').clearValidators();
-      this.referCaseForm.get('refercaseVisitDate').updateValueAndValidity({ emitEvent: false });
+      this.referCaseForm.get('refercaseVisitDate').setErrors(null);
     }
+    this.cd.markForCheck();
   }
   onChangeCheckBox = (documenttypeID: string) => {
     const index = this.selectedTypes.indexOf(documenttypeID);
@@ -242,17 +236,30 @@ export class DoctorReReferComponent implements OnInit {
   }
   isObject = (val: any) => {
     if (val === null) { return false; }
-    return ( (typeof val === 'function') || (typeof val === 'object') );
+    return ((typeof val === 'function') || (typeof val === 'object'));
   }
   // for Re-Refer
   onClickReRefer = async (post: any) => {
     this.markFormTouched(this.referCaseForm);
-    if (!post.patientDOB){
-      this.referCaseForm.get('patientDOB').setErrors({
-        emptyDOB: true,
-      });
+    if (!post.patientDOB && post.refercaseUrgent && !post.refercaseVisitDate) {
+      this.referCaseForm.get('patientDOB').setErrors({ emptyDOB: true });
+      this.referCaseForm.get('refercaseVisitDate').setErrors({ emptyDate: true });
+    }
+    if (post.patientDOB && post.refercaseUrgent && !post.refercaseVisitDate) {
+      this.referCaseForm.get('patientDOB').setErrors(null);
+      this.referCaseForm.get('refercaseVisitDate').setErrors({ emptyDate: true });
+    }
+    if (!post.patientDOB && !post.refercaseUrgent) {
+      this.referCaseForm.get('patientDOB').setErrors({ emptyDOB: true });
+      this.referCaseForm.get('refercaseVisitDate').setErrors(null);
+    }
+    if (post.patientDOB && !post.refercaseUrgent) {
+      this.referCaseForm.get('patientDOB').setErrors(null);
+      this.referCaseForm.get('refercaseVisitDate').setErrors(null);
     }
     if (this.referCaseForm.valid && this.findInvalidControls().length === 0) {
+      this.referCaseForm.get('patientDOB').setErrors(null);
+      this.referCaseForm.get('refercaseVisitDate').setErrors(null);
       this.spinner.show();
       for (const doc of this.documents) {
         doc.documentFilename = await this.uploadFiles(doc).then((res: Array<any>) => res[0].fileName).catch(error => error);
@@ -261,16 +268,16 @@ export class DoctorReReferComponent implements OnInit {
         languageID: '1',
         refercaseID: JSON.parse(this.store.reRefer).refercaseID,
         refercaseOrgCaseID: JSON.parse(this.store.reRefer).refercaseOrgCaseID === '0' ?
-        JSON.parse(this.store.reRefer).refercaseID : JSON.parse(this.store.reRefer).refercaseOrgCaseID,
+          JSON.parse(this.store.reRefer).refercaseID : JSON.parse(this.store.reRefer).refercaseOrgCaseID,
         facilityID: post.facilityID,
         specialityID: this.referCaseForm.get('specialityID').value.length > 0 ?
-        this.specialIDconvert(this.referCaseForm.get('specialityID').value) : '',
-        reasonID: post.reasonIDs.length > 0 ? this.reasonsConvertStrint(post.reasonIDs).trim() : '' ,
+          this.specialIDconvert(this.referCaseForm.get('specialityID').value) : '',
+        reasonID: post.reasonIDs.length > 0 ? this.reasonsConvertStrint(post.reasonIDs).trim() : '',
         reasonIDs: '0',
         insuranceNames: post.insuranceName && this.isObject(post.insuranceName) ? post.insuranceName.label.trim() :
-        post.insuranceName && !this.isObject(post.insuranceName) ? post.insuranceName.trim() : '',
+          post.insuranceName && !this.isObject(post.insuranceName) ? post.insuranceName.trim() : '',
         reasonNames: post.reasonIDs.length > 0 ? this.reasonsConvertNameStrint(post.reasonIDs).trim() : '',
-        refercaseVisitDate: post.refercaseVisitDate ? moment(post.refercaseVisitDate).format('YYYY-MM-DD') : '',
+        refercaseVisitDate: post.refercaseVisitDate ? moment(post.refercaseVisitDate, 'YYYY-MM-DD').format('YYYY-MM-DD') : '',
         refercaseVisitTime: post.refercaseVisitTime ? moment(post.refercaseVisitTime, 'h:mm:ss A').format('HH:mm:ss') : '',
         doctorID: this.service.getDocLocal() ? this.service.getDocLocal().doctorID : this.service.getDocSession().doctorID,
         refercaseHospitalAdmission: post.refercaseHospitalAdmission ? 'Yes' : 'No',
@@ -278,9 +285,9 @@ export class DoctorReReferComponent implements OnInit {
         refercaseDescription: post.refercaseDescription ? post.refercaseDescription : '',
         refercaseNPI: post.refercaseNPI ? post.refercaseNPI : '',
         documents: this.documents.length > 0 ? this.documents.map((document) => ({
-            documenttypeID: document.documenttypeID,
-            documentFilename: document.documentFilename
-          })) : ''
+          documenttypeID: document.documenttypeID,
+          documentFilename: document.documentFilename
+        })) : ''
       };
       this.docService.addreRefer(JSON.stringify(data)).subscribe((response) => {
         if (response[0].status === 'true') {
@@ -442,5 +449,94 @@ export class DoctorReReferComponent implements OnInit {
       }, error => reject(error));
     });
   }
-
+  onTypeDOB = (value: string) => {
+    let input = value;
+    if (/\D\/$/.test(input)) { input = input.substr(0, input.length - 3); }
+    const values = input.split('/').map((v) => v.replace(/\D/g, ''));
+    if (values[0]) { values[0] = this.checkValue(values[0], 12); }
+    if (values[1]) { values[1] = this.checkValue(values[1], 31); }
+    const output = values.map((v, i) => v.length === 2 && i < 2 ? v + ' / ' : v);
+    this.dateOfBirth.nativeElement.value = output.join('').substr(0, 14);
+  }
+  onBlurDOB = (value: string) => {
+    const input = value;
+    const values = input.split('/').map((v) => v.replace(/\D/g, ''));
+    let output = '';
+    if (values.length === 3) {
+      const year = values[2].length !== 4 ? +(values[2]) + 2000 : +(values[2]);
+      const month = +(values[0]) - 1;
+      const day = +(values[1]);
+      const d = new Date(year, month, day);
+      if (!isNaN(+d)) {
+        document.getElementById('dob').innerText = d.toString();
+        const dates = [d.getMonth() + 1, d.getDate(), d.getFullYear()];
+        output = dates.map((v) => {
+          v = v;
+          return v.toString().length === 1 ? '0' + v : v;
+        }).join(' / ');
+      }
+    }
+    if (output) {
+      this.dateOfBirth.nativeElement.value = output.replace(/\s/g, '');
+      this.referCaseForm.get('patientDOB')
+        .setValue(new Date(+output.split('/')[2], +output.split('/')[0] - 1, +output.split('/')[1]), { emitEvent: false });
+      this.referCaseForm.get('patientDOB').updateValueAndValidity({ emitEvent: false });
+      this.cd.markForCheck();
+    }
+    if (!output) {
+      this.dateOfBirth.nativeElement.value = '';
+      this.referCaseForm.get('patientDOB').patchValue('', { emitEvent: false });
+      this.referCaseForm.get('patientDOB').updateValueAndValidity({ emitEvent: false });
+      this.cd.markForCheck();
+    }
+  }
+  onTypeVisitDate = (value: string) => {
+    let input = value;
+    if (/\D\/$/.test(input)) { input = input.substr(0, input.length - 3); }
+    const values = input.split('/').map((v) => v.replace(/\D/g, ''));
+    if (values[0]) { values[0] = this.checkValue(values[0], 12); }
+    if (values[1]) { values[1] = this.checkValue(values[1], 31); }
+    const output = values.map((v, i) => v.length === 2 && i < 2 ? v + ' / ' : v);
+    this.visitDate.nativeElement.value = output.join('').substr(0, 14);
+  }
+  onBlurVisitDate = (value: string) => {
+    const input = value;
+    const values = input.split('/').map((v) => v.replace(/\D/g, ''));
+    let output = '';
+    if (values.length === 3) {
+      const year = values[2].length !== 4 ? +(values[2]) + new Date().getFullYear() : +(values[2]);
+      const month = +(values[0]) - 1;
+      const day = +(values[1]);
+      const d = new Date(year, month, day);
+      if (!isNaN(+d)) {
+        document.getElementById('dov').innerText = d.toString();
+        const dates = [d.getMonth() + 1, d.getDate(), d.getFullYear()];
+        output = dates.map((v) => {
+          v = v;
+          return v.toString().length === 1 ? '0' + v : v;
+        }).join(' / ');
+      }
+    }
+    if (output) {
+      this.visitDate.nativeElement.value = output.replace(/\s/g, '');
+      this.referCaseForm.get('refercaseVisitDate')
+        .setValue(new Date(+output.split('/')[2], +output.split('/')[0] - 1, +output.split('/')[1]), { emitEvent: false });
+      this.referCaseForm.get('refercaseVisitDate').updateValueAndValidity({ emitEvent: false });
+      this.cd.markForCheck();
+    }
+    if (!output) {
+      this.visitDate.nativeElement.value = '';
+      this.referCaseForm.get('refercaseVisitDate').patchValue('', { emitEvent: false });
+      this.referCaseForm.get('refercaseVisitDate').updateValueAndValidity({ emitEvent: false });
+      this.cd.markForCheck();
+    }
+  }
+  checkValue = (str: string, max: number) => {
+    if (str.charAt(0) !== '0' || str === '00') {
+      let num = +str;
+      if (isNaN(num) || num <= 0 || num > max) { num = 1; }
+      str = num > +(max.toString().charAt(0)) && num.toString().length === 1 ? '0' + num : num.toString();
+    }
+    return str;
+  }
 }
