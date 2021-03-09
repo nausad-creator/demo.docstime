@@ -20,12 +20,16 @@ import { DocsViewMyScheduleComponent } from './docs-view-my-schedule/docs-view-m
 import { DoctorAddReferComponent } from './doctor-add-refer/doctor-add-refer.component';
 import { DoctorReReferComponent } from './doctor-re-refer/doctor-re-refer.component';
 import { DoctorViewReferComponent } from './doctor-view-refer/doctor-view-refer.component';
+import { EditReferGuard } from './edit-refer.guard';
 import { MyProfileComponent } from './my-profile/my-profile.component';
 import { MyScheduleComponent } from './my-schedule/my-schedule.component';
 import { NotificationSettingsComponent } from './notification-settings/notification-settings.component';
 import { NotificationComponent } from './notification/notification.component';
 import { ReferralsReceivedComponent } from './referrals-received/referrals-received.component';
+import { EditReferralComponent } from './referrals-sent/edit-referral/edit-referral.component';
 import { ReferralsSentComponent } from './referrals-sent/referrals-sent.component';
+import { RejectReReferComponent } from './reject-received-modal/reject-re-refer/reject-re-refer.component';
+import { RejectReferGuard } from './reject-rerefer.guard';
 
 const routes: Routes = [
     {
@@ -46,6 +50,11 @@ const routes: Routes = [
                         component: DoctorReReferComponent,
                         canActivate: [DocRereferGuard],
                     },
+                    {
+                        path: 'reject-re-refer-case',
+                        component: RejectReReferComponent,
+                        canActivate: [RejectReferGuard],
+                    }
                 ],
                 data: {
                     seo: {
@@ -73,6 +82,11 @@ const routes: Routes = [
                         component: DoctorReReferComponent,
                         canActivate: [DocRereferGuard],
                     },
+                    {
+                        path: 'reject-re-refer-case',
+                        component: RejectReReferComponent,
+                        canActivate: [RejectReferGuard],
+                    }
                 ],
                 data: {
                     seo: {
@@ -164,6 +178,11 @@ const routes: Routes = [
                         path: 're-refer-case',
                         component: DoctorReReferComponent,
                         canActivate: [DocRereferGuard],
+                    },
+                    {
+                        path: 'edit-refer-case',
+                        component: EditReferralComponent,
+                        canActivate: [EditReferGuard],
                     }
                 ],
                 data: {

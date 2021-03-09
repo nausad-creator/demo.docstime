@@ -1,5 +1,25 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { ReferCase } from '../docs.interface';
+import { TimelineComponent } from '../timeline/timeline.component';
+interface TimeLine{
+doctorFax: string;
+doctorFullName: string;
+doctorID: string;
+doctorMobile: string;
+doctorProfileImage: string;
+facilityID: string;
+facilityLogo: string;
+facilityName: string;
+newTime: string;
+refercaseID: string;
+timelineDate: string;
+timelineID: string;
+timelineRemarks: string;
+timelineStatus: string;
+tzCountryCode: string;
+tzID: string;
+}
 @Component({
   selector: 'app-share-referral-sent',
   templateUrl: './share-referral-sent.component.html',
@@ -19,13 +39,16 @@ export class ShareReferralSentComponent implements OnInit {
   @Input() refercaseStatus: string;
   @Input() specialityName: string;
   @Input() doctorFullName: string;
-  @Input() wholeObject: any;
+  @Input() timeline: Array<TimeLine>;
+  @Input() wholeObject: ReferCase;
   @Output() view: EventEmitter<any> = new EventEmitter();
   genderAtZero: string;
   fullName: string;
   preFixDRstr: string;
   convertedTime: string;
-  constructor(private cd: ChangeDetectorRef) { }
+  constructor(
+    private cd: ChangeDetectorRef,
+    private modalService: BsModalService) { }
 
   ngOnInit(): void {
     this.refSpecialityName = this.refSpecialityName ? `/${this.refSpecialityName}` : '';
@@ -50,8 +73,16 @@ export class ShareReferralSentComponent implements OnInit {
     time[0] < 10 ? (time[0] = '0' + time[0]) : (time[0] = time[0]);
     return time[0] + '' + time[1] + '' + time[2] + ' ' + time[5]; // return adjusted time or original string
   }
-
-  onClickViewReferral = (referral: any) => {
+  openTimeLine = (timeLine: Array<TimeLine>) => {
+    const initialState = {
+      list: [{ timeline: timeLine }]
+    };
+    this.modalService.show(TimelineComponent, { initialState });
+  }
+  openMail = () => {
+    window.open(`https://mail.google.com/mail/u/0/?view=cm&fs=1&to=someone@example.com&su=SUBJECT&body=BODY&bcc=someone.else@example.com&tf=1`);
+  }
+  onClickViewReferral = (referral: ReferCase) => {
     this.view.emit(JSON.stringify(referral));
   }
 

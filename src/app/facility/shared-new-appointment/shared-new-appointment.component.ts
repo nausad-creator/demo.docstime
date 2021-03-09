@@ -1,9 +1,12 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { HomeService } from 'src/app/home.service';
 import { environment } from 'src/environments/environment';
 import { ConfirmedReceivedModalComponent } from '../confirmed-received-modal/confirmed-received-modal.component';
+import { ReferCase } from '../docs.interface';
 import { RejectReceivedModalComponent } from '../reject-received-modal/reject-received-modal.component';
+import { Store } from '../store.service';
 
 @Component({
   selector: 'app-shared-new-appointment',
@@ -28,7 +31,8 @@ export class SharedNewAppointmentComponent implements OnInit {
   @Input() refercaseID: string;
   @Input() facilityID: string;
   @Input() doctorID: string;
-  @Input() wholeOBject: any;
+  @Input() refercaseSentTZID: string;
+  @Input() wholeOBject: ReferCase;
   @Output() view: EventEmitter<any> = new EventEmitter();
   @Output() updateView: EventEmitter<any> = new EventEmitter();
   @Output() updateViewToday: EventEmitter<any> = new EventEmitter();
@@ -37,12 +41,14 @@ export class SharedNewAppointmentComponent implements OnInit {
   convertedTime: string;
   bsModalRef: BsModalRef;
   preFixDRstr: string;
-  baseUrl = `${environment.apiBaseUrl}/backend/web/uploads`;
+  baseUrl = `${environment.fileUrl}`;
   url: string;
   constructor(
     private modalService: BsModalService,
     private cd: ChangeDetectorRef,
-    private service: HomeService
+    private service: HomeService,
+    private router: Router,
+    private store: Store
   ) { }
 
   ngOnInit(): void {
@@ -106,21 +112,16 @@ export class SharedNewAppointmentComponent implements OnInit {
   openModalReject = () => {
     const initialState = {
       list: [{
-        name: this.fullName,
-        convertedTime: this.convertedTime,
-        refercaseVisitTime: this.refercaseVisitTime ? this.refercaseVisitTime : '',
-        genderAtZero: this.genderAtZero,
-        refercaseVisitDate: this.refercaseVisitDate,
-        age: this.age,
-        reasonName: this.reasonName,
         refercaseID: this.refercaseID,
-        refSpecialityName: this.refSpecialityName,
         facilityID: this.facilityID,
-        doctorID: this.doctorID
+        tzID: this.refercaseSentTZID ? this.refercaseSentTZID : '',
+        doctorID: this.doctorID,
+        url: this.router.url
       }]
     };
+    this.store.setRejectrefer(JSON.stringify(this.wholeOBject));
     this.bsModalRef = this.modalService.show(RejectReceivedModalComponent, { id: 911, initialState });
-    this.bsModalRef.content.event.subscribe((res: any) => {
+    this.bsModalRef.content.event.subscribe((res: string) => {
       const data = JSON.parse(res);
       if (data.res === 'confirmed') {
         this.updateView.emit('Update');
@@ -128,7 +129,7 @@ export class SharedNewAppointmentComponent implements OnInit {
     });
   }
 
-  onClickView = (referral: any) => {
+  onClickView = (referral: ReferCase) => {
     this.view.emit(JSON.stringify(referral));
   }
 

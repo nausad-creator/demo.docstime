@@ -7,20 +7,30 @@
   <div class="row align-items-center">
     <div class="col-md-5 text-appont" style="cursor: pointer;" (click)="onClickView(wholeOBject)">
         <p class="m-0">{{reasonName | titlecase}}</p>
-        <p *ngIf="refDocName">Referred By:<br> <span class="text-dark">{{preFixDRstr === 'DR.' ? (refDocName | titlecase) : 'Dr. ' + (refDocName | titlecase)}}
-          <br>{{specialityName | titlecase}}
-        </span></p>
+        <a *ngIf="refDocName">Referred By:</a>
+        <h5 class="text-dark" style="margin-top: .4rem; margin-bottom: .4rem;" *ngIf="refDocName">{{preFixDRstr === 'DR.' ? (refDocName | titlecase) : 'Dr. ' + (refDocName | titlecase)}}</h5>
+        <p class="m-0" *ngIf="specialityName"> {{specialityName | titlecase}}</p>
+        <!-- <span class="text-dark" *ngIf="specialityName"> {{specialityName | titlecase}}</span> -->
     </div>
     <div class="col-md-3 icons-dated" style="cursor: pointer;" (click)="onClickView(wholeOBject)">
       <p class="m-0" *ngIf="refercaseVisitDate"><i class="ti-calendar"></i> {{refercaseVisitDate | date : 'mediumDate'}}</p>
       <p class="m-0" *ngIf="refercaseVisitTime"><i class="ti-time"></i>{{convertedTime}}</p>
     </div>
-    <div class="col-md-4 text-xl-right btnsgrp-appointment" *ngIf="refercaseStatus === 'Pending'">
+    <div class="col-md-4 text-xl-right btnsgrp-appointment" style="cursor: pointer;" (click)="onClickView(wholeOBject)">
+      <p class="text-dark sb-text mb-2" *ngIf="refercaseUrgent === 'Yes'">Urgent Consult</p>
+      <p class="text-dark sb-text mb-2" *ngIf="refercaseUrgent === 'No'"></p>																	
+    </div>
+    <div class="col-md-12 text-right" *ngIf="refercaseStatus === 'Pending'">
+      <a (click)="openModalConfirm()" class="btn btn-outline-primary btn-sm">Confirm/Reschedule</a>
+      <a (click)="openModalReject()" class="btn btn-outline-primary m-1 btn-sm">Reject/Rerefer</a>	
+      <!-- <button type="button" class="btn btn-primary m-1 btn-sm" disabled>Disable</button>	 -->
+    </div>
+    <!-- <div class="col-md-4 text-xl-right btnsgrp-appointment" *ngIf="refercaseStatus === 'Pending'">
       <p class="text-dark sb-text mb-2" *ngIf="refercaseUrgent === 'Yes'">Urgent Consult</p>
       <a style="cursor: pointer;
-      border-color: #007bff;" class="btn btn-outline-primary" (click)="openModalConfirm()">Confirm</a>
+      border-color: #007bff; margin-bottom: 5px;" class="btn btn-outline-primary" (click)="openModalConfirm()">Confirm/Reschedule</a>
       <a style="cursor: pointer;
-      border-color: #007bff;" class="btn btn-outline-primary" (click)="openModalReject()">Reject</a>
-    </div>
+      border-color: #007bff;" class="btn btn-outline-primary" (click)="openModalReject()">Reject Re-refer</a>
+    </div> -->
   </div> 
 </div>

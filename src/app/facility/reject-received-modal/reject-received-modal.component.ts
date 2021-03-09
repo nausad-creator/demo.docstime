@@ -1,11 +1,14 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder } from '@angular/forms';
+import { Router } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { HomeService } from 'src/app/home.service';
-import { ConfirmedReceivedModalComponent } from '../confirmed-received-modal/confirmed-received-modal.component';
 import { FacilityService } from '../facility.service';
-
+interface Reject {
+  rejectRemark: string;
+}
 @Component({
   selector: 'app-reject-received-modal',
   templateUrl: './reject-received-modal.component.html',
@@ -14,18 +17,13 @@ import { FacilityService } from '../facility.service';
 })
 export class RejectReceivedModalComponent implements OnInit {
   list: any[] = [];
-  fullName: string;
-  convertedTime: string;
-  genderAtZero: string;
-  refercaseVisitDate: string;
-  age: string;
-  reasonName: string;
+  rejectDefault = false;
+  rejectForm: FormGroup;
   refercaseID: string;
-  refSpecialityName: string;
   facilityID: string;
   doctorID: string;
-  refercaseVisitTime: string;
   event: EventEmitter<any> = new EventEmitter();
+  tzID: string;
   constructor(
     private bsModalRef: BsModalRef,
     private spinner: NgxSpinnerService,
@@ -33,57 +31,50 @@ export class RejectReceivedModalComponent implements OnInit {
     private facilityService: FacilityService,
     private modalService: BsModalService,
     private cd: ChangeDetectorRef,
-    private service: HomeService
-  ) { }
+    private service: HomeService,
+    private fb: FormBuilder,
+    private router: Router,
+  ) {
+    this.rejectForm = this.fb.group({
+      rejectRemark: ['']
+    });
+  }
 
   ngOnInit(): void {
-    this.fullName = this.list[0].name ? this.list[0].name : '';
-    this.convertedTime = this.list[0].convertedTime ? this.list[0].convertedTime : '';
-    this.genderAtZero = this.list[0].genderAtZero ? this.list[0].genderAtZero : '';
-    this.refercaseVisitDate = this.list[0].refercaseVisitDate ? this.list[0].refercaseVisitDate : '';
-    this.age = this.list[0].age ? this.list[0].age : '';
-    this.reasonName = this.list[0].reasonName ? this.list[0].reasonName : '';
     this.refercaseID = this.list[0].refercaseID ? this.list[0].refercaseID : '';
-    this.refSpecialityName = this.list[0].refSpecialityName ? this.list[0].refSpecialityName : '';
-    this.refercaseVisitTime = this.list[0].refercaseVisitTime !== 'Undefined' &&
-      this.list[0].refercaseVisitTime ? this.list[0].refercaseVisitTime : '';
     this.facilityID = this.list[0].facilityID;
     this.doctorID = this.list[0].doctorID;
-    this.cd.markForCheck();
+    this.tzID = this.list[0].tzID ? this.list[0].tzID : '';
   }
   onClose = () => {
     this.bsModalRef.hide();
   }
-  onOpenConfirmation = () => {
-    this.bsModalRef.hide();
-    setTimeout(() => {
-      const initialState = {
-        list: [{
-          name: this.fullName,
-          convertedTime: this.convertedTime,
-          refercaseVisitTime: this.refercaseVisitTime ? this.refercaseVisitTime : '',
-          genderAtZero: this.genderAtZero,
-          refercaseVisitDate: this.refercaseVisitDate,
-          age: this.age,
-          reasonName: this.reasonName,
-          refercaseID: this.refercaseID,
-          refSpecialityName: this.refSpecialityName,
-          facilityID: this.facilityID,
-          doctorID: this.doctorID
-        }]
-      };
-      this.bsModalRef = this.modalService.show(ConfirmedReceivedModalComponent, { id: 200, initialState });
-    }, 600);
+  onCloseReject = (modalID: number) => {
+    this.modalService.hide(modalID);
   }
-  onReject = () => {
+  onReRefer = () => {
+    if (
+      this.list[0].url.split('?')[0] === '/facility/facility-dashboard' || this.list[0].url === '/facility/facility-dashboard/view-refer'
+    ) {
+      this.router.navigate(['/facility/facility-dashboard/reject-re-refer-case']);
+    }
+    if (
+      this.list[0].url.split('?')[0] === '/facility/facility-referral-received' || this.list[0].url === '/facility/facility-referral-received/view-refer'
+    ) {
+      this.router.navigate(['/facility/facility-referral-received/reject-re-refer-case']);
+    }
+  }
+  onReject = (rejectRemark: Reject) => {
     this.spinner.show();
     const data = {
       languageID: '1',
       refercaseID: this.refercaseID,
-      facilityID: this.facilityID,
+      facilityID: this.service.getFaLocal() ? this.service.getFaLocal().facilityID : this.service.getFaSession().facilityID,
+      tzID: this.tzID,
+      timelineRemarks: rejectRemark.rejectRemark ? rejectRemark.rejectRemark : '',
       newDate: '',
       newTime: '',
-      doctorID: this.doctorID
+      doctorID: this.doctorID ? this.doctorID : '0'
     };
     this.facilityService.rejectReferral(JSON.stringify(data)).subscribe(
       (res) => {

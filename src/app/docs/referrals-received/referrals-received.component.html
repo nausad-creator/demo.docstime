@@ -4,6 +4,7 @@
     <div class="container">
       <div class="row">
         <div class="col-xl-8 col-lg-8 appointment-conten order-2 order-lg-1 pt-3">
+          <app-shared-filter [component]="'received'" (filter)="onAppliedFilter($event)" (resetFilter)="onResetFilter()" *ngIf="isEmpty"></app-shared-filter>
           <div class="appointmen-content appoinment-show appointmen-referral" *ngIf="all.length>0">
             <div
             infinite-scroll
@@ -19,6 +20,7 @@
                 [age]="appoint.age ? appoint.age : '0'" [refercaseID]="appoint.refercaseID ? appoint.refercaseID : ''"
                 [facilityID]="appoint.facilityID ? appoint.facilityID : ''"
                 [refDocName]="appoint.refDocName ? appoint.refDocName : ''"
+                [refercaseSentTZID]="appoint.refercaseSentTZID ? appoint.refercaseSentTZID : ''"
                 [refercaseUrgent]="appoint.refercaseUrgent ? appoint.refercaseUrgent : ''"
                 [refSpecialityName]="appoint.insuranceNames ? appoint.insuranceNames : ''"
                 [specialityName]="appoint.refSpecialityName ? appoint.refSpecialityName : ''"
@@ -43,10 +45,11 @@
               </div>
             </div>
           </div>
-          <div class="" style="margin-top: 40px; height: 550px;" *ngIf="(scheduledAll$ | async) === null">
+          <div class="" style="margin-top: 5px;" *ngIf="(scheduledAll$ | async) === null">
             <div class="row">
               <div class="col">
-                <p class="text-center">Loading...</p>
+                <ngx-skeleton-loader count="5" [theme]="{ height: '150px' }">
+                </ngx-skeleton-loader>
               </div>
             </div>
           </div>

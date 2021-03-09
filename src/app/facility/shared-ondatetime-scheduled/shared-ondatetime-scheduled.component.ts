@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
+import { ReferCase } from '../docs.interface';
 import { Store } from '../store.service';
 
 @Component({
@@ -42,27 +43,27 @@ export class SharedOndatetimeScheduledComponent implements OnInit {
     time[0] < 10 ? (time[0] = '0' + time[0]) : (time[0] = time[0]);
     return time[0] + '' + time[1] + '' + time[2] + ' ' + time[5]; // return adjusted time or original string
   }
-  onNavigateViewDasboard = ($event: any) => {
+  onNavigateViewDasboard = ($event: ReferCase) => {
     const data = { data: $event, from: 'dashboard' };
     this.store.setReferView(JSON.stringify(data));
-    this.router.navigate([`${this.router.url}/view-refer`], { state: { data } });
+    this.router.navigate([`/facility/facility-dashboard/view-refer`], { state: { data } });
   }
-  onNavigateViewMySchedule = ($event: any) => {
+  onNavigateViewMySchedule = ($event: ReferCase) => {
     const data = { data: $event, url: this.router.url };
     this.store.setReferView(JSON.stringify(data));
     this.router.navigate(['/facility/my-schedule-view-refer'], { state: { data } });
   }
-  onNavigateViewSent = ($event: any) => {
+  onNavigateViewSent = ($event: ReferCase) => {
     const data = { data: $event, from: 'insideSent' };
     this.store.setReferView(JSON.stringify(data));
-    this.router.navigate([`${this.router.url}/view-refer`], { state: { data } });
+    this.router.navigate([`/facility/facility-referral-sent/view-refer`], { state: { data } });
   }
-  onNavigateViewReceived = ($event: any) => {
+  onNavigateViewReceived = ($event: ReferCase) => {
     const data = { data: $event, from: 'received' };
     this.store.setReferView(JSON.stringify(data));
-    this.router.navigate([`${this.router.url}/view-refer`], { state: { data } });
+    this.router.navigate([`/facility/facility-referral-received/view-refer`], { state: { data } });
   }
-  onClickInsideView = ($event: any) => {
+  onClickInsideView = ($event: ReferCase) => {
     const url = this.router.url.split('/');
     switch (url[2]) {
       case 'facility-dashboard': {
@@ -103,13 +104,13 @@ export class SharedOndatetimeScheduledComponent implements OnInit {
       }
     }
   }
-  onClickInsideAddCace = ($event: any) => {
+  onClickInsideAddCace = ($event: ReferCase) => {
     const url = this.router.url.split('/');
     const data = { data: $event, from: 'add-case' };
     this.store.setReferView(JSON.stringify(data));
     this.router.navigate([`/${url[1]}/${url[2]}/view-refer`]);
   }
-  onClickInsidereReferCace = ($event: any) => {
+  onClickInsidereReferCace = ($event: ReferCase) => {
     const url = this.router.url.split('/');
     switch (url[2]) {
       case 'facility-dashboard': {
@@ -150,12 +151,12 @@ export class SharedOndatetimeScheduledComponent implements OnInit {
       }
     }
   }
-  onClickInsideSchedulReferCace = ($event: any) => {
+  onClickInsideSchedulReferCace = ($event: ReferCase) => {
     const data = { data: $event, url: '' };
     this.store.setReferView(JSON.stringify(data));
     this.router.navigate(['/facility/my-schedule-view-refer'], { state: { data } });
   }
-  onClickInsideDoctorsViewCace = ($event: any) => {
+  onClickInsideDoctorsViewCace = ($event: ReferCase) => {
     const data = { data: $event, from: 'doctorsList' };
     this.store.setReferView(JSON.stringify(data));
     this.router.navigate([`${this.router.url}/view-refer`], { state: { data } });

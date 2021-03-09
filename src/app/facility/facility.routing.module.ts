@@ -4,6 +4,7 @@ import { FacilityGuard } from '../facility.guard';
 import { AddReferFormComponent } from './add-refer-form/add-refer-form.component';
 import { CancelledComponent } from './cancelled/cancelled.component';
 import { DoctorsListingComponent } from './doctors-listing/doctors-listing.component';
+import { EditReferGuard } from './edit-refer.guard';
 import { FacAboutUsComponent } from './fac-about-us/fac-about-us.component';
 import { FacContactUsComponent } from './fac-contact-us/fac-contact-us.component';
 import { FacFaqComponent } from './fac-faq/fac-faq.component';
@@ -17,6 +18,7 @@ import { FacilityMyProfileComponent } from './facility-my-profile/facility-my-pr
 import { FacilityMyScheduleComponent } from './facility-my-schedule/facility-my-schedule.component';
 import { FacilityNotificationSettingComponent } from './facility-notification-setting/facility-notification-setting.component';
 import { FacilityReferralReceivedComponent } from './facility-referral-received/facility-referral-received.component';
+import { EditReferralComponent } from './facility-referral-sent/edit-referral/edit-referral.component';
 import { FacilityReferralSentComponent } from './facility-referral-sent/facility-referral-sent.component';
 import { FacilityComponent } from './facility/facility.component';
 import { MyScheduledReReferComponent } from './my-scheduled-re-refer/my-scheduled-re-refer.component';
@@ -25,6 +27,8 @@ import { NotificationFacilityComponent } from './notification-facility/notificat
 import { PreviousComponent } from './previous/previous.component';
 import { ReReferFormComponent } from './re-refer-form/re-refer-form.component';
 import { ReReferStoreGuard } from './re-refer-store.guard';
+import { RejectReReferComponent } from './reject-received-modal/reject-re-refer/reject-re-refer.component';
+import { RejectReferGuard } from './reject-rerefer.guard';
 import { StoreGuard } from './store.guard';
 import { UpcommingComponent } from './upcomming/upcomming.component';
 import { ViewReferComponent } from './view-refer/view-refer.component';
@@ -48,6 +52,11 @@ const routes: Routes = [
                         component: ReReferFormComponent,
                         canActivate: [ReReferStoreGuard],
                     },
+                    {
+                        path: 'reject-re-refer-case',
+                        component: RejectReReferComponent,
+                        canActivate: [RejectReferGuard],
+                    }
                 ],
                 data: {
                     seo: {
@@ -182,6 +191,11 @@ const routes: Routes = [
                         component: ReReferFormComponent,
                         canActivate: [ReReferStoreGuard],
                     },
+                    {
+                        path: 'reject-re-refer-case',
+                        component: RejectReReferComponent,
+                        canActivate: [RejectReferGuard],
+                    }
                 ],
                 data: {
                     seo: {
@@ -209,6 +223,11 @@ const routes: Routes = [
                         component: ReReferFormComponent,
                         canActivate: [ReReferStoreGuard],
                     },
+                    {
+                        path: 'edit-refer-case',
+                        component: EditReferralComponent,
+                        canActivate: [EditReferGuard],
+                    }
                 ],
                 data: {
                     seo: {

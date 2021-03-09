@@ -6,11 +6,17 @@
         <div class="col-xl-8 col-lg-8 appointment-conten order-2 order-lg-1 pt-3">
           <div class="title-dashbord d-flex">
             <h4 class="text-dark">{{fullDate | date: 'fullDate'}}</h4>
-            <div class="ml-auto" *ngIf="(today$ | async)?.length > 0"><a (click)="navigateToMySchedule()"
-                class="viewall-btn" style="cursor: pointer;">View All<i class="ti-angle-right"></i></a></div>
+            <div class="ml-auto">
+              <div class="d-flex">
+                <app-shared-filter [component]="'home'" (filter)="onAppliedFilter($event)"
+                  (resetFilter)="onResetFilter()" *ngIf="isToday || isOther"></app-shared-filter>
+                <a (click)="navigateToMySchedule()" class="viewall-btn mb-0 ml-3" style="cursor: pointer;"
+                  *ngIf="(today$ | async)?.length > 0">View All<i class="ti-angle-right"></i></a>
+              </div>
+            </div>
           </div>
-          <div class="selected-users wow fadeInRight" data-wow-delay="0.2s">
-            <div *ngIf="today$ | async as today">
+          <div class="selected-users">
+            <div *ngIf="today$ | async as today" class="wow fadeInRight" data-wow-delay="0.2s">
               <owl-carousel-o [options]="caseOptions">
                 <ng-template carouselSlide *ngFor="let appoint of today | sortByTime">
                   <app-shared-today-appointments
@@ -28,17 +34,23 @@
                 </ng-template>
               </owl-carousel-o>
             </div>
-            <div class="" style="margin-top: 20px;" *ngIf="(today$ | async) === null">
+            <div class="" style="margin-top: 0px;" *ngIf="(today$ | async) === null">
               <div class="row">
-                <div class="col">
-                  <p class="text-center">Loading...</p>
+                <div class="col-md-6">
+                  <ngx-skeleton-loader count="1" [theme]="{ height: '95px', 'margin-bottom': '0px' }">
+                  </ngx-skeleton-loader>
+                </div>
+                <div class="col-md-6">
+                  <ngx-skeleton-loader count="1" [theme]="{ height: '95px', 'margin-bottom': '0px' }">
+                  </ngx-skeleton-loader>
                 </div>
               </div>
             </div>
             <div class="" style="margin-top: 20px; margin-bottom: 1rem;" *ngIf="(today$ | async)?.length === 0">
               <div class="row">
                 <div class="col">
-                  <p class="text-center">No Record Found.</p>
+                  <p class="text-center sb-text mb-0" style="line-height:normal">No docstime referrals today</p>
+                  <p class="text-center" style="line-height: normal;">Currently we have nothing to show</p>
                 </div>
               </div>
             </div>
@@ -61,6 +73,7 @@
                   [facilityID]="appoint.facilityID ? appoint.facilityID : ''"
                   [refercaseUrgent]="appoint.refercaseUrgent ? appoint.refercaseUrgent : ''"
                   [refDocName]="appoint.refDocName ? appoint.refDocName : ''"
+                  [refercaseSentTZID]="appoint.refercaseSentTZID ? appoint.refercaseSentTZID : ''"
                   [refSpecialityName]="appoint.insuranceNames ? appoint.insuranceNames : ''"
                   [specialityName]="appoint.refSpecialityName ? appoint.refSpecialityName : ''"
                   [refercaseVisitDate]="appoint.refercaseVisitDate ? appoint.refercaseVisitDate : ''"
@@ -85,10 +98,11 @@
               </div>
             </div>
           </div>
-          <div class="" style="margin-top: 20px; height: 550px;" *ngIf="(other$ | async) === null">
+          <div class="" style="margin-top: 5px;" *ngIf="(other$ | async) === null">
             <div class="row">
               <div class="col">
-                <p class="text-center">Loading...</p>
+                <ngx-skeleton-loader count="3" [theme]="{ height: '150px' }">
+                </ngx-skeleton-loader>
               </div>
             </div>
           </div>
@@ -96,7 +110,10 @@
             <div class="row">
               <div class="col">
                 <img class="img-center pt-3 pt-lg-5" src="assets/img/no-data.png" alt="No-Data">
-                <p class="text-center" style="padding-right:32px;">No Record Found.</p>
+                <p class="text-center sb-text" style="padding-right:32px; line-height:normal">No new DocsTime referrals.
+                </p>
+                <p class="text-center" style="padding-right:28px; line-height:normal">Currently we have nothing to show
+                </p>
               </div>
             </div>
           </div>

@@ -4,8 +4,9 @@
 
 export const environment = {
   production: false,
-  cookieDomain: 'https://demo.docstime.com', // -<< must be 'localhost'
-  apiBaseUrl: 'https://demo.docstime.com/backend/web/index.php/v1'
+  cookieDomain: 'http://demo.docstime.com', // -<< must be 'localhost'
+  apiBaseUrl: 'http://demo.docstime.com/backend/web/index.php/v2',
+  fileUrl: 'http://demo.docstime.com/backend/web/uploads'
 };
 
 /*

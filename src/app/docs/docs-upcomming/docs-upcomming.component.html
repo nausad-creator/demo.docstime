@@ -54,10 +54,11 @@
       </div>
     </div>
   </div>
-  <div class="" style="margin-top: 40px; height: 550px;" *ngIf="(scheduledUpcomming$ | async) === null">
+  <div class="" style="margin-top: 5px;" *ngIf="(scheduledUpcomming$ | async) === null">
     <div class="row">
       <div class="col">
-        <p class="text-center">Loading...</p>
+        <ngx-skeleton-loader count="5" [theme]="{ height: '150px' }">
+        </ngx-skeleton-loader>
       </div>
     </div>
   </div>

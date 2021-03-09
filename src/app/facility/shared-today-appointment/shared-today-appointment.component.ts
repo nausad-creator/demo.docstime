@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Refer } from '../docs.interface';
 
 @Component({
   selector: 'app-shared-today-appointment',
@@ -46,7 +47,7 @@ export class SharedTodayAppointmentComponent implements OnInit {
     return `${time[0]}${time[1]}${time[2]} ${time[5]}`; // return adjusted time or original string
   }
 
-  onClickView = (referral: any) => {
+  onClickView = (referral: Refer) => {
     this.view.emit(JSON.stringify(referral));
   }
 

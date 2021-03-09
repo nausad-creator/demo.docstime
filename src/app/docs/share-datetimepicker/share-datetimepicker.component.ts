@@ -3,6 +3,8 @@ import { HomeService } from 'src/app/home.service';
 import * as moment from 'moment';
 import { DocsService } from '../docs.service';
 import { Observable } from 'rxjs';
+import { ReferralReceived } from '../docs.interface';
+import { map } from 'rxjs/operators';
 @Component({
   selector: 'app-share-datetimepicker',
   templateUrl: './share-datetimepicker.component.html',
@@ -14,7 +16,7 @@ export class ShareDatetimepickerComponent implements OnInit, DoCheck {
   changes = '';
   @Input() from: string;
   @Output() updateView: EventEmitter<any> = new EventEmitter();
-  scheduledAccepted$: Observable<Array<any>>;
+  scheduledAccepted$: Observable<Array<ReferralReceived>>;
   constructor(
     private service: HomeService,
     private docService: DocsService,
@@ -57,13 +59,21 @@ export class ShareDatetimepickerComponent implements OnInit, DoCheck {
     const data = {
       page: '0',
       facilityID: '0',
+      patientName: '',
+      referbydoctorName: '',
+      insuranceNames: '',
+      patientGender: '',
+      refercaseUrgent: '',
+      reasonIDs: '',
+      refercaseVisitTime: '',
       refercaseStatus: 'Accepted',
       startDate: moment(date).format('YYYY-MM-DD'),
       endDate: moment(date).format('YYYY-MM-DD'),
       languageID: '1',
       doctorID: this.service.getDocLocal() ? this.service.getDocLocal().doctorID : this.service.getDocSession().doctorID
     };
-    this.scheduledAccepted$ = this.docService.referralReceivedLists(JSON.stringify(data));
+    this.scheduledAccepted$ = this.docService.referralReceivedLists(JSON.stringify(data))
+      .pipe(map(res => res[0].data)) as Observable<Array<ReferralReceived>>;
     this.cd.markForCheck();
   }
   ngDoCheck(): any {

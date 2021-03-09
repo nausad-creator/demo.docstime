@@ -7,27 +7,19 @@
           <div class="title-dashbord d-flex">
             <h4 class="text-dark"></h4>
             <div class="ml-auto mb-3"><a (click)="openNPIaddDoctor()" style="cursor: pointer;"
-              class="btn btn-outline-primary">+ Add Doctor</a></div>
+                class="btn btn-outline-primary">+ Add Doctor</a></div>
           </div>
           <div class="appointmen-content appointmen-referral appoinment-show"
             *ngIf="doctorList$ | async as doctorsList">
             <div class="details-list" *ngFor="let doctor of doctorsList | slice:0:show">
-              <div
-            infinite-scroll
-            [infiniteScrollDistance]="scrollDistance"
-            [infiniteScrollThrottle]="throttle"
-            [scrollWindow]="true"
-            (scrolledUp)="onScrollUp()"
-            (scrolled)="onScrollEnd()">
-            <app-shared-list-doctors 
-                [doctorFullName]="doctor.doctorFullName" 
-                [doctorGender]="doctor.doctorGender"
-                [doctorProfileImage]="doctor.doctorProfileImage"
-                [specialityName]="doctor.speciality.length > 0 ? doctor.speciality[0].specialityName : []"
-                [wholeObject]="doctor"
-                (view)="openDoctorViewModal($event)">
-              </app-shared-list-doctors>
-          </div>
+              <div infinite-scroll [infiniteScrollDistance]="scrollDistance" [infiniteScrollThrottle]="throttle"
+                [scrollWindow]="true" (scrolledUp)="onScrollUp()" (scrolled)="onScrollEnd()">
+                <app-shared-list-doctors [doctorFullName]="doctor.doctorFullName" [doctorGender]="doctor.doctorGender"
+                  [doctorProfileImage]="doctor.doctorProfileImage"
+                  [specialityName]="doctor.speciality.length > 0 ? doctor.speciality[0].specialityName : []"
+                  [wholeObject]="doctor" (view)="openDoctorViewModal($event)">
+                </app-shared-list-doctors>
+              </div>
             </div>
             <div class="row" style="min-height: 250px;" *ngIf="doctorsList.length > 0 && doctorsList.length <= 3">
               <div class="">
@@ -42,11 +34,10 @@
               </div>
             </div>
           </div>
-          <div class="" style="margin-top: 40px; height: 550px;" *ngIf="(doctorList$ | async) === null">
-            <div class="row">
-              <div class="col">
-                <p class="text-center">Loading...</p>
-              </div>
+          <div class="" *ngIf="(doctorList$ | async) === null">
+            <div style="margin-top: 2px;">
+              <ngx-skeleton-loader count="7" [theme]="{ height: '90px' }">
+              </ngx-skeleton-loader>
             </div>
           </div>
           <div class="" style="margin-top: 40px; height: 530px" *ngIf="(doctorList$ | async) === undefined">

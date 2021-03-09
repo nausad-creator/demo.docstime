@@ -9,29 +9,28 @@
             <div class="ml-auto mb-3"><a style="cursor: pointer;" (click)="onClickAddCases()"
                 class="btn btn-outline-primary">Refer a Patient</a></div>
           </div> -->
+          <app-shared-filter [component]="'sent'" (filter)="onAppliedFilter($event)" (resetFilter)="onResetFilter()"
+            *ngIf="isEmpty"></app-shared-filter>
           <div class="appointmen-content appointmen-referral appoinment-show" *ngIf="all.length>0">
-              <div
-            infinite-scroll
-            [infiniteScrollDistance]="scrollDistance"
-            [infiniteScrollThrottle]="throttle"
-            [scrollWindow]="true"
-            (scrolled)="onScrollEnd()">
-            <div class="details-list" *ngFor="let appoint of all">
-            <app-share-referral-sent [patientFirstName]="appoint.patientFirstName ? appoint.patientFirstName : ''"
-            [patientLastName]="appoint.patientLastName ? appoint.patientLastName : ''"
-            [reasonName]="appoint.reasonName ? appoint.reasonName : appoint.reasonNames ? appoint.reasonNames : ''"
-            [patientGender]="appoint.patientGender ? appoint.patientGender : ''"
-            [age]="appoint.age ? appoint.age : '0'"
-            [refercaseUrgent]="appoint.refercaseUrgent ? appoint.refercaseUrgent : ''"
-            [refSpecialityName]="appoint.insuranceNames ? appoint.insuranceNames : ''"
-            [specialityName]="appoint.specialityName ? appoint.specialityName : ''"
-            [doctorFullName]="appoint.doctorFullName ? appoint.doctorFullName : ''"
-            [refercaseVisitDate]="appoint.refercaseVisitDate ? appoint.refercaseVisitDate : ''"
-            [refercaseVisitTime]="appoint.refercaseVisitTime !== null && appoint.refercaseVisitTime !== Undefined && appoint.refercaseVisitTime !== '' ? appoint.refercaseVisitTime : ''"
-            [refercaseStatus]="appoint.refercaseStatus ? appoint.refercaseStatus : ''" [wholeObject]="appoint"
-            (view)="showReferralClick($event)">
-          </app-share-referral-sent>
-        </div>
+            <div infinite-scroll [infiniteScrollDistance]="scrollDistance" [infiniteScrollThrottle]="throttle"
+              [scrollWindow]="true" (scrolled)="onScrollEnd()">
+              <div class="details-list" *ngFor="let appoint of all">
+                <app-share-referral-sent [patientFirstName]="appoint.patientFirstName ? appoint.patientFirstName : ''"
+                  [patientLastName]="appoint.patientLastName ? appoint.patientLastName : ''"
+                  [reasonName]="appoint.reasonName ? appoint.reasonName : appoint.reasonNames ? appoint.reasonNames : ''"
+                  [patientGender]="appoint.patientGender ? appoint.patientGender : ''"
+                  [age]="appoint.age ? appoint.age : '0'"
+                  [refercaseUrgent]="appoint.refercaseUrgent ? appoint.refercaseUrgent : ''"
+                  [refSpecialityName]="appoint.insuranceNames ? appoint.insuranceNames : ''"
+                  [specialityName]="appoint.specialityName ? appoint.specialityName : ''"
+                  [doctorFullName]="appoint.doctorFullName ? appoint.doctorFullName : ''"
+                  [timeline]="appoint.timeline.length > 0 ? appoint.timeline : []"
+                  [refercaseVisitDate]="appoint.refercaseVisitDate ? appoint.refercaseVisitDate : ''"
+                  [refercaseVisitTime]="appoint.refercaseVisitTime !== null && appoint.refercaseVisitTime !== Undefined && appoint.refercaseVisitTime !== '' ? appoint.refercaseVisitTime : ''"
+                  [refercaseStatus]="appoint.refercaseStatus ? appoint.refercaseStatus : ''" [wholeObject]="appoint"
+                  (view)="showReferralClick($event)">
+                </app-share-referral-sent>
+              </div>
             </div>
             <div class="row" style="min-height: 250px;" *ngIf="all.length > 0 && all.length <= 3">
               <div class="">
@@ -46,10 +45,11 @@
               </div>
             </div>
           </div>
-          <div class="" style="margin-top: 40px; height: 550px;" *ngIf="(referralSent$ | async) === null">
+          <div class="" style="margin-top: 5px;" *ngIf="(referralSent$ | async) === null">
             <div class="row">
               <div class="col">
-                <p class="text-center">Loading...</p>
+                <ngx-skeleton-loader count="5" [theme]="{ height: '150px' }">
+                </ngx-skeleton-loader>
               </div>
             </div>
           </div>

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, EventEmitter, KeyValueDiffers, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, KeyValueDiffers, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { Observable, Subject, Subscription, merge } from 'rxjs';
@@ -7,6 +7,7 @@ import { HomeService } from 'src/app/home.service';
 import { DocsService } from '../docs.service';
 import { faShareAlt } from '@fortawesome/free-solid-svg-icons';
 import { environment } from 'src/environments/environment';
+import { ReceivedCount } from '../docs.interface';
 const currentDate = new Date();
 @Component({
   selector: 'app-doc-nav',
@@ -15,7 +16,7 @@ const currentDate = new Date();
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DocNavComponent implements OnInit, DoCheck, OnDestroy {
-  scheduledAll$: Observable<Array<any>>;
+  scheduledAll$: Observable<Array<ReceivedCount>>;
   forceReload$ = new Subject<void>();
   count = 0;
   pendingCount = 0;
@@ -31,7 +32,7 @@ export class DocNavComponent implements OnInit, DoCheck, OnDestroy {
     doctorFullName: '',
     doctorProfileImage: ''
   };
-  baseUrl = `${environment.apiBaseUrl}/backend/web/uploads`;
+  baseUrl = `${environment.fileUrl}`;
   url: string;
   routeUrl: string;
   constructor(
@@ -46,15 +47,15 @@ export class DocNavComponent implements OnInit, DoCheck, OnDestroy {
   }
 
   ngOnInit(): void {
-    const initialValue$ = this.getDataOnce();
-    const updates$ = this.forceReload$.pipe(mergeMap(() => this.getDataOnce()));
+    const initialValue$ = this.getDataOnce() as Observable<Array<ReceivedCount>>;
+    const updates$ = this.forceReload$.pipe(mergeMap(() => this.getDataOnce() as Observable<Array<ReceivedCount>>));
     this.scheduledAll$ = merge(initialValue$, updates$);
-    this.subscription = this.scheduledAll$.subscribe((res: Array<any>) => {
-     if (res[0].status !== 'false'){
-      res[0].data.length > 0 ? this.count = +res[0].data[0].doctorbadgeCount : this.count = 0;
-      res[0].count.length > 0 ? this.pendingCount = +res[0].count[0].pendingCount : this.pendingCount = 0;
-      this.cd.markForCheck();
-     }
+    this.subscription = this.scheduledAll$.subscribe((res: Array<ReceivedCount>) => {
+      if (res[0].status !== 'false') {
+        res[0].data.length > 0 ? this.count = +res[0].data[0].doctorbadgeCount : this.count = 0;
+        res[0].count.length > 0 ? this.pendingCount = res[0].count[0].pendingCount : this.pendingCount = 0;
+        this.cd.markForCheck();
+      }
     }, err => console.error(err));
     // this is for behavior subject
     this.service.update.subscribe((res) => this.detectChange = res);
@@ -120,7 +121,7 @@ export class DocNavComponent implements OnInit, DoCheck, OnDestroy {
     this.service.getDocLocal() ? this.service.removeLocal() : this.service.removeSession();
     this.docService.unSubscribe();
     this.docService.unSubs();
-    if (window.sessionStorage){
+    if (window.sessionStorage) {
       sessionStorage.clear();
     }
     setTimeout(() => {

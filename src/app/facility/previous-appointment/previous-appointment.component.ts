@@ -1,6 +1,6 @@
-import { chainedInstruction } from '@angular/compiler/src/render3/view/util';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { environment } from 'src/environments/environment';
+import { ReferCase } from '../docs.interface';
 
 @Component({
   selector: 'app-previous-appointment',
@@ -28,7 +28,7 @@ export class PreviousAppointmentComponent implements OnInit {
   fullName: string;
   convertedTime: string;
   preFixDRstr: string;
-  baseUrl = `${environment.apiBaseUrl}/backend/web/uploads`;
+  baseUrl = `${environment.fileUrl}`;
   url: string;
   constructor(private cd: ChangeDetectorRef) { }
 
@@ -57,7 +57,7 @@ export class PreviousAppointmentComponent implements OnInit {
     return time[0] + '' + time[1] + '' + time[2] + ' ' + time[5]; // return adjusted time or original string
   }
 
-  onClickViewPrivious = (referral: any) => {
+  onClickViewPrivious = (referral: ReferCase) => {
     referral.refercaseStatus = 'Completed';
     this.view.emit(JSON.stringify(referral));
   }

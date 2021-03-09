@@ -1,7 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { HomeService } from 'src/app/home.service';
 import { ConfirmReceivedModalComponent } from '../confirm-received-modal/confirm-received-modal.component';
+import { DocStore } from '../doc-store.service';
+import { ReferCase } from '../docs.interface';
 import { RejectReceivedModalComponent } from '../reject-received-modal/reject-received-modal.component';
 
 @Component({
@@ -23,9 +26,10 @@ export class ShareNewAppointmentsComponent implements OnInit {
   @Input() refercaseVisitDate: string;
   @Input() refercaseVisitTime: string;
   @Input() refercaseStatus: string;
+  @Input() refercaseSentTZID: string;
   @Input() refercaseID: string;
   @Input() facilityID: string;
-  @Input() wholeOBject: any;
+  @Input() wholeOBject: ReferCase;
   @Output() view: EventEmitter<any> = new EventEmitter();
   @Output() updateView: EventEmitter<any> = new EventEmitter();
   @Output() updateViewToday: EventEmitter<any> = new EventEmitter();
@@ -37,7 +41,9 @@ export class ShareNewAppointmentsComponent implements OnInit {
   constructor(
     private modalService: BsModalService,
     private cd: ChangeDetectorRef,
-    private service: HomeService
+    private service: HomeService,
+    private store: DocStore,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -80,7 +86,7 @@ export class ShareNewAppointmentsComponent implements OnInit {
       }]
     };
     this.bsModalRef = this.modalService.show(ConfirmReceivedModalComponent, { id: 201, initialState });
-    this.bsModalRef.content.event.subscribe((res: any) => {
+    this.bsModalRef.content.event.subscribe((res: string) => {
       const data = JSON.parse(res);
       if (data.res === 'confirmed') {
         const pDate = new Date(data.refercaseVisitDate).setHours(0, 0, 0, 0);
@@ -99,28 +105,22 @@ export class ShareNewAppointmentsComponent implements OnInit {
   openModalReject = () => {
     const initialState = {
       list: [{
-        name: this.fullName,
-        convertedTime: this.convertedTime,
-        refercaseVisitTime: this.refercaseVisitTime ? this.refercaseVisitTime : '',
-        genderAtZero: this.genderAtZero,
-        refercaseVisitDate: this.refercaseVisitDate,
-        age: this.age,
-        reasonName: this.reasonName,
         refercaseID: this.refercaseID,
-        refSpecialityName: this.refSpecialityName,
-        facilityID: this.facilityID
+        facilityID: this.facilityID,
+        tzID: this.refercaseSentTZID ? this.refercaseSentTZID : '',
+        url: this.router.url
       }]
     };
-    this.bsModalRef = this.modalService.show(RejectReceivedModalComponent, { id: 912, initialState });
-    this.bsModalRef.content.event.subscribe((res: any) => {
+    this.store.setRejectrefer(JSON.stringify(this.wholeOBject));
+    this.bsModalRef = this.modalService.show(RejectReceivedModalComponent, { id: 911, initialState });
+    this.bsModalRef.content.event.subscribe((res: string) => {
       const data = JSON.parse(res);
       if (data.res === 'confirmed') {
         this.updateView.emit('Update');
       }
     });
   }
-
-  onClickView = (referral: any) => {
+  onClickView = (referral: ReferCase) => {
     this.view.emit(JSON.stringify(referral));
   }
 }

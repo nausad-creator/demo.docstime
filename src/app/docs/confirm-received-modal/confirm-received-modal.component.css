@@ -28,3 +28,27 @@
     border-radius: .3rem;
     outline: 0;
 }
+.inputWithIcon input [id="dov"] {
+  padding-right: 40px;
+}
+
+.inputWithIcon input [id="time"] {
+  padding-right: 40px;
+}
+
+.inputWithIcon {
+  position: relative;
+}
+
+.inputWithIcon i {
+  position: absolute;
+  right: 0px;
+  top: 3px;
+  padding: 9px 7px;
+}
+input[name="dov"] {
+  word-spacing:-3px;
+}
+.btn-mrgin{
+  margin-right: 15px;
+}

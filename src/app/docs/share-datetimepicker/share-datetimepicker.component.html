@@ -21,10 +21,11 @@
         </div>
       </div>
     </div>
-    <div class="" style="margin-top: 40px; height: 50px;" *ngIf="(scheduledAccepted$ | async) === null">
+    <div class="" style="margin-top: 10px;" *ngIf="(scheduledAccepted$ | async) === null">
       <div class="row">
         <div class="col">
-          <p class="text-center">Loading...</p>
+          <ngx-skeleton-loader count="5" [theme]="{ height: '67px' }">
+          </ngx-skeleton-loader>
         </div>
       </div>
     </div>

@@ -7,6 +7,8 @@ import { Router } from '@angular/router';
 import { FacilityService } from '../facility.service';
 import { Location } from '@angular/common';
 import { Store } from '../store.service';
+import { ReferCase } from '../docs.interface';
+import { DeleteConfirmationComponent } from './delete-confirmation/delete-confirmation.component';
 
 @Component({
   selector: 'app-view-refer',
@@ -15,7 +17,7 @@ import { Store } from '../store.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ViewReferComponent implements OnInit {
-  caseViewData: any;
+  caseViewData: ReferCase;
   from: string;
   @Input() refercaseVisitDate: string;
   convertedTime: string;
@@ -37,7 +39,7 @@ export class ViewReferComponent implements OnInit {
     });
   }
   async ngOnInit(): Promise<void> {
-    this.caseViewData = await this.getViewData() as object;
+    this.caseViewData = await this.getViewData() as ReferCase;
     this.from = JSON.parse(this.store.referView).from;
     this.refercaseVisitDate = this.caseViewData.refercaseVisitDate;
     const time = this.caseViewData.refercaseVisitTime !== null && this.caseViewData.refercaseVisitTime !== 'Undefined' ?
@@ -56,7 +58,7 @@ export class ViewReferComponent implements OnInit {
     this.cd.markForCheck();
   }
 
-  openModalConfirm = (post: any) => {
+  openModalConfirm = (post: ReferCase) => {
     const initialState = {
       list: [{
         name: post.patientFirstName ? post.patientFirstName : 'Undefined',
@@ -73,7 +75,7 @@ export class ViewReferComponent implements OnInit {
       }]
     };
     this.bsModalRef = this.modalService.show(ConfirmedReceivedModalComponent, { id: 200, initialState });
-    this.bsModalRef.content.event.subscribe((res: any) => {
+    this.bsModalRef.content.event.subscribe((res: string) => {
       const data = JSON.parse(res);
       if (data.res === 'confirmed') {
         setTimeout(() => {
@@ -82,24 +84,19 @@ export class ViewReferComponent implements OnInit {
       }
     });
   }
-  openModalReject = (post: any) => {
+  openModalReject = (post: ReferCase) => {
     const initialState = {
       list: [{
-        name: post.patientFirstName ? post.patientFirstName : 'Undefined',
-        convertedTime: post.refercaseVisitTime ? this.tConvert(post.refercaseVisitTime) : 'Undefined',
-        refercaseVisitTime: post.refercaseVisitTime ? post.refercaseVisitTime : '',
-        genderAtZero: post.patientGender.charAt(0),
-        refercaseVisitDate: post.refercaseOrgVisitDate,
-        age: post.age ? post.age : '0',
-        reasonName: post.reasonName ? post.reasonName : post.reasonNames,
         refercaseID: post.refercaseID,
-        refSpecialityName: post.insuranceNames ? `/${post.insuranceNames}` : '',
         facilityID: post.facilityID,
-        doctorID: post.doctorID
+        tzID: post.refercaseSentTZID ? post.refercaseSentTZID : '',
+        doctorID: post.doctorID,
+        url: this.router.url
       }]
     };
+    this.store.setRejectrefer(JSON.stringify(post));
     this.bsModalRef = this.modalService.show(RejectReceivedModalComponent, { id: 911, initialState });
-    this.bsModalRef.content.event.subscribe((res: any) => {
+    this.bsModalRef.content.event.subscribe((res: string) => {
       const data = JSON.parse(res);
       if (data.res === 'confirmed') {
         setTimeout(() => {
@@ -168,34 +165,63 @@ export class ViewReferComponent implements OnInit {
   openInNewWindow = (file: string) => {
     window.open(file);
   }
-  onClickRereferDashboard = (data: any) => {
+  onClickRereferDashboard = (data: ReferCase) => {
     this.store.setRerefer(JSON.stringify(data));
     this.router.navigate(['/facility/facility-dashboard/re-refer-case']);
     this.cd.markForCheck();
   }
-  onClickRereferSent = (data: any) => {
+  onClickRereferSent = (data: ReferCase) => {
     this.store.setRerefer(JSON.stringify(data));
     this.router.navigate(['/facility/facility-referral-sent/re-refer-case']);
     this.cd.markForCheck();
   }
-  onClickRereferReceived = (data: any) => {
+  onClickRereferReceived = (data: ReferCase) => {
     this.store.setRerefer(JSON.stringify(data));
     this.router.navigate(['/facility/facility-referral-received/re-refer-case']);
     this.cd.markForCheck();
   }
-  onClickRereferDoctorsList = (data: any) => {
+  onClickRereferDoctorsList = (data: ReferCase) => {
     this.store.setRerefer(JSON.stringify(data));
     this.router.navigate(['/facility/facility-doctors-list/re-refer-case']);
     this.cd.markForCheck();
   }
-  onClickRereferNotification = (data: any) => {
+  onClickRereferNotification = (data: ReferCase) => {
     this.store.setRerefer(JSON.stringify(data));
     this.router.navigate(['/facility/facility-notifications/re-refer-case']);
     this.cd.markForCheck();
   }
-  onClickRereferAdd = (data: any) => {
+  onClickRereferAdd = (data: ReferCase) => {
     this.store.setRerefer(JSON.stringify(data));
     this.router.navigate(['/facility/facility-add-refer-case/re-refer-case']);
     this.cd.markForCheck();
+  }
+  editCase = (data: ReferCase) => {
+    this.store.setEditrefer(JSON.stringify(data));
+    this.router.navigate(['/facility/facility-referral-sent/edit-refer-case']);
+  }
+  deleteCase = (refercaseID: string) => {
+    const initialState = {
+      list: [{ refercaseID }]
+    };
+    this.bsModalRef = this.modalService.show(DeleteConfirmationComponent, {
+        id: 919,
+        initialState,
+        animated: false,
+        ignoreBackdropClick: true,
+        keyboard: false,
+        // class: 'modal-dialog-centered'
+      });
+    this.bsModalRef.content.event.subscribe((res: string) => {
+      const data = JSON.parse(res);
+      if (data.res === 'confirmed') {
+        this.facilityService.forceReloadSentList();
+        const url = this.router.url.split('/');
+        if (`/${url[2]}` === '/notifications') {
+          this.facilityService.forceReloadNotify();
+          this.store.setReferView(null);
+        }
+        this.location.back();
+      }
+    });
   }
 }

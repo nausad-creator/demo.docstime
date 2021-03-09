@@ -9,6 +9,7 @@
             <div class="ml-auto mb-3"><a style="cursor: pointer;" (click)="onClickAddCases()"
                 class="btn btn-outline-primary">Refer a Patient</a></div>
           </div> -->
+          <app-shared-filter [component]="'sent'" (filter)="onAppliedFilter($event)" (resetFilter)="onResetFilter()" *ngIf="isEmpty"></app-shared-filter>
           <div class="appointmen-content appoinment-show appointmen-referral" *ngIf="all.length>0">
             <div
             infinite-scroll
@@ -28,7 +29,9 @@
                 [doctorFullName]="appoint.doctorFullName ? appoint.doctorFullName : ''"
                 [refercaseVisitDate]="appoint.refercaseVisitDate ? appoint.refercaseVisitDate : ''"
                 [refercaseVisitTime]="appoint.refercaseVisitTime !== null && appoint.refercaseVisitTime !== Undefined && appoint.refercaseVisitTime !== '' ? appoint.refercaseVisitTime : ''"
-                [refercaseStatus]="appoint.refercaseStatus ? appoint.refercaseStatus : ''" [wholeObject]="appoint"
+                [refercaseStatus]="appoint.refercaseStatus ? appoint.refercaseStatus : ''" 
+                [timeline]="appoint.timeline.length > 0 ? appoint.timeline : []"
+                [wholeObject]="appoint"
                 (view)="showReferralClick($event)">
               </app-share-referral-sent>
             </div>
@@ -47,10 +50,11 @@
             </div>
             <!-- </div> -->
           </div>
-          <div class="" style="margin-top: 40px; height: 550px;" *ngIf="(referralSent$ | async) === null">
+          <div class="" style="margin-top: 5px;" *ngIf="(referralSent$ | async) === null">
             <div class="row">
               <div class="col">
-                <p class="text-center">Loading...</p>
+                <ngx-skeleton-loader count="5" [theme]="{ height: '150px' }">
+                </ngx-skeleton-loader>
               </div>
             </div>
           </div>

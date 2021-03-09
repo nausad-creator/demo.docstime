@@ -29,7 +29,7 @@ export class AddOrExistingDoctorModalComponent implements OnInit {
   mobileForCheck: string;
   name: string;
   maxSize = 2048000;
-  baseUrl = `${environment.apiBaseUrl}/backend/web/uploads`;
+  baseUrl = `${environment.fileUrl}`;
   selectedFiles: File;
   degreeList$: Observable<Array<any>>;
   specialityList$: Observable<Array<any>>;

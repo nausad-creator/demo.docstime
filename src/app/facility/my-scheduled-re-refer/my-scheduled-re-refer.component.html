@@ -108,8 +108,8 @@
                     <label for="Insurance">Insurance</label>
                     <div class="form-group">
                       <ng-select [closeOnSelect]="true" [addTag]="true" [addTagText]="'Add'" [searchable]="true"
-                        appearance="outline" placeholder="Enter Insurance" formControlName="insuranceName"
-                        class="custom" labelForId="Insurance" name="insuranceName">
+                        appearance="outline" placeholder="Enter Insurance" formControlName="insuranceNames"
+                        class="custom" labelForId="Insurance" name="insuranceNames">
                         <ng-option *ngFor="let ins of (insuranceList$ | async)" [value]="ins.insuranceName">
                           {{ins.insuranceName}}</ng-option>
                       </ng-select>
@@ -179,15 +179,14 @@
                     </div>
                   </div>
                   <div class="col-sm-6" *ngIf="isNPI">
-                    <label for="Insurance">Referred to NPI</label>
+                    <label for="npi">Referred to NPI</label>
                     <div class="form-group">
-                      <input class="form-control" maxlength="10" formControlName="refercaseNPI" name="NPI" id="NPI"
-                        type="text" placeholder="Enter NPI">
-                      <small class="text-danger text-center"
-                        *ngIf="referCaseForm.controls['refercaseNPI'].hasError('pattern') && (referCaseForm.controls['refercaseNPI'].dirty || referCaseForm.controls['refercaseNPI'].touched)">Only
-                        numeric
-                        value & NPI
-                        number must be only 10 digit.</small>
+                      <ng-select [items]="doctorListNPI$ | async" [closeOnSelect]="true" bindLabel="doctorFullName"
+                        bindValue="doctorNPI" class="custom" labelForId="npi" placeholder="Enter NPI or name"
+                        [minTermLength]="1" typeToSearchText="Please enter 1 or more characters"
+                        [trackByFn]="trackByFnDoctorNPI" [typeahead]="doctorInputNPI$" [loading]="loadingDoctors"
+                        formControlName="refercaseNPI">
+                      </ng-select>
                     </div>
                   </div>
                   <div class="col-sm-12"></div>
@@ -214,7 +213,8 @@
                         placeholder="hh:mm am/pm (Optional)" formControlName="refercaseVisitTime" name="time" id="time"
                         [owlDateTime]="dt4">
                       <a class="cursr"><i [owlDateTimeTrigger]="dt4" class="ti-time cursr"></i></a>
-                      <owl-date-time [hour12Timer]="true" [pickerType]="'timer'" #dt4></owl-date-time>
+                      <owl-date-time [hour12Timer]="true" [startAt]="startAt" [stepMinute]="15" [pickerType]="'timer'"
+                        #dt4></owl-date-time>
                       <small class="text-danger small"
                         *ngIf="referCaseForm.controls['refercaseVisitTime'].hasError('emptyDate')">Please
                         select Date of visit first.</small>

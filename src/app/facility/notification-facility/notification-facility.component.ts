@@ -1,13 +1,15 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, KeyValueDiffers, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import * as moment from 'moment';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-import { merge, Observable, Subject, Subscription } from 'rxjs';
-import { mergeMap, take } from 'rxjs/operators';
+import { merge, Observable, of, Subject, Subscription } from 'rxjs';
+import { catchError, map, mergeMap, take, tap } from 'rxjs/operators';
 import { HomeService } from 'src/app/home.service';
 import { FacilityService } from '../facility.service';
 import { Store } from '../store.service';
-
+import { Notification } from '../docs.interface';
+const currentDate = new Date();
 @Component({
   selector: 'app-notification-facility',
   templateUrl: './notification-facility.component.html',
@@ -15,7 +17,7 @@ import { Store } from '../store.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotificationFacilityComponent implements OnInit, DoCheck, OnDestroy {
-  notificationLists$: Observable<Array<any>>;
+  notificationLists$: Observable<Array<Notification>>;
   forceReload$ = new Subject<void>();
   throttle = 10;
   scrollDistance = 0.3;
@@ -23,7 +25,15 @@ export class NotificationFacilityComponent implements OnInit, DoCheck, OnDestroy
   notification = [];
   changes = '';
   differ: any;
-  subscription: Subscription;
+  recordCount: number;
+  isEmpty = false;
+  subscriptionInitial: Subscription;
+  subscriptionUpdates: Subscription;
+  data = {
+    loginuserID: '',
+    languageID: '1',
+    page: this.page.toString()
+  };
   constructor(
     private facilityService: FacilityService,
     private service: HomeService,
@@ -37,17 +47,15 @@ export class NotificationFacilityComponent implements OnInit, DoCheck, OnDestroy
     // detect diff
     this.differ = this.differs.find({}).create();
   }
-  ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
-  }
 
   ngOnInit(): void {
-    const initialValue$ = this.getDataOnce();
-    const updates$ = this.forceReload$.pipe(mergeMap(() => this.getDataOnce()));
+    // initialization
+    this.data.loginuserID = this.service.getFaLocal() ? this.service.getFaLocal().facilityID : this.service.getFaSession().facilityID;
+    // getting data
+    const initialValue$ = this.getDataOnce() as Observable<Array<Notification>>;
+    const updates$ = this.forceReload$.pipe(mergeMap(() => this.getDataOnce() as Observable<Array<Notification>>));
     this.notificationLists$ = merge(initialValue$, updates$);
-    this.subscription = this.notificationLists$
+    this.subscriptionInitial = this.notificationLists$
       .subscribe(res => res ? this.notification = res : this.notification = [], err => console.error(err));
     this.cd.markForCheck();
     // behavior subscription
@@ -55,44 +63,38 @@ export class NotificationFacilityComponent implements OnInit, DoCheck, OnDestroy
   }
   getDataOnce = () => {
     this.page = 0;
-    const data = {
-      loginuserID: this.service.getFaLocal() ? this.service.getFaLocal().facilityID : this.service.getFaSession().facilityID,
-      languageID: '1',
-      page: this.page.toString()
-    };
-    return this.facilityService.notifyList(JSON.stringify(data)).pipe(take(1));
+    this.data.page = this.page.toString();
+    return this.facilityService.notifyList(JSON.stringify(this.data)).pipe(
+      tap((c) => {
+        this.recordCount = c[0].recordcount;
+        this.isEmpty = c[0].recordcount > 0 ? true : false;
+      }), map(res => res[0].data),
+      take(1), catchError(() => of([]))) as Observable<Array<Notification>>;
   }
   onUpdateList = () => {
     this.facilityService.forceReloadNotify();
     this.forceReload$.next();
   }
   onScrollEnd = () => {
-    if (this.notification.length >= 10) {
+    if (this.recordCount !== this.notification.length) {
       this.spinner.show();
       this.page++;
-      const data = {
-        loginuserID: this.service.getFaLocal() ? this.service.getFaLocal().facilityID : this.service.getFaSession().facilityID,
-        languageID: '1',
-        page: this.page.toString()
-      };
-      this.moreNotificationsList(JSON.stringify(data)).then((newVal: Array<any>) => {
-        if (newVal.length > 0) {
-          newVal.map((vl: any) => this.notification.push(vl));
-          this.cd.markForCheck();
-        }
-      }).catch(err => console.error(err)).finally(() => this.spinner.hide());
+      this.data.page = this.page.toString();
+      this.subscriptionUpdates = this.moreNotificationsList(JSON.stringify(this.data)).subscribe((res) => {
+        res.map(v => this.notification.push(v));
+        this.cd.markForCheck();
+      },
+        () => this.spinner.hide(),
+        () => this.spinner.hide()
+      );
     }
   }
   moreNotificationsList = (data: string) => {
-    return new Promise((resolve, reject) => {
-      this.facilityService.notificationLists(data).subscribe(res => {
-        if (res) {
-          resolve(res);
-        } else {
-          resolve([]);
-        }
-      }, err => reject(err));
-    });
+    return this.facilityService.notificationLists(data).pipe(tap((count) => {
+      this.recordCount = count[0].recordcount;
+      this.spinner.hide();
+    }), map(res => res[0].data),
+      catchError(() => of([]))) as Observable<Array<Notification>>;
   }
   ngDoCheck(): any {
     const change = this.differ.diff(this);
@@ -138,11 +140,58 @@ export class NotificationFacilityComponent implements OnInit, DoCheck, OnDestroy
       this.toastr.error('No Data Found', 'Error');
     }
   }
+  substractDays = (date: string | number | Date, days: number) => {
+    const result = new Date(date);
+    result.setDate(result.getDate() - days);
+    return result;
+  }
+  clearOneWeek = () => {
+    this.spinner.show();
+    const data = {
+      loginuserID: this.service.getFaLocal() ? this.service.getFaLocal().facilityID : this.service.getFaSession().facilityID,
+      languageID: '1',
+      notificationID: '',
+      startDate: moment(this.substractDays(currentDate, 7)).format('YYYY-MM-DD'),
+      endDate: moment(currentDate).format('YYYY-MM-DD'),
+      deleteAll: '',
+    };
+    this.delete(JSON.stringify(data))
+      .then(res => res[0].status === 'true' ? this.toastr.success('Deleted successfully') : this.toastr.error('Some error occured, please try again later'))
+      .catch(() => this.toastr.error('Some error occured, please try again later'))
+      .finally(() => { this.onUpdateList(); this.spinner.hide(); });
+  }
+  delete = (post: string) => {
+    return new Promise((resolve, reject) => {
+      this.facilityService.deleteNotification(post).subscribe((res) => resolve(res), error => reject(error));
+    });
+  }
+  clearAll = () => {
+    this.spinner.show();
+    const data = {
+      loginuserID: this.service.getFaLocal() ? this.service.getFaLocal().facilityID : this.service.getFaSession().facilityID,
+      languageID: '1',
+      notificationID: '',
+      startDate: '',
+      endDate: '',
+      deleteAll: 'Yes',
+    };
+    this.delete(JSON.stringify(data))
+      .then(res => res[0].status === 'true' ? this.toastr.success('Deleted successfully') : this.toastr.error('Some error occured, please try again later'))
+      .catch(() => this.toastr.error('Some error occured, please try again later'))
+      .finally(() => { this.onUpdateList(); this.spinner.hide(); });
+  }
   onClickReferCase = (post: string) => {
     this.spinner.show();
     return new Promise((resolve, reject) => {
       this.facilityService.referralReceived(post).subscribe(res => resolve(res), err => reject(err));
     });
   }
-
+  ngOnDestroy(): void {
+    if (this.subscriptionUpdates) {
+      this.subscriptionUpdates.unsubscribe();
+    }
+    if (this.subscriptionInitial) {
+      this.subscriptionInitial.unsubscribe();
+    }
+  }
 }

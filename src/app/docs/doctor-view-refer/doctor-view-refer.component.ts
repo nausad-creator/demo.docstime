@@ -8,6 +8,8 @@ import { RejectReceivedModalComponent } from '../reject-received-modal/reject-re
 import { HomeService } from 'src/app/home.service';
 import { Location } from '@angular/common';
 import { DocStore } from '../doc-store.service';
+import { ReferCase } from '../docs.interface';
+import { DeleteConfirmationComponent } from './delete-confirmation/delete-confirmation.component';
 
 @Component({
   selector: 'app-doctor-view-refer',
@@ -16,7 +18,7 @@ import { DocStore } from '../doc-store.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DoctorViewReferComponent implements OnInit {
-  caseViewData: any;
+  caseViewData: ReferCase;
   from: string;
   @Input() refercaseVisitDate: string;
   convertedTime: string;
@@ -30,8 +32,7 @@ export class DoctorViewReferComponent implements OnInit {
     private service: HomeService,
     private docService: DocsService,
     private location: Location,
-    private store: DocStore
-  ) { }
+    private store: DocStore) { }
   bsModalRef: BsModalRef;
   getViewData = () => {
     return new Promise(resolve => {
@@ -39,7 +40,7 @@ export class DoctorViewReferComponent implements OnInit {
     });
   }
   async ngOnInit(): Promise<void> {
-    this.caseViewData = await this.getViewData() as object;
+    this.caseViewData = await this.getViewData() as ReferCase;
     this.from = JSON.parse(this.store.referView).from;
     this.refercaseVisitDate = this.caseViewData.refercaseVisitDate;
     const time = this.caseViewData.refercaseVisitTime !== null && this.caseViewData.refercaseVisitTime !== 'Undefined' ?
@@ -59,7 +60,7 @@ export class DoctorViewReferComponent implements OnInit {
     this.cd.markForCheck();
   }
 
-  openModalConfirm = (post: any) => {
+  openModalConfirm = (post: ReferCase) => {
     const initialState = {
       list: [{
         name: post.patientFirstName ? post.patientFirstName : 'Undefined',
@@ -76,7 +77,7 @@ export class DoctorViewReferComponent implements OnInit {
       }]
     };
     this.bsModalRef = this.modalService.show(ConfirmReceivedModalComponent, { id: 200, initialState });
-    this.bsModalRef.content.event.subscribe((res: any) => {
+    this.bsModalRef.content.event.subscribe((res: string) => {
       const data = JSON.parse(res);
       if (data.res === 'confirmed') {
         setTimeout(() => {
@@ -85,24 +86,19 @@ export class DoctorViewReferComponent implements OnInit {
       }
     });
   }
-  openModalReject = (post: any) => {
+  openModalReject = (post: ReferCase) => {
     const initialState = {
       list: [{
-        name: post.patientFirstName ? post.patientFirstName : 'Undefined',
-        convertedTime: post.refercaseVisitTime ? this.tConvert(post.refercaseVisitTime) : 'Undefined',
-        refercaseVisitTime: post.refercaseVisitTime ? post.refercaseVisitTime : '',
-        genderAtZero: post.patientGender.charAt(0),
-        refercaseVisitDate: post.refercaseVisitDate ? post.refercaseVisitDate : '',
-        age: post.age ? post.age : '0',
-        reasonName: post.reasonName ? post.reasonName : post.reasonNames,
+        doctorID: this.service.getDocLocal() ? this.service.getDocLocal().doctorID : this.service.getDocSession().doctorID,
         refercaseID: post.refercaseID,
-        refSpecialityName: post.insuranceNames ? `/${post.insuranceNames}` : '',
         facilityID: post.facilityID,
-        doctorID: this.service.getDocLocal() ? this.service.getDocLocal().doctorID : this.service.getDocSession().doctorID
+        tzID: post.refercaseSentTZID ? post.refercaseSentTZID : '',
+        url: this.router.url
       }]
     };
+    this.store.setRejectrefer(JSON.stringify(post));
     this.bsModalRef = this.modalService.show(RejectReceivedModalComponent, { id: 911, initialState });
-    this.bsModalRef.content.event.subscribe((res: any) => {
+    this.bsModalRef.content.event.subscribe((res: string) => {
       const data = JSON.parse(res);
       if (data.res === 'confirmed') {
         setTimeout(() => {
@@ -170,24 +166,53 @@ export class DoctorViewReferComponent implements OnInit {
   openInNewWindow = (file: string) => {
     window.open(file);
   }
-  onClickRereferDashboard = (data: any) => {
+  onClickRereferDashboard = (data: ReferCase) => {
     this.store.setRerefer(JSON.stringify(data));
     this.router.navigate(['/doctor/dashboard/re-refer-case']);
   }
-  onClickRereferSent = (data: any) => {
+  onClickRereferSent = (data: ReferCase) => {
     this.store.setRerefer(JSON.stringify(data));
     this.router.navigate(['/doctor/referrals-sent/re-refer-case']);
   }
-  onClickRereferReceived = (data: any) => {
+  onClickRereferReceived = (data: ReferCase) => {
     this.store.setRerefer(JSON.stringify(data));
     this.router.navigate(['/doctor/referrals-received/re-refer-case']);
   }
-  onClickRereferNotification = (data: any) => {
+  onClickRereferNotification = (data: ReferCase) => {
     this.store.setRerefer(JSON.stringify(data));
     this.router.navigate(['/doctor/notifications/re-refer-case']);
   }
-  onClickRereferAdd = (data: any) => {
+  onClickRereferAdd = (data: ReferCase) => {
     this.store.setRerefer(JSON.stringify(data));
     this.router.navigate(['/doctor/add-refer-case/re-refer-case']);
+  }
+  editCase = (data: ReferCase) => {
+    this.store.setEditrefer(JSON.stringify(data));
+    this.router.navigate(['/doctor/referrals-sent/edit-refer-case']);
+  }
+  deleteCase = (refercaseID: string) => {
+    const initialState = {
+      list: [{ refercaseID }]
+    };
+    this.bsModalRef = this.modalService.show(DeleteConfirmationComponent, {
+      id: 919,
+      initialState,
+      animated: false,
+      ignoreBackdropClick: true,
+      keyboard: false,
+      // class: 'modal-dialog-centered'
+    });
+    this.bsModalRef.content.event.subscribe((res: string) => {
+      const data = JSON.parse(res);
+      if (data.res === 'confirmed') {
+        this.docService.forceReloadSentList();
+        const url = this.router.url.split('/');
+        if (`/${url[2]}` === '/notifications') {
+          this.docService.forceReloadNotify();
+          this.store.setReferView(null);
+        }
+        this.location.back();
+      }
+    });
   }
 }

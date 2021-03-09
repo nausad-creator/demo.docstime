@@ -68,6 +68,16 @@ import { ReReferStoreGuard } from './re-refer-store.guard';
 import { StoreGuard } from './store.guard';
 import { FacilityRoutingModule } from './facility.routing.module';
 import { CmsPipe } from './cms.pipe';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { SharedFilterComponent } from './shared-filter/shared-filter.component';
+import { TimelineComponent } from './timeline/timeline.component';
+import { DeleteConfirmationComponent } from './view-refer/delete-confirmation/delete-confirmation.component';
+import { EditReferralComponent } from './facility-referral-sent/edit-referral/edit-referral.component';
+import { EditReferGuard } from './edit-refer.guard';
+import { VerificationComponent } from './facility-my-profile/verification/verification.component';
+import { RejectReReferComponent } from './reject-received-modal/reject-re-refer/reject-re-refer.component';
+import { RejectReferGuard } from './reject-rerefer.guard';
+import { TruncatePipe } from './truncate.pipe';
 
 @NgModule({
   declarations: [
@@ -118,7 +128,14 @@ import { CmsPipe } from './cms.pipe';
     FacPrivacyDoctorComponent,
     FacJoinsComponent,
     AlertModalComponent,
-    CmsPipe
+    CmsPipe,
+    SharedFilterComponent,
+    TimelineComponent,
+    DeleteConfirmationComponent,
+    EditReferralComponent,
+    VerificationComponent,
+    RejectReReferComponent,
+    TruncatePipe
   ],
   imports: [
     CommonModule,
@@ -138,8 +155,9 @@ import { CmsPipe } from './cms.pipe';
     ShareIconsModule,
     ShareButtonsPopupModule,
     GooglePlaceModule,
+    NgxSkeletonLoaderModule
   ],
-  providers: [FacilityService, Store, StoreGuard, ReReferStoreGuard],
+  providers: [FacilityService, Store, StoreGuard, ReReferStoreGuard, EditReferGuard, RejectReferGuard],
 })
 export class FacilityModule {
   constructor(iconLibrary: FaIconLibrary) {

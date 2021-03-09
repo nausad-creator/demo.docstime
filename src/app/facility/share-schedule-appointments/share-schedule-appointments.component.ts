@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { environment } from 'src/environments/environment';
+import { ReferCase } from '../docs.interface';
 
 @Component({
   selector: 'app-share-schedule-appointments',
@@ -27,7 +28,7 @@ export class ShareScheduleAppointmentsComponent implements OnInit {
   fullName: string;
   convertedTime: string;
   preFixDRstr: string;
-  baseUrl = `${environment.apiBaseUrl}/backend/web/uploads`;
+  baseUrl = `${environment.fileUrl}`;
   url: string;
   constructor(private cd: ChangeDetectorRef) { }
 
@@ -56,7 +57,7 @@ export class ShareScheduleAppointmentsComponent implements OnInit {
     return time[0] + '' + time[1] + '' + time[2] + ' ' + time[5]; // return adjusted time or original string
   }
 
-  onClickViewUpcomming = (referral: any) => {
+  onClickViewUpcomming = (referral: ReferCase) => {
     this.view.emit(JSON.stringify(referral));
   }
 }

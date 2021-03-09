@@ -50,11 +50,15 @@ export class SharedNotificationComponent implements OnInit {
   onClickDelete = (notificationID: string) => {
     this.spinner.show();
     const data = {
-      loginuserID: this.service.getDocLocal() ? this.service.getDocLocal().doctorID :
-        this.service.getDocSession().doctorID, languageID: '1', notificationID
+      loginuserID: this.service.getDocLocal() ? this.service.getDocLocal().doctorID : this.service.getDocSession().doctorID,
+      languageID: '1',
+      notificationID,
+      startDate: '',
+      endDate: '',
+      deleteAll: '',
     };
     this.delete(JSON.stringify(data))
-    .then(res => res[0].status === 'true' ? this.toastr.success('Deleted successfully') : this.toastr.error('Some error occured, please try again later'))
+      .then(res => res[0].status === 'true' ? this.toastr.success('Notification Deleted successfully') : this.toastr.error('Some error occured, please try again later'))
       .catch(() => this.toastr.error('Some error occured, please try again later'))
       .finally(() => { this.update.emit(); this.spinner.hide(); });
   }
@@ -68,7 +72,7 @@ export class SharedNotificationComponent implements OnInit {
       notificationType === 'refercase-created' ||
       this.notificationMessageText.substring(0, 23) === 'Thank you for accepting' ||
       this.notificationMessageText.substring(0, 23) === 'URGENT Thank you for ac'
-      ) {
+    ) {
       this.navigate.emit(notificationReferenceKey);
     }
   }

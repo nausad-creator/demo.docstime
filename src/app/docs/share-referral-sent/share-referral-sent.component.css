@@ -1,3 +1,6 @@
 .sb-text {
     font-weight: bold;
   }
+  .cursr{
+    cursor: pointer;
+  }

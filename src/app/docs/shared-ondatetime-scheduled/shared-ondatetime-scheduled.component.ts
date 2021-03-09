@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { DocStore } from '../doc-store.service';
+import { ReferCase } from '../docs.interface';
 
 @Component({
   selector: 'app-shared-ondatetime-scheduled',
@@ -41,27 +42,27 @@ export class SharedOndatetimeScheduledComponent implements OnInit {
     time[0] < 10 ? (time[0] = '0' + time[0]) : (time[0] = time[0]);
     return time[0] + '' + time[1] + '' + time[2] + ' ' + time[5]; // return adjusted time or original string
   }
-  onNavigateViewDasboard = ($event: any) => {
+  onNavigateViewDasboard = ($event: ReferCase) => {
     const data = { data: $event, from: 'dashboard' };
     this.store.setReferView(JSON.stringify(data));
-    this.router.navigate([`${this.router.url}/view-refer`]);
+    this.router.navigate([`/doctor/dashboard/view-refer`]);
   }
-  onNavigateViewMySchedule = ($event: any) => {
+  onNavigateViewMySchedule = ($event: ReferCase) => {
     const data = { data: $event, url: this.router.url };
     this.store.setReferView(JSON.stringify(data));
     this.router.navigate(['/doctor/doc-my-schedule-view-refer']);
   }
-  onNavigateViewSent = ($event: any) => {
+  onNavigateViewSent = ($event: ReferCase) => {
     const data = { data: $event, from: 'insideSent' };
     this.store.setReferView(JSON.stringify(data));
-    this.router.navigate([`${this.router.url}/view-refer`]);
+    this.router.navigate([`/doctor/referrals-sent/view-refer`]);
   }
-  onNavigateViewReceived = ($event: any) => {
+  onNavigateViewReceived = ($event: ReferCase) => {
     const data = { data: $event, from: 'received' };
     this.store.setReferView(JSON.stringify(data));
-    this.router.navigate([`${this.router.url}/view-refer`]);
+    this.router.navigate([`/doctor/referrals-received/view-refer`]);
   }
-  onClickInsideView = ($event: any) => {
+  onClickInsideView = ($event: ReferCase) => {
     const url = this.router.url.split('/');
     switch (url[2]) {
       case 'dashboard': {
@@ -96,13 +97,13 @@ export class SharedOndatetimeScheduledComponent implements OnInit {
       }
     }
   }
-  onClickInsideAddCace = ($event: any) => {
+  onClickInsideAddCace = ($event: ReferCase) => {
     const url = this.router.url.split('/');
     const data = { data: $event, from: 'add-case' };
     this.store.setReferView(JSON.stringify(data));
     this.router.navigate([`/${url[1]}/${url[2]}/view-refer`]);
   }
-  onClickInsidereReferCace = ($event: any) => {
+  onClickInsidereReferCace = ($event: ReferCase) => {
     const url = this.router.url.split('/');
     switch (url[2]) {
       case 'dashboard': {
@@ -137,7 +138,7 @@ export class SharedOndatetimeScheduledComponent implements OnInit {
       }
     }
   }
-  onClickInsideSchedulReferCace = ($event: any) => {
+  onClickInsideSchedulReferCace = ($event: ReferCase) => {
     const data = { data: $event, url: '' };
     this.store.setReferView(JSON.stringify(data));
     this.router.navigate(['/doctor/doc-my-schedule-view-refer']);

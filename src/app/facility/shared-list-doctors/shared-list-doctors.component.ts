@@ -16,7 +16,7 @@ export class SharedListDoctorsComponent implements OnInit {
   @Output() view: EventEmitter<any> = new EventEmitter();
   url = '';
   preFixDRstr: string;
-  baseUrl = `${environment.apiBaseUrl}/backend/web/uploads`;
+  baseUrl = `${environment.fileUrl}`;
   constructor(private cd: ChangeDetectorRef) { }
 
   ngOnInit(): void {

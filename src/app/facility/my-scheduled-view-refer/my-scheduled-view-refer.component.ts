@@ -5,6 +5,7 @@ import { ConfirmedReceivedModalComponent } from '../confirmed-received-modal/con
 import { RejectReceivedModalComponent } from '../reject-received-modal/reject-received-modal.component';
 import { Location } from '@angular/common';
 import { Store } from '../store.service';
+import { ReferCase } from '../docs.interface';
 @Component({
   selector: 'app-my-scheduled-view-refer',
   templateUrl: './my-scheduled-view-refer.component.html',
@@ -12,7 +13,7 @@ import { Store } from '../store.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MyScheduledViewReferComponent implements OnInit {
-  caseViewData: any;
+  caseViewData: ReferCase;
   url: string;
   @Input() refercaseVisitDate: string;
   convertedTime: string;
@@ -32,7 +33,7 @@ export class MyScheduledViewReferComponent implements OnInit {
     });
   }
   async ngOnInit(): Promise<void> {
-    this.caseViewData = await this.getViewData() as object;
+    this.caseViewData = await this.getViewData() as ReferCase;
     this.url = JSON.parse(this.store.referView).url;
     this.refercaseVisitDate = this.caseViewData.refercaseVisitDate;
     const time = this.caseViewData.refercaseVisitTime !== null && this.caseViewData.refercaseVisitTime !== 'Undefined' ?

@@ -1,149 +1,183 @@
 <body class="dashbord-section">
-    <div class="spacetop"></div>
-    <section class="section-dashbord overflow-hidden">
-      <div class="container">
-        <div class="row">
-          <div class="col-xl-8 col-lg-8 appointment-conten order-2 order-lg-1 pt-3">
-            <div class="refrred-cases-content card show-detail wow fadeInRight"
-              style="width: 100%; min-height: 100%; position: relative;" data-wow-delay="0.1s" *ngIf="caseViewData">
-              <div class="titlecases d-flex">
-                <h4 class="mb-0">Referred Cases</h4>
-                <p class="ml-auto"><a (click)="onClickBack()" style="cursor: pointer;"
-                    class="referred-btn">
-                    <i class="ti-angle-left"></i>
-                    Back</a></p>
-              </div>
-              <hr>
-              <div class="">
-                <!-- not sent -->
-                <div class="content-referral" *ngIf="caseViewData">
-                  <h5 *ngIf="caseViewData.refFacilityName">Primary Facility</h5>
-                  <div class="selected-users d-flex mb-3" *ngIf="caseViewData.refFacilityName">
-                    <a style="cursor: pointer;" class="primary-items" style="min-width:250px;">
-                      <div class="lefttext">
-                        <p class="mb-0">
-                          {{caseViewData.refFacilityName | titlecase}}</p>
-                      </div>
-                    </a>
-                  </div>
-                  <h5>Referred by</h5>
-                  <div class="selected-users d-flex mb-3">
-                    <a style="cursor: pointer;" class="usersdeta-items" style="min-width:250px;">
-                      <div class="lefttext">
-                        <h4 class="mb-0"
-                          *ngIf="caseViewData.refDocName !== null && caseViewData.refDocName !== undefined">
-                          {{preFixDRstr === 'DR.' ? (caseViewData.refDocName | titlecase) : 'Dr. ' + (caseViewData.refDocName | titlecase)}}</h4>
-                        <p class="mb-0" *ngIf="caseViewData.refSpecialityName">
-                          {{caseViewData.refSpecialityName | titlecase}}</p>
-                      </div>
-                    </a>
-                  </div>
-                  <div class="row">
-                    <div class="listinfor col-sm-6">
-                      <h4>Reason for consultation</h4>
-                      <p class="text-dark" *ngIf="caseViewData.reasonName || caseViewData.reasonNames">
-                        {{caseViewData.reasonName ? caseViewData.reasonName : caseViewData.reasonNames ? caseViewData.reasonNames : + ''}}
-                      </p>
+  <div class="spacetop"></div>
+  <section class="section-dashbord overflow-hidden">
+    <div class="container">
+      <div class="row">
+        <div class="col-xl-8 col-lg-8 appointment-conten order-2 order-lg-1 pt-3">
+          <div class="refrred-cases-content card show-detail wow fadeInRight"
+            style="width: 100%; min-height: 100%; position: relative;" data-wow-delay="0.1s" *ngIf="caseViewData">
+            <div class="titlecases d-flex">
+              <h4 class="mb-0">Referred Cases</h4>
+              <p class="ml-auto"><a (click)="onClickBack()" style="cursor: pointer;" class="referred-btn">
+                  <i class="ti-angle-left"></i>
+                  Back</a></p>
+            </div>
+            <hr>
+            <div class="">
+              <!-- not sent -->
+              <div class="content-referral" *ngIf="caseViewData">
+                <h5 *ngIf="caseViewData.refFacilityName">Primary Facility</h5>
+                <div class="selected-users d-flex mb-3" *ngIf="caseViewData.refFacilityName">
+                  <a style="cursor: pointer;" class="primary-items" style="min-width:250px;">
+                    <div class="lefttext">
+                      <p class="mb-0">
+                        {{caseViewData.refFacilityName | titlecase}}</p>
                     </div>
-                    <div class="listinfor col-sm-6" *ngIf="refercaseVisitDate">
-                      <h4>Appointment Date & Time</h4>
-                      <p class="text-dark"
-                        *ngIf="refercaseVisitDate">
-                        {{(refercaseVisitDate | date : 'mediumDate') + convertedTime}}
-                      </p>
+                  </a>
+                </div>
+                <h5>Referred by</h5>
+                <div class="selected-users d-flex mb-3"
+                  *ngIf="caseViewData.refDocName !== null && caseViewData.refDocName !== undefined">
+                  <a style="cursor: pointer;" class="usersdeta-items" [ngClass]="{
+                      'lengMax': caseViewData.refDocName.length >= 30 && caseViewData.refDocName.length < 40,
+                      'lengMin': caseViewData.refDocName.length < 30 && caseViewData.refDocName.length > 20,
+                      'lengExtraMax': caseViewData.refDocName.length >= 40,
+                      'lengSmall': caseViewData.refDocName.length <= 20
+                    }" style="height:auto;">
+                    <div class="lefttext collepse_click collapsed" data-toggle="collapse" href="#multiCollapseExample1"
+                      role="button" aria-expanded="false" aria-controls="multiCollapseExample1">
+                      <h4 class="mb-0"
+                        *ngIf="caseViewData.refDocName !== null && caseViewData.refDocName !== undefined">
+                        {{preFixDRstr === 'DR.' ? (caseViewData.refDocName | titlecase) : 'Dr. ' + (caseViewData.refDocName | titlecase)}}
+                      </h4>
+                      <p class="mb-0" *ngIf="caseViewData.refSpecialityName">
+                        {{caseViewData.refSpecialityName | titlecase}}</p>
                     </div>
-                    <div class="listinfor col-sm-10"
-                    *ngIf="caseViewData.refercaseDescription">
+                    <div class="collapse multi-collapse" id="multiCollapseExample1">
+                      <div class="toggledbody pt-3">
+                        <div class="listinfor text-white" *ngIf="caseViewData.referdocMobile"> <i
+                            class="ti-mobile text-white"></i> &nbsp; {{caseViewData.referdocMobile}} </div>
+                        <div class="listinfor text-white" *ngIf="caseViewData.refDoctorEmail"> <i
+                            class="ti-email text-white"></i> &nbsp; {{caseViewData.refDoctorEmail}} </div>
+                        <div class="listinfor text-white" *ngIf="caseViewData.referdocFax"> <i
+                            class="fa fa-fax text-white" aria-hidden="true"></i> &nbsp; {{caseViewData.referdocFax}}
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+                <div class="row">
+                  <div class="listinfor col-sm-6">
+                    <h4>Reason for consultation</h4>
+                    <p class="text-dark" *ngIf="caseViewData.reasonName || caseViewData.reasonNames">
+                      {{caseViewData.reasonName ? caseViewData.reasonName : caseViewData.reasonNames ? caseViewData.reasonNames : + ''}}
+                    </p>
+                  </div>
+                  <div class="listinfor col-sm-6" *ngIf="refercaseVisitDate">
+                    <h4>Appointment Date & Time</h4>
+                    <p class="text-dark" *ngIf="refercaseVisitDate">
+                      {{(refercaseVisitDate | date : 'mediumDate') + convertedTime}}
+                    </p>
+                  </div>
+                  <div class="listinfor col-sm-10" *ngIf="caseViewData.refercaseDescription">
                     <h4>Descripion</h4>
                     <p class="text-dark" *ngIf="caseViewData.refercaseDescription">
                       {{caseViewData.refercaseDescription}}
                     </p>
                   </div>
-                  </div>
                 </div>
+              </div>
 
-                <div class="patient-information mt-1">
-                  <h4 class="mb-3">Patient Information</h4>
-                  <div class="row">
-                    <div class="listinfor col-sm-6" *ngIf="caseViewData.patientFirstName"> <i class="ti-user"></i> &nbsp;
-                      {{caseViewData.patientFirstName}}</div>
-                    <div class="listinfor col-sm-6" *ngIf="caseViewData.patientEmail"> <i class="ti-email"></i> &nbsp;
-                      {{caseViewData.patientEmail}}</div>
-                    <div class="listinfor col-sm-6" *ngIf="caseViewData.patientMobile"> <i class="ti-mobile"></i> &nbsp;
-                      {{caseViewData.patientMobile}}</div>
-                    <div class="listinfor col-sm-6" *ngIf="caseViewData.patientGender"> <i class="ti-target"></i> &nbsp;
-                      {{caseViewData.patientGender}}</div>
-                    <div class="listinfor col-sm-6" *ngIf="caseViewData.patientDOB"> <i class="ti-calendar"></i> &nbsp;
-                      {{caseViewData.patientDOB | date: 'mediumDate'}}</div>
-                    <div class="listinfor col-sm-6" *ngIf="caseViewData.insuranceNames"> <i class="ti-shield"></i> &nbsp;
-                      {{caseViewData.insuranceNames}}</div>
-                    <div class="listinfor col-sm-12" *ngIf="caseViewData.refercaseHospitalAdmission === 'Yes'">
-                      <span class="iconify" data-icon="icomoon-free:checkbox-checked" data-inline="false" style="color: blue;width: 1.1em;
+              <div class="patient-information mt-1">
+                <h4 class="mb-3">Patient Information</h4>
+                <div class="row">
+                  <div class="listinfor col-sm-6" *ngIf="caseViewData.patientFirstName"> <i class="ti-user"></i> &nbsp;
+                    {{caseViewData.patientFirstName}}</div>
+                  <div class="listinfor col-sm-6" *ngIf="caseViewData.patientEmail"> <i class="ti-email"></i> &nbsp;
+                    {{caseViewData.patientEmail}}</div>
+                  <div class="listinfor col-sm-6" *ngIf="caseViewData.patientMobile"> <i class="ti-mobile"></i> &nbsp;
+                    {{caseViewData.patientMobile}}</div>
+                  <div class="listinfor col-sm-6" *ngIf="caseViewData.patientGender"> <i class="ti-target"></i> &nbsp;
+                    {{caseViewData.patientGender}}</div>
+                  <div class="listinfor col-sm-6" *ngIf="caseViewData.patientDOB"> <i class="ti-calendar"></i> &nbsp;
+                    {{caseViewData.patientDOB | date: 'mediumDate'}}</div>
+                  <div class="listinfor col-sm-6" *ngIf="caseViewData.insuranceNames"> <i class="ti-shield"></i> &nbsp;
+                    {{caseViewData.insuranceNames}}</div>
+                  <div class="listinfor col-sm-12" *ngIf="caseViewData.refercaseHospitalAdmission === 'Yes'">
+                    <span class="iconify" data-icon="icomoon-free:checkbox-checked" data-inline="false" style="color: blue;width: 1.1em;
                             height: 1.1em;"></span> &nbsp;
-                      {{'Hospital/Facility admission required'}}</div>
-                      <div class="listinfor sb-text col-sm-12" *ngIf="caseViewData.refercaseUrgent === 'Yes'">&nbsp;
-                        {{'Urgent Consult'}}</div>
-                  </div>
-                  <div class="row" style="padding-top: 10px;">								
-                    <div class=" col-sm-6" *ngIf="caseViewData.refercaseSentDate">Referral Sent: {{caseViewData.refercaseSentDate | date : 'mediumDate'}}</div>
-                    <div class=" col-sm-6" *ngIf="caseViewData.refercaseConfirmedDate && caseViewData.refercaseConfirmedDate !== '0000-00-00 00:00:00'">Referral Confirmed: {{caseViewData.refercaseConfirmedDate | date : 'mediumDate'}}</div>									
-                  </div>
+                    {{'Hospital/Facility admission required'}}</div>
+                  <div class="listinfor sb-text col-sm-12" *ngIf="caseViewData.refercaseUrgent === 'Yes'">&nbsp;
+                    {{'Urgent Consult'}}</div>
                 </div>
-                <hr>
-                <div class="attached-document">
-                  <h4 class="mb-3">Attach Documents</h4>
-                  <div class="row" *ngIf="caseViewData.documents.length > 0">
-                    <div class="imageitems col-md-4" *ngFor="let item of caseViewData.documents | convertToPdf">
-  
-                      <h *ngIf="item.ImageData.length > 0">{{item.documenttypeName}}</h>
-  
-                      <div *ngIf="item.ImageData.length > 0">
-                        <a (click)="openInNewWindow(url)" style="cursor: pointer;" *ngFor="let url of item.ImageData"><img
-                            style="width: 171px; height: 163px; margin-bottom: 3px;" [defaultImage]="url" [lazyLoad]="url" offset="100" alt="note"></a>
-                      </div>
-                    </div>
+                <div class="row" style="padding-top: 10px;">
+                  <div class=" col-sm-6 mb-1" *ngIf="caseViewData.refercaseReceivedDate">Referral Received:
+                    <a style="cursor: default;">{{caseViewData.refercaseReceivedDate | date : 'MMM d, y, h:mm a'}}</a>
                   </div>
-                  <div class="" style="margin-top: 40px; height: 180px;" *ngIf="caseViewData.documents.length === 0">
-                    <div class="row">
-                      <div class="col">
-                        <p class="text-center">No Attach Documents Found.</p>
-                      </div>
-                    </div>
+                  <div class=" col-sm-6 mb-1" *ngIf="caseViewData.refercaseVisitDate && caseViewData.refercaseVisitTime">
+                    Appointment Date:
+                    <a style="cursor: default;">{{(caseViewData.refercaseVisitDate + ' ' + caseViewData.refercaseVisitTime) | date : 'MMM d, y, h:mm a'}}
+                      <span
+                        *ngIf="caseViewData.timeline.length > 0">{{'(' + caseViewData.timeline[0].tzCountryCode + ')'}}</span>
+                    </a></div>
+                  <div class=" col-sm-6 mb-1"
+                    *ngIf="caseViewData.refercaseConfirmedDate && caseViewData.refercaseConfirmedDate !== '0000-00-00 00:00:00'">
+                    Referral Confirmed:
+                    <a style="cursor: default;">{{caseViewData.refercaseConfirmedDate | date : 'MMM d, y, h:mm a'}}</a>
+                  </div>
+                  <div class=" col-sm-6 mb-1"
+                    *ngIf="caseViewData.refercaseLastUpdatedDate && caseViewData.refercaseLastUpdatedDate !== '0000-00-00 00:00:00'">
+                    Last Updated Date:
+                    <a
+                      style="cursor: default;">{{caseViewData.refercaseLastUpdatedDate | date : 'MMM d, y, h:mm a'}}</a>
                   </div>
                 </div>
               </div>
-              <!-- for sent and schedule -->
-              <div class="btns-">
-                <a style="cursor: pointer;" *ngIf="caseViewData.refercaseStatus === 'Pending'"
-                class="btn btn-outline-primary" (click)="openModalConfirm(caseViewData)">Confirm</a>
-                <a style="cursor: pointer; margin-left: 5px;" *ngIf="caseViewData.refercaseStatus === 'Pending'"
-                class="btn btn-outline-primary" (click)="openModalReject(caseViewData)">Reject</a>
-                <div class="col-md-4 text-xl-right btnsgrp-appointment"
-                  *ngIf="caseViewData.refercaseStatus === 'Rejected'">
-                  <div class="text-danger" style="float: left;"><img src="assets/img/close-icon.svg" alt=""
-                      height="15px">Rejected</div>
+              <hr>
+              <div class="attached-document">
+                <h4 class="mb-3">Attach Documents</h4>
+                <div class="row" *ngIf="caseViewData.documents.length > 0">
+                  <div class="imageitems col-md-4" *ngFor="let item of caseViewData.documents | convertToPdf">
+
+                    <h *ngIf="item.ImageData.length > 0">{{item.documenttypeName}}</h>
+
+                    <div *ngIf="item.ImageData.length > 0">
+                      <a (click)="openInNewWindow(url)" style="cursor: pointer;" *ngFor="let url of item.ImageData"><img
+                          style="width: 171px; height: 163px; margin-bottom: 3px;" [defaultImage]="url" [lazyLoad]="url"
+                          offset="100" alt="note"></a>
+                    </div>
+                  </div>
                 </div>
-                <div class="col-md-4 text-xl-right btnsgrp-appointment"
-                  *ngIf="caseViewData.refercaseStatus === 'Accepted'">
-                  <div class="text-success" style="float: left;"><img src="assets/img/check-icon.svg" alt=""
-                      height="15px">Confirmed</div>
+                <div class="" style="margin-top: 40px; height: 180px;" *ngIf="caseViewData.documents.length === 0">
+                  <div class="row">
+                    <div class="col">
+                      <p class="text-center">No Attach Documents Found.</p>
+                    </div>
+                  </div>
                 </div>
-                <div class="col-md-4 text-xl-right btnsgrp-appointment"
-                  *ngIf="caseViewData.refercaseStatus === 'Completed'">
-                  <div class="text-primary" style="float: left;"><img src="assets/img/done.svg" alt=""
-                      height="15px">Completed</div>
-                </div>
-                <a style="cursor: pointer; float: right;"
-                  (click)="onClickRereferSchedule(caseViewData)"
-                  [ngClass]="{'btn-outline-primary' : caseViewData.refercaseReRefferred === 'No', 'btn disabled' : caseViewData.refercaseReRefferred === 'Yes'}">Re-Refer</a>
               </div>
             </div>
-          </div>
-          <div class="col-xl-4 col-lg-4 uploadfile-conten order-1 order-lg-2 card" style="border-radius:0;">
-            <app-share-datetimepicker (updateView)="updateView()"></app-share-datetimepicker>
+            <!-- for sent and schedule -->
+            <div class="btns-">
+              <a style="cursor: pointer;" *ngIf="caseViewData.refercaseStatus === 'Pending'"
+                class="btn btn-outline-primary" (click)="openModalConfirm(caseViewData)">Confirm</a>
+              <a style="cursor: pointer; margin-left: 5px;" *ngIf="caseViewData.refercaseStatus === 'Pending'"
+                class="btn btn-outline-primary" (click)="openModalReject(caseViewData)">Reject</a>
+              <div class="col-md-4 text-xl-right btnsgrp-appointment"
+                *ngIf="caseViewData.refercaseStatus === 'Rejected'">
+                <div class="text-danger" style="float: left;"><img src="assets/img/close-icon.svg" alt=""
+                    height="15px">Rejected</div>
+              </div>
+              <div class="col-md-4 text-xl-right btnsgrp-appointment"
+                *ngIf="caseViewData.refercaseStatus === 'Accepted'">
+                <div class="text-success" style="float: left;"><img src="assets/img/check-icon.svg" alt=""
+                    height="15px">Confirmed</div>
+              </div>
+              <div class="col-md-4 text-xl-right btnsgrp-appointment"
+                *ngIf="caseViewData.refercaseStatus === 'Completed'">
+                <div class="text-primary" style="float: left;"><img src="assets/img/done.svg" alt=""
+                    height="15px">Completed</div>
+              </div>
+              <a style="cursor: pointer; float: right;" (click)="onClickRereferSchedule(caseViewData)"
+                [ngClass]="{'btn-outline-primary' : caseViewData.refercaseReRefferred === 'No', 'btn disabled' : caseViewData.refercaseReRefferred === 'Yes'}">Re-Refer</a>
+            </div>
           </div>
         </div>
+        <div class="col-xl-4 col-lg-4 uploadfile-conten order-1 order-lg-2 card" style="border-radius:0;">
+          <app-share-datetimepicker (updateView)="updateView()"></app-share-datetimepicker>
+        </div>
       </div>
-    </section>
-    <br>
-  </body>
+    </div>
+  </section>
+  <br>
+</body>

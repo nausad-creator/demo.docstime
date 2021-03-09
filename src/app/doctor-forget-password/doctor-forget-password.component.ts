@@ -71,7 +71,7 @@ export class DoctorForgetPasswordComponent implements OnInit {
           this.modalService.hide(509);
           setTimeout(() => {
             this.spinner.hide();
-            this.openVerificationModal(res[0].data[0], 'Mobile number');
+            this.openVerificationModal(res[0].data[0], 'mobile number');
             this.toastr.success('We have sent otp on your registered mobile.');
           }, 500);
         }).catch((error) => {

@@ -1,8 +1,11 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { environment } from 'src/environments/environment';
 import { ConfirmedReceivedModalComponent } from '../confirmed-received-modal/confirmed-received-modal.component';
+import { ReferCase } from '../docs.interface';
 import { RejectReceivedModalComponent } from '../reject-received-modal/reject-received-modal.component';
+import { Store } from '../store.service';
 
 @Component({
   selector: 'app-share-referral-received',
@@ -27,7 +30,8 @@ export class ShareReferralReceivedComponent implements OnInit {
   @Input() refercaseID: string;
   @Input() facilityID: string;
   @Input() doctorID: string;
-  @Input() wholeObject: any;
+  @Input() refercaseSentTZID: string;
+  @Input() wholeObject: ReferCase;
   @Output() view: EventEmitter<any> = new EventEmitter();
   @Output() updateView: EventEmitter<any> = new EventEmitter();
   genderAtZero: string;
@@ -35,11 +39,13 @@ export class ShareReferralReceivedComponent implements OnInit {
   convertedTime: string;
   preFixDRstr: string;
   bsModalRef: BsModalRef;
-  baseUrl = `${environment.apiBaseUrl}/backend/web/uploads`;
+  baseUrl = `${environment.fileUrl}`;
   url: string;
   constructor(
     private modalService: BsModalService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private store: Store,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -84,7 +90,7 @@ export class ShareReferralReceivedComponent implements OnInit {
       }]
     };
     this.bsModalRef = this.modalService.show(ConfirmedReceivedModalComponent, { id: 200, initialState });
-    this.bsModalRef.content.event.subscribe((res: any) => {
+    this.bsModalRef.content.event.subscribe((res: string) => {
       const data = JSON.parse(res);
       if (data.res === 'confirmed') {
         this.updateView.emit();
@@ -94,28 +100,22 @@ export class ShareReferralReceivedComponent implements OnInit {
   openModalReject = () => {
     const initialState = {
       list: [{
-        name: this.fullName,
-        convertedTime: this.convertedTime,
-        refercaseVisitTime: this.refercaseVisitTime ? this.refercaseVisitTime : '',
-        genderAtZero: this.genderAtZero,
-        refercaseVisitDate: this.refercaseVisitDate,
-        age: this.age,
-        reasonName: this.reasonName,
         refercaseID: this.refercaseID,
-        refSpecialityName: this.refSpecialityName,
         facilityID: this.facilityID,
-        doctorID: this.doctorID
+        tzID: this.refercaseSentTZID ? this.refercaseSentTZID : '',
+        url: this.router.url
       }]
     };
+    this.store.setRejectrefer(JSON.stringify(this.wholeObject));
     this.bsModalRef = this.modalService.show(RejectReceivedModalComponent, { id: 911, initialState });
-    this.bsModalRef.content.event.subscribe((res: any) => {
+    this.bsModalRef.content.event.subscribe((res: string) => {
       const data = JSON.parse(res);
       if (data.res === 'confirmed') {
-        this.updateView.emit();
+        this.updateView.emit('Update');
       }
     });
   }
-  onClickViewReferral = (referral: any) => {
+  onClickViewReferral = (referral: ReferCase) => {
     this.view.emit(JSON.stringify(referral));
   }
 }

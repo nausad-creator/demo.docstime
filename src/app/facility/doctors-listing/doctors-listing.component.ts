@@ -1,11 +1,18 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { merge, Observable, Subject } from 'rxjs';
-import { mergeMap, take } from 'rxjs/operators';
+import { map, mergeMap, take } from 'rxjs/operators';
 import { HomeService } from 'src/app/home.service';
 import { NpiModalComponent } from '../npi-modal/npi-modal.component';
 import { DortorViewComponent } from '../dortor-view/dortor-view.component';
-
+interface Doctor {
+  doctorAddress: string;
+  doctorFirstName: string;
+  doctorFullName: string;
+  doctorID: string;
+  doctorLastName: string;
+  doctorNPI: string;
+}
 @Component({
   selector: 'app-doctors-listing',
   templateUrl: './doctors-listing.component.html',
@@ -16,7 +23,7 @@ export class DoctorsListingComponent implements OnInit {
   show = 10;
   throttle = 10;
   scrollDistance = 0.3;
-  doctorList$: Observable<Array<any>>;
+  doctorList$: Observable<Array<Doctor>>;
   forceReload$ = new Subject<void>();
   bsModalRef: BsModalRef;
   constructor(
@@ -27,15 +34,14 @@ export class DoctorsListingComponent implements OnInit {
 
   ngOnInit(): void {
     const initialValue$ = this.getDataOnce();
-    const updates$ = this.forceReload$.pipe(
-      mergeMap(() => this.getDataOnce()));
+    const updates$ = this.forceReload$.pipe(mergeMap(() => this.getDataOnce() as Observable<Array<Doctor>>));
     this.doctorList$ = merge(initialValue$, updates$);
     this.cd.markForCheck();
     this.service.updateDoctors.subscribe((isTrue) => isTrue ? this.forceReload() : '');
     this.cd.markForCheck();
   }
   getDataOnce = () => {
-    return this.service.getDoctors.pipe(take(1));
+    return this.service.getDoctors.pipe(map(res => res[0].data), take(1)) as Observable<Array<Doctor>>;
   }
   onScrollEnd = () => {
     this.show += 10;

@@ -62,6 +62,15 @@ import { DocRereferGuard } from './doc-rerefer.guard';
 import { DocViewGuard } from './doc-view.guard';
 import { DoctorRoutingModule } from './doctor.routing.module';
 import { CmsPipe } from './cms.pipe';
+import { SharedFilterComponent } from './shared-filter/shared-filter.component';
+import { TimelineComponent } from './timeline/timeline.component';
+import { VerificationComponent } from './my-profile/verification/verification.component';
+import { DeleteConfirmationComponent } from './doctor-view-refer/delete-confirmation/delete-confirmation.component';
+import { EditReferralComponent } from './referrals-sent/edit-referral/edit-referral.component';
+import { EditReferGuard } from './edit-refer.guard';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { RejectReReferComponent } from './reject-received-modal/reject-re-refer/reject-re-refer.component';
+import { RejectReferGuard } from './reject-rerefer.guard';
 @NgModule({
   declarations:
     [
@@ -104,7 +113,13 @@ import { CmsPipe } from './cms.pipe';
       DocPrivacyDoctorComponent,
       DocFaqComponent,
       AlertModalComponent,
-      CmsPipe
+      CmsPipe,
+      SharedFilterComponent,
+      TimelineComponent,
+      VerificationComponent,
+      DeleteConfirmationComponent,
+      EditReferralComponent,
+      RejectReReferComponent
     ],
   imports: [
     CommonModule,
@@ -126,8 +141,9 @@ import { CmsPipe } from './cms.pipe';
     ShareButtonsPopupModule,
     FontAwesomeModule,
     GooglePlaceModule,
+    NgxSkeletonLoaderModule
   ],
-  providers: [DocsService, DocStore, DocViewGuard, DocRereferGuard],
+  providers: [DocsService, DocStore, DocViewGuard, DocRereferGuard, EditReferGuard, RejectReferGuard],
 })
 export class DocsModule {
   constructor(iconLibrary: FaIconLibrary) {

@@ -1,0 +1,86 @@
+<h4 class="text-dark"><a class="cursr" id="FilterHandale">Filter <small class="ti-filter"></small></a></h4>
+<!--Filter Code-->
+<div class="filterContent card mb-3">
+  <div class="cord-body p-3">
+    <form class="FilterForm" [formGroup]="referCaseForm" (ngSubmit)="onApply(referCaseForm.value)" method="get">
+      <div class="headfilter d-flex">
+        <a class="cursr" id="FilterClose">&times; </a>
+        <a (click)="onResetFilter(referCaseForm.value)" class="Clear ml-auto cursr">Clear All</a>
+      </div>
+
+      <div class="form-row align-items-center">
+        <div class="form-group col-md-12 col-sm-12"
+          [ngClass]="{'customgroup': component === 'sent' || component === 'received'}">
+          <label class="" [ngClass]="{'customLabel': component === 'sent' || component === 'received'}">Date</label>
+          <div class="form-group customgroup inputWithIcon">
+            <input class="form-control" maxlength=14 #dateOfRefer (keyup)="onTypeDOB(dateOfRefer.value)"
+              (blur)="onBlurDOB(dateOfRefer.value)" [max]="component === 'docs-previous' ? maxDate : ''" [min]="component === 'received' || component === 'docs-upcomming' || component === 'home'? min : ''" placeholder="mm/dd/yyyy"
+              formControlName="referCaseDate" id="dob" name="patientDOB" [owlDateTime]="dt5" required>
+            <a class="cursr"><i [owlDateTimeTrigger]="dt5" class="ti-calendar cursr"></i></a>
+            <owl-date-time [pickerType]="'calendar'" #dt5></owl-date-time>
+            <small class="text-danger small"
+              *ngIf="referCaseForm.get('referCaseDate').invalid && referCaseForm.controls['referCaseDate'].hasError('owlDateTimeMin')">Date
+              should not before {{min | date: 'mediumDate'}}</small>
+              <small class="text-danger small"
+                *ngIf="referCaseForm.get('referCaseDate').invalid && referCaseForm.controls['referCaseDate'].hasError('owlDateTimeMax')">Date
+                          should not after {{maxDate | date: 'mediumDate'}}</small>
+          </div>
+        </div>
+        <div class="form-group col-md-12 col-sm-12"
+          [ngClass]="{'customgroup': component === 'sent' || component === 'received'}">
+          <label class="" [ngClass]="{'customLabel': component === 'sent' || component === 'received'}">Patient
+            Name</label>
+          <input class="form-control" formControlName="patientName" name="patientName" id="patientName" type="text"
+            placeholder="Patient name">
+        </div>
+        <div class="form-group col-md-12 col-sm-12"
+          [ngClass]="{'customgroup': component === 'sent' || component === 'received'}">
+          <label class="" [ngClass]="{'customLabel': component === 'sent' || component === 'received'}"
+            *ngIf="component">{{component === 'sent' ? 'Refer to doctor Name' : 'Refer by doctor Name'}}</label>
+          <input class="form-control" name="date" formControlName="doctorName" id="doctorName" type="doctorName"
+            placeholder="Refer by doctor Name">
+        </div>
+        <div class="form-group col-md-12 col-sm-12"
+          [ngClass]="{'customgroup': component === 'sent' || component === 'received'}">
+          <label class="" [ngClass]="{'customLabel': component === 'sent' || component === 'received'}">Gender</label>
+          <ng-select appearance="outline" [searchable]="false" [clearable]="false" formControlName="patientGender"
+            class="custom" placeholder="Select Gender">
+            <ng-option *ngFor="let gender of genders" [value]="gender">{{gender}}</ng-option>
+          </ng-select>
+        </div>
+        <div class="form-group col-md-12 col-sm-12"
+          [ngClass]="{'customgroup': component === 'sent' || component === 'received'}">
+          <label class=""
+            [ngClass]="{'customLabel': component === 'sent' || component === 'received'}">Insurance</label>
+          <ng-select [closeOnSelect]="true" [addTag]="true" [addTagText]="'Add'" [searchable]="true"
+            appearance="outline" placeholder="Enter Insurance" formControlName="insuranceNames" class="custom"
+            labelForId="Insurance" name="insuranceNames">
+            <ng-option *ngFor="let ins of (insuranceList$ | async)" [value]="ins.insuranceName">
+              {{ins.insuranceName}}</ng-option>
+          </ng-select>
+        </div>
+        <div class="form-group col-md-12 col-sm-12"
+          [ngClass]="{'customgroup': component === 'sent' || component === 'received'}" *ngIf="component === 'sent' || component === 'received'">
+          <label class="" [ngClass]="{'customLabel': component === 'sent' || component === 'received'}">Status</label>
+          <ng-select appearance="outline" [searchable]="false" [clearable]="false" formControlName="referStatus"
+            class="custom" placeholder="Select Status">
+            <ng-option *ngFor="let status of statusSent" [value]="status.value">{{status.label}}</ng-option>
+          </ng-select>
+        </div>
+        <div class="form-group col-md-12 col-sm-12"
+          [ngClass]="{'customgroup': component === 'sent' || component === 'received'}">
+          <div class="">
+            <div class="custom-control custom-checkbox">
+              <input formControlName="refercaseUrgent" type="checkbox" class="custom-control-input" id="Urgent"
+                name="Urgent">
+              <label class="custom-control-label" for="Urgent">Urgent Only</label>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 col-sm-12 text-right">
+          <button type="submit" class="button button-contactForm btn_1">Apply</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

@@ -179,13 +179,15 @@ a:hover {
 
 a:not([href]):not([tabindex]) {
   /* color: inherit; */
-  text-decoration: none
+  text-decoration: none;
+  cursor: pointer;
 }
 
 a:not([href]):not([tabindex]):focus,
 a:not([href]):not([tabindex]):hover {
   /* color: inherit; */
-  text-decoration: none
+  text-decoration: none;
+  cursor: pointer;
 }
 
 a:not([href]):not([tabindex]):focus {
@@ -6121,6 +6123,7 @@ a.badge-dark:focus {
 }
 
 .close {
+  margin-top: -8px;
   float: right;
   font-size: 1.5rem;
   font-weight: 700;

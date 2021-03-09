@@ -4,14 +4,38 @@
     <div class="container">
       <div class="row">
         <div class="col-xl-8 col-lg-8 appointment-conten order-2 order-lg-1 pt-3">
-          <ul class="nav nav-tabs custom-tabs border-0" id="myTab" role="tablist">
-            <li class="nav-item"><a class="nav-link btn-outline-primary" id="home-tab" routerLink="docs-upcomming" routerLinkActive="active"
-              [routerLinkActiveOptions]="{ exact: true }"
-                aria-controls="Upcoming" aria-selected="true">Upcoming</a></li>
-            <li class="nav-item"><a class="nav-link btn-outline-primary" id="profile-tab" routerLink="docs-previous" routerLinkActive="active"
-              [routerLinkActiveOptions]="{ exact: true }"
-                aria-controls="profile" aria-selected="false">Previous</a></li>
-          </ul>
+          <div class="row">
+            <div class="col-sm-6">
+              <ul class="nav nav-tabs custom-tabs border-0" id="myTab" role="tablist">
+                <li class="nav-item"><a class="nav-link btn-outline-primary" id="home-tab" routerLink="docs-upcomming"
+                    routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" aria-controls="Upcoming"
+                    aria-selected="true">Upcoming</a></li>
+                <li class="nav-item"><a class="nav-link btn-outline-primary" id="profile-tab" routerLink="docs-previous"
+                    routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" aria-controls="profile"
+                    aria-selected="false">Previous</a></li>
+              </ul>
+            </div>
+            <div class="col-sm-6 pt-3 pt-sm-0">
+              <div class="d-flex justify-content-end align-items-center">
+                <div class="sortings">
+                  <div class="form-group mb-0 mr-3" *ngIf="component === 'docs-upcomming' && isUpcmming">
+                    <ng-select (change)="onChangeUpcomming(sort)" [items]="sortingUpcomming" bindLabel="value"
+                      bindValue="id" appearance="outline" [searchable]="false" [clearable]="false" [(ngModel)]="sort"
+                      class="custom" placeholder="Sorting">
+                    </ng-select>
+                  </div>
+                  <div class="form-group mb-0 mr-3" *ngIf="component === 'docs-previous' && isPrevs">
+                    <ng-select (change)="onChangePrevious(sort)" [items]="sortingPrivious" bindLabel="value"
+                      bindValue="id" appearance="outline" [searchable]="false" [clearable]="false" [(ngModel)]="sort"
+                      class="custom" placeholder="Sorting">
+                    </ng-select>
+                  </div>
+                </div>
+                <app-shared-filter [component]="component" (filter)="onAppliedFilter($event)"
+                  (resetFilter)="onResetFilter()" *ngIf="isUpcmming || isPrevs"></app-shared-filter>
+              </div>
+            </div>
+          </div>
           <div class="tab-content pt-3" id="myTabContent">
             <router-outlet></router-outlet>
           </div>

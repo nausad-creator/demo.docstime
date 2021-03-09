@@ -6,28 +6,25 @@
     <div class="row align-items-center">
       <div class="col-md-5 text-appont" style="cursor: pointer;" (click)="onClickViewReferral(wholeObject)">
         <p class="m-0">{{reasonName | titlecase}}</p>
-        <p *ngIf="refDocName">Referred By:<br> <span class="text-dark">{{preFixDRstr === 'DR.' ? (refDocName | titlecase) : 'Dr. ' + (refDocName | titlecase)}}
-          <br>{{specialityName | titlecase}}
-        </span></p>
+        <a *ngIf="refDocName">Referred By:</a>
+        <h5 class="text-dark" style="margin-top: .4rem; margin-bottom: .4rem;" *ngIf="refDocName">{{preFixDRstr === 'DR.' ? (refDocName | titlecase) : 'Dr. ' + (refDocName | titlecase)}}</h5>
+        <!-- <span class="text-dark" *ngIf="specialityName"> {{specialityName | titlecase}}</span> -->
+        <p class="m-0" *ngIf="specialityName"> {{specialityName | titlecase}}</p>
       </div>
       <div class="col-md-3 icons-dated" style="cursor: pointer;" (click)="onClickViewReferral(wholeObject)">
         <p class="m-0" *ngIf="refercaseVisitDate"><i class="ti-calendar"></i> {{refercaseVisitDate | date : 'mediumDate'}}</p>
         <p class="m-0" *ngIf="refercaseVisitTime"><i class="ti-time"></i> {{convertedTime}}</p>
       </div>
-      <div class="col-md-4 text-xl-right btnsgrp-appointment" *ngIf="refercaseStatus === 'Pending'">
+      <div class="col-md-4 text-xl-right btnsgrp-appointment" style="cursor: pointer;" (click)="onClickViewReferral(wholeObject)">
         <p class="text-dark sb-text mb-2" *ngIf="refercaseUrgent === 'Yes'">Urgent Consult</p>
-        <a style="cursor: pointer;
-        border-color: #007bff;" class="btn btn-outline-primary" (click)="openModalConfirm()">Confirm</a>
-        <a style="cursor: pointer;
-        border-color: #007bff;" class="btn btn-outline-primary" (click)="openModalReject()">Reject</a>
+        <p class="text-dark sb-text mb-2" *ngIf="refercaseUrgent === 'No' && refercaseStatus === 'Pending'"></p>
+        <div class="text-success" *ngIf="refercaseStatus === 'Accepted'"><img src="assets/img/check-icon.svg" alt="" height="15px"> Confirmed</div>
+        <div class="text-danger" *ngIf="refercaseStatus === 'Rejected'"><img src="assets/img/close-icon.svg" alt="" height="15px"> Rejected</div>	
+        <div class="text-muted" *ngIf="refercaseStatus === 'Expired'"><i class="ti-na"></i> Expired</div>																
       </div>
-      <div class="col-md-4 text-xl-right btnsgrp-appointment" *ngIf="refercaseStatus === 'Accepted'" style="cursor: pointer;" (click)="onClickViewReferral(wholeObject)">
-        <p class="text-dark sb-text mb-2" *ngIf="refercaseUrgent === 'Yes'">Urgent Consult</p>
-        <div class="text-success"><img src="assets/img/check-icon.svg" alt="" height="15px"> Confirmed</div>
-      </div>
-      <div class="col-md-4 text-xl-right btnsgrp-appointment" *ngIf="refercaseStatus === 'Rejected'" style="cursor: pointer;" (click)="onClickViewReferral(wholeObject)">
-        <p class="text-dark sb-text mb-2" *ngIf="refercaseUrgent === 'Yes'">Urgent Consult</p>
-        <div class="text-danger"><img src="assets/img/close-icon.svg" alt="" height="15px"> Rejected</div>
+      <div class="col-md-12 text-right" *ngIf="refercaseStatus === 'Pending'">
+        <a (click)="openModalConfirm()" class="btn btn-outline-primary btn-sm">Confirm/Reschedule</a>
+        <a (click)="openModalReject()" class="btn btn-outline-primary m-1 btn-sm">Reject/Rerefer</a>	
       </div>
     </div>
   </div>

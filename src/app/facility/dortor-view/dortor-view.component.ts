@@ -15,7 +15,7 @@ export class DortorViewComponent implements OnInit {
   imageUrl: string;
   modalRef: BsModalRef;
   detailsForm: FormGroup;
-  baseUrl = `${environment.apiBaseUrl}/backend/web/uploads`;
+  baseUrl = `${environment.fileUrl}`;
   countryCodeOptions = [
     { code: '+91', flag: 'assets/img/flag_india_1.png' },
     { code: '+129', flag: 'assets/img/flag_uae_1.png' },

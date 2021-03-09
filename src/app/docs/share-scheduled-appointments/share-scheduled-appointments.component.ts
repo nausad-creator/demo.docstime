@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ReferCase } from '../docs.interface';
 
 @Component({
   selector: 'app-share-scheduled-appointments',
@@ -51,7 +52,7 @@ export class ShareScheduledAppointmentsComponent implements OnInit {
     return time[0] + '' + time[1] + '' + time[2] + ' ' + time[5]; // return adjusted time or original string
   }
 
-  onClickViewUpcomming = (referral: any) => {
+  onClickViewUpcomming = (referral: ReferCase) => {
     this.view.emit(JSON.stringify(referral));
   }
 }

@@ -30,7 +30,7 @@ export class FacilityNavComponent implements OnInit, DoCheck, OnDestroy  {
     facilityuserProfileImage: ''
   };
   subscription: Subscription;
-  baseUrl = `${environment.apiBaseUrl}/backend/web/uploads`;
+  baseUrl = `${environment.fileUrl}`;
   url: string;
   @Output() loggedOutFacility: EventEmitter<any> = new EventEmitter();
   constructor(

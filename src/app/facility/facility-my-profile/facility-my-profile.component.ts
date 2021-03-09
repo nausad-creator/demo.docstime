@@ -1,13 +1,21 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import * as moment from 'moment';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { HomeService } from 'src/app/home.service';
 import { environment } from 'src/environments/environment';
 import { FacilityService } from '../facility.service';
-
+import { VerificationComponent } from './verification/verification.component';
+interface ChangeEmailMobile {
+  facilityuserID: string;
+  changeFacilityuserMobile: string;
+  changeFacilityuserEmail: string;
+  changeFacilityuserOldMobile: string;
+  changeFacilityuserOldEmail: string;
+}
 @Component({
   selector: 'app-facility-my-profile',
   templateUrl: './facility-my-profile.component.html',
@@ -15,11 +23,12 @@ import { FacilityService } from '../facility.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FacilityMyProfileComponent implements OnInit {
+  bsModalRef: BsModalRef;
   maxDate = new Date();
   facData: any;
   url: string;
   maxSize = 2048000;
-  baseUrl = `${environment.apiBaseUrl}/backend/web/uploads`;
+  baseUrl = `${environment.fileUrl}`;
   selectedFiles: File;
   basicProfile: FormGroup;
   profProfile: FormGroup;
@@ -38,7 +47,8 @@ export class FacilityMyProfileComponent implements OnInit {
     private service: HomeService,
     private toastr: ToastrService,
     private fb: FormBuilder,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private modalService: BsModalService
   ) { }
 
   ngOnInit(): void {
@@ -62,18 +72,21 @@ export class FacilityMyProfileComponent implements OnInit {
       facilityuserImage: [this.facData.facilityuserImage ? this.facData.facilityuserImage : ''],
       facilityuserFirstName: [this.facData.facilityuserFirstName ? this.facData.facilityuserFirstName : ''],
       facilityuserLastName: [this.facData.facilityuserLastName ? this.facData.facilityuserLastName : ''],
-      facilityuserMobile: [this.facData.facilityuserMobile ? this.facData.facilityuserMobile : '', Validators.compose([Validators.required,
-      Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')
-      ])],
+      facilityuserMobile: [this.facData.facilityuserMobile ? this.facData.facilityuserMobile
+        .split('(').join('-').split(')').join('-').split('-').join(' ').trim().split(' ').join('')
+        : '', Validators.compose([Validators.required,
+        Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')
+        ])],
       userCountryCode: [this.countryCodeOptions[0].code, Validators.compose([
         Validators.required
       ])],
     });
     this.profProfile = this.fb.group({
       facilityContactNumber: [this.facData.facilityContactNumber ?
-        this.facData.facilityContactNumber : '', Validators.compose([Validators.required,
-        Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')
-        ])],
+        this.facData.facilityContactNumber.split('(').join('-').split(')').join('-').split('-').join(' ').trim().split(' ').join('') : '',
+      Validators.compose([Validators.required,
+      Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')
+      ])],
       userCountryCode: [this.countryCodeOptions[0].code, Validators.compose([
         Validators.required
       ])],
@@ -93,8 +106,16 @@ export class FacilityMyProfileComponent implements OnInit {
   onChangeCode = (code: string) => {
     this.flag = this.countryCodeOptions.filter((data) => data.code === code)[0].flag;
   }
-
   onUpdateBasicClick = (post: any) => {
+    if (post.facilityuserEmail !== this.facData.facilityuserEmail ||
+      post.facilityuserMobile !== this.facData.facilityuserMobile
+        .split('(').join('-').split(')').join('-').split('-').join(' ').trim().split(' ').join('')) {
+      this.onVerifyChange();
+    } else {
+      this.updateBasic(post);
+    }
+  }
+  updateBasic = (post: any) => {
     this.markFormTouched(this.basicProfile);
     if (this.basicProfile.valid && this.profProfile.valid && this.findInvalidControlsBasic().length === 0) {
       this.updateFacilityProfile(post).then((response: Array<any>) => {
@@ -144,57 +165,57 @@ export class FacilityMyProfileComponent implements OnInit {
   }
 
   updateFacilityProfile = (post: any) => {
-      this.spinner.show();
-      return new Promise((resolve, reject) => {
-        const data = {
-          languageID: '1',
-          facilityuserID: this.facData.facilityuserID,
-          facilityName: post.facilityName ? post.facilityName : this.basicProfile.get('facilityName').value,
-          facilityAbout: post.facilityAbout ? post.facilityAbout : this.basicProfile.get('facilityAbout').value,
-          facilityuserDOB: post.facilityuserDOB ? moment(post.facilityuserDOB).format('YYYY-MM-DD') :
+    this.spinner.show();
+    return new Promise((resolve, reject) => {
+      const data = {
+        languageID: '1',
+        facilityuserID: this.facData.facilityuserID,
+        facilityName: post.facilityName ? post.facilityName : this.basicProfile.get('facilityName').value,
+        facilityAbout: post.facilityAbout ? post.facilityAbout : this.basicProfile.get('facilityAbout').value,
+        facilityuserDOB: post.facilityuserDOB ? moment(post.facilityuserDOB).format('YYYY-MM-DD') :
           moment(this.basicProfile.get('facilityuserDOB').value).format('YYYY-MM-DD'),
-          facilityuserEmail: post.facilityuserEmail ? post.facilityuserEmail : this.basicProfile.get('facilityuserEmail').value,
-          facilityuserMobile: post.facilityuserMobile ? post.facilityuserMobile : this.basicProfile.get('facilityuserMobile').value,
-          facilityuserFirstName: post.facilityuserFirstName ? post.facilityuserFirstName :
+        facilityuserEmail: post.facilityuserEmail ? post.facilityuserEmail : this.basicProfile.get('facilityuserEmail').value,
+        facilityuserMobile: post.facilityuserMobile ? post.facilityuserMobile : this.basicProfile.get('facilityuserMobile').value,
+        facilityuserFirstName: post.facilityuserFirstName ? post.facilityuserFirstName :
           this.basicProfile.get('facilityuserFirstName').value,
-          facilityuserImage: this.service.getFaLocal() ? this.service.getFaLocal().facilityuserImage
+        facilityuserImage: this.service.getFaLocal() ? this.service.getFaLocal().facilityuserImage
           : this.service.getFaSession().facilityuserImage,
-          facilityuserLastName: post.facilityuserLastName ? post.facilityuserLastName : this.basicProfile.get('facilityuserLastName').value,
-          facilityuserGender: post.facilityuserGender ? post.facilityuserGender : this.basicProfile.get('facilityuserGender').value,
-        };
-        this.facilityService.updateProfile(JSON.stringify(data)).subscribe(
-          (response) => {
-            if (response[0].status === 'true') {
-              resolve(response[0].data);
-            } else {
-              resolve([]);
-            }
-          }, error => reject(error)
-        );
-      });
+        facilityuserLastName: post.facilityuserLastName ? post.facilityuserLastName : this.basicProfile.get('facilityuserLastName').value,
+        facilityuserGender: post.facilityuserGender ? post.facilityuserGender : this.basicProfile.get('facilityuserGender').value,
+      };
+      this.facilityService.updateProfile(JSON.stringify(data)).subscribe(
+        (response) => {
+          if (response[0].status === 'true') {
+            resolve(response[0].data);
+          } else {
+            resolve([]);
+          }
+        }, error => reject(error)
+      );
+    });
   }
   updateFacilityInfo = (post: any) => {
-      this.spinner.show();
-      return new Promise((resolve, reject) => {
-        const data = {
-          languageID: '1',
-          facilityuserID: this.facData.facilityuserID,
-          facilityName: post.facilityName ? post.facilityName : this.profProfile.get('facilityName').value,
-          facilityEmail: post.facilityEmail ? post.facilityEmail : this.profProfile.get('facilityEmail').value,
-          facilityContactNumber: post.facilityContactNumber ? post.facilityContactNumber :
+    this.spinner.show();
+    return new Promise((resolve, reject) => {
+      const data = {
+        languageID: '1',
+        facilityuserID: this.facData.facilityuserID,
+        facilityName: post.facilityName ? post.facilityName : this.profProfile.get('facilityName').value,
+        facilityEmail: post.facilityEmail ? post.facilityEmail : this.profProfile.get('facilityEmail').value,
+        facilityContactNumber: post.facilityContactNumber ? post.facilityContactNumber :
           this.profProfile.get('facilityContactNumber').value,
-          facilityAddress: post.facilityAddress ? post.facilityAddress : this.profProfile.get('facilityAddress').value,
-        };
-        this.facilityService.updateInfo(JSON.stringify(data)).subscribe(
-          (response) => {
-            if (response[0].status === 'true') {
-              resolve(response[0].data);
-            } else {
-              resolve([]);
-            }
-          }, error => reject(error)
-        );
-      });
+        facilityAddress: post.facilityAddress ? post.facilityAddress : this.profProfile.get('facilityAddress').value,
+      };
+      this.facilityService.updateInfo(JSON.stringify(data)).subscribe(
+        (response) => {
+          if (response[0].status === 'true') {
+            resolve(response[0].data);
+          } else {
+            resolve([]);
+          }
+        }, error => reject(error)
+      );
+    });
   }
 
   findInvalidControlsBasic = () => {
@@ -233,19 +254,19 @@ export class FacilityMyProfileComponent implements OnInit {
       }
     });
   }
-  onSelectFile = async (event: any) => {
-    if (event.target.files.length > 0) {
+  onSelectFile = async (event: Event) => {
+    if ((event.target as HTMLInputElement).files.length > 0) {
       this.spinner.show();
-      if (event.target.files[0].size <= this.maxSize) {
-        this.selectedFiles = event.target.files[0] as File;
+      if ((event.target as HTMLInputElement).files[0].size <= this.maxSize) {
+        this.selectedFiles = (event.target as HTMLInputElement).files[0] as File;
         await this.uploadFiles(this.selectedFiles)
           .then((fulFilled) => {
             const reader = new FileReader();
             reader.readAsDataURL(this.selectedFiles);
             reader.onload = () => {
-            this.url = reader.result as string;
-            this.cd.markForCheck();
-          };
+              this.url = reader.result as string;
+              this.cd.markForCheck();
+            };
             this.updateLogo(fulFilled[0].fileName);
           })
           .catch((error) => {
@@ -292,7 +313,7 @@ export class FacilityMyProfileComponent implements OnInit {
       if (response[0].status === 'true') {
         this.facData = response[0].data[0];
         this.service.getFaLocal() ? this.service.setFaLocal(JSON.stringify(response[0].data[0]))
-        : this.service.setFaSession(JSON.stringify(response[0].data[0]));
+          : this.service.setFaSession(JSON.stringify(response[0].data[0]));
         this.toastr.success('Profile Picture Updated');
         setTimeout(() => { this.service.nextCount(`${response[0].data[0].facilityuserImage}`); });
         this.spinner.hide();
@@ -307,5 +328,52 @@ export class FacilityMyProfileComponent implements OnInit {
         console.error(error);
       }
     );
+  }
+  onVerifyChange = () => {
+    this.spinner.show();
+    const data: ChangeEmailMobile = {
+      facilityuserID: this.facData.facilityuserID,
+      changeFacilityuserEmail: this.basicProfile.get('facilityuserEmail').value,
+      changeFacilityuserMobile: this.basicProfile.get('facilityuserMobile').value,
+      changeFacilityuserOldEmail: this.facData.facilityuserEmail,
+      changeFacilityuserOldMobile: this.facData.facilityuserMobile
+        .split('(').join('-').split(')').join('-').split('-').join(' ').trim().split(' ').join(''),
+    };
+    this.verifyChange(JSON.stringify(data))
+      .then((res: boolean) => {
+        if (res) {
+          this.openVerification(data);
+        }
+        if (!res) {
+          this.toastr.error('Error occured, please try again later');
+        }
+      }).catch(err => console.error(err)).finally(() => this.spinner.hide());
+  }
+  verifyChange = (data: string) => {
+    return new Promise((resolve, reject) => {
+      this.facilityService.checkForChange(data).subscribe(
+        res => {
+          if (res[0].status === 'true') {
+            resolve(true);
+          }
+          if (res[0].status === 'false') {
+            resolve(false);
+          }
+        }, error => reject(error));
+    });
+  }
+  openVerification = (res: ChangeEmailMobile) => {
+    const initialState = {
+      list: [{
+        res
+      }]
+    };
+    this.bsModalRef = this.modalService.show(VerificationComponent, { id: 274, initialState });
+    this.bsModalRef.content.event.subscribe((response: string) => {
+      const data = JSON.parse(response);
+      if (data.res === 'confirmed') {
+        this.updateBasic(this.basicProfile.value);
+      }
+    });
   }
 }

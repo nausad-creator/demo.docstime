@@ -1,9 +1,21 @@
 import { HttpClient, HttpHeaders, HttpRequest, HttpEventType, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SwPush } from '@angular/service-worker';
-import { Observable, timer, throwError, Subject } from 'rxjs';
+import { Observable, timer, throwError, Subject, BehaviorSubject } from 'rxjs';
 import { retry, catchError, switchMap, shareReplay, map, takeUntil, first } from 'rxjs/operators';
 import { environment } from './../../environments/environment';
+import {
+  AddEditReReferResponse,
+  ChangeResponse,
+  ChangeVerificationResponse,
+  DashboardResponse,
+  DeleteResponse,
+  Doctors,
+  NotifyResponse,
+  ReceivedCount,
+  ReceivedResponse,
+  SentResponse
+} from './docs.interface';
 const VAPID_PUBLIC_KEY = 'BH9oatuz4hOXp3y--Nh5caxQBS9WzrfF_Pd4_bxysBpkQbaYi0q4iAVy1kYSNxBuVBefrrGVU6bATE69fjdY9Is';
 const PRIVATE_KEY = 'b8C5w1EbG9sb2kIrUyPOqYA47u_hIeQK7-1xZvIXo9I';
 const CACHE_SIZE = 1;
@@ -22,15 +34,15 @@ export class FacilityService {
   private reloadNotify$ = new Subject<void>();
   private referralReceivedCount$ = new Subject<void>();
 
-  private todayAppontments$: Observable<Array<any>>;
-  private otherAppointments$: Observable<Array<any>>;
-  private referralReceivedUpcomming$: Observable<Array<any>>;
-  private referralReceivedPrivious$: Observable<Array<any>>;
-  private referralCancelled$: Observable<Array<any>>;
-  private referralReceivedListsAll$: Observable<Array<any>>;
-  private referralSentLists$: Observable<Array<any>>;
-  private notifyList$: Observable<Array<any>>;
-  private referralReceivedListsCount$: Observable<Array<any>>;
+  private todayAppontments$: Observable<Array<DashboardResponse>>;
+  private otherAppointments$: Observable<Array<DashboardResponse>>;
+  private referralReceivedUpcomming$: Observable<Array<ReceivedResponse>>;
+  private referralReceivedPrivious$: Observable<Array<ReceivedResponse>>;
+  private referralCancelled$: Observable<Array<ReceivedResponse>>;
+  private referralReceivedListsAll$: Observable<Array<ReceivedResponse>>;
+  private referralSentLists$: Observable<Array<SentResponse>>;
+  private notifyList$: Observable<Array<NotifyResponse>>;
+  private referralReceivedListsCount$: Observable<Array<ReceivedCount>>;
   // urls
   private changePasswordUrl = '/facilityuser/facilityuser-change-password';
   private updateProfileUrl = '/facilityuser/facilityuser-update-profile';
@@ -45,17 +57,123 @@ export class FacilityService {
   private rejectReferralUrl = '/refercase/reject-case';
   private createReferUrl = '/refercase/refer-new-case';
   private createreReferUrl = '/refercase/refer-existing-case';
+  private editReferUrl = '/refercase/edit-refer-case';
   private notifyListsUrl = '/notification/get-notification-list';
   private updateNotifyUrl = '/notification/update-notification-read-status';
   private deleteNotifyUrl = '/notification/delete-notification';
   private notifyResetBadgeCountUrl = '/notification/reset-badge-count';
+  private rejectReReferUrl = '/refercase/reject-re-refer-case';
+  private doctorListUrl = '/doctor/doctor-list';
+  private changeEmailMobileUrl = '/facilityuser/facilityuser-change-mobile-email';
+  private changeOTPverificationUlr = '/facilityuser/change-otp-verification';
+  private deleteCaseUrl = '/refercase/delete-case';
 
-  constructor(private http: HttpClient, private swPush: SwPush) { }
+  constructor(private http: HttpClient, private swPush: SwPush) {
+    this.update = new BehaviorSubject(this.filterUpdate);
+    this.reset = new BehaviorSubject(this.filterReset);
+    this.sortData = new BehaviorSubject(this.sort);
+    this.isEmptyUpcoming = new BehaviorSubject(this.isEmptyUpcomming);
+    this.isEmptyPrivious = new BehaviorSubject(this.isEmptyPrevious);
+    this.isEmptyCancel = new BehaviorSubject(this.isEmptyCancelled);
+  }
+  // Behavior Subject
+  filterUpdate: string;
+  update: BehaviorSubject<string>;
+  // Behavior Subject
+  filterReset: string;
+  reset: BehaviorSubject<string>;
+  // Behavior Subject
+  sort: string;
+  sortData: BehaviorSubject<string>;
+  // Behavior Subject
+  isEmptyUpcomming = false;
+  isEmptyUpcoming: BehaviorSubject<boolean>;
+  // Behavior Subject
+  isEmptyPrevious = false;
+  isEmptyPrivious: BehaviorSubject<boolean>;
+  // Behavior Subject
+  isEmptyCancelled = false;
+  isEmptyCancel: BehaviorSubject<boolean>;
 
   httpOptions = {
     headers: new HttpHeaders({}),
   };
-
+  filter = (update: string) => {
+    this.update.next(update);
+  }
+  sorting = (data: string) => {
+    this.sortData.next(data);
+  }
+  resetFilter = (reset: string) => {
+    this.reset.next(reset);
+  }
+  showUpcommingFiler = (isEmpty: boolean) => {
+    this.isEmptyUpcoming.next(isEmpty);
+  }
+  showPreviousFiler = (isEmpty: boolean) => {
+    this.isEmptyPrivious.next(isEmpty);
+  }
+  showCancelledFiler = (isEmpty: boolean) => {
+    this.isEmptyCancel.next(isEmpty);
+  }
+  checkForChange = (data: string): Observable<Array<ChangeResponse>> => {
+    const form = new FormData();
+    const json = `[{
+      "facilityuserID":"${JSON.parse(data).facilityuserID}",
+      "changeFacilityuserMobile":"${JSON.parse(data).changeFacilityuserMobile}",
+      "changeFacilityuserEmail":"${JSON.parse(data).changeFacilityuserEmail}",
+      "changeFacilityuserOldMobile":"${JSON.parse(data).changeFacilityuserOldMobile}",
+      "changeFacilityuserOldEmail":"${JSON.parse(data).changeFacilityuserOldEmail}",
+      "languageID":"1",
+      "apiType":"Android",
+      "apiVersion":"1.0"
+    }]`;
+    form.append('json', json);
+    return this.http
+      .post<Array<ChangeResponse>>(environment.apiBaseUrl + this.changeEmailMobileUrl, form, this.httpOptions)
+      .pipe(shareReplay(), retry(2), catchError(this.handleError));
+  }
+  changeVerification = (data: string): Observable<Array<ChangeVerificationResponse>> => {
+    const form = new FormData();
+    const json = `[{
+      "languageID":"${JSON.parse(data).languageID}",
+      "facilityuserID":"${JSON.parse(data).facilityuserID}",
+      "changeFacilityuserOTP":"${JSON.parse(data).changeFacilityuserOTP}",
+      "apiType":"Android",
+      "apiVersion":"1.0"
+    }]`;
+    form.append('json', json);
+    return this.http
+      .post<Array<ChangeVerificationResponse>>(environment.apiBaseUrl + this.changeOTPverificationUlr, form, this.httpOptions)
+      .pipe(shareReplay(), retry(2), catchError(this.handleError));
+  }
+  deleteCase = (data: string): Observable<Array<DeleteResponse>> => {
+    const form = new FormData();
+    const json = `[{
+      "apiType":"Android",
+      "apiVersion":"1.0",
+      "languageID":"${JSON.parse(data).languageID}",
+      "refercaseID":"${JSON.parse(data).refercaseID}"
+    }]`;
+    form.append('json', json);
+    return this.http
+      .post<Array<DeleteResponse>>(environment.apiBaseUrl + this.deleteCaseUrl, form, this.httpOptions)
+      .pipe(shareReplay(), retry(2), catchError(this.handleError));
+  }
+  searchDoctors = (searchWord: string): Observable<Array<Doctors>> => {
+    const form = new FormData();
+    const json = `[{
+      "referCaseSearch":"${true}",
+      "searchWord":"${searchWord}",
+      "languageID":"1",
+      "apiType":"Android",
+      "apiVersion":"1.0"
+      }]`;
+    form.append('json', json);
+    return this.http
+      .post<Array<Doctors>>(environment.apiBaseUrl + this.doctorListUrl, form, this.httpOptions)
+      .pipe(retry(2), catchError(this.handleError));
+  }
   facChangePassword(data: string): Observable<any> {
     const form = new FormData();
     const json = `[{
@@ -208,7 +326,42 @@ export class FacilityService {
       .post<any>(environment.apiBaseUrl + `${this.createreReferUrl}`, form, this.httpOptions)
       .pipe(shareReplay(), retry(2), catchError(this.handleError));
   }
-  today = (data: string) => {
+  editRefer(data: string): Observable<Array<AddEditReReferResponse>> {
+    const form = new FormData();
+    const json = `[{
+      "apiType": "Android",
+      "apiVersion": "1.0",
+      "languageID": "${JSON.parse(data).languageID}",
+      "patientEmail": "${JSON.parse(data).patientEmail}",
+      "patientFirstName": "${JSON.parse(data).patientFirstName}",
+      "patientDOB": "${JSON.parse(data).patientDOB}",
+      "patientCountryCode": "${JSON.parse(data).patientCountryCode}",
+      "patientMobile": "${JSON.parse(data).patientMobile}",
+      "patientGender": "${JSON.parse(data).patientGender}",
+      "facilityID": "${JSON.parse(data).facilityID}",
+      "specialityID": "${JSON.parse(data).specialityID}",
+      "reasonID": "${JSON.parse(data).reasonID}",
+      "reasonIDs": "${JSON.parse(data).reasonIDs}",
+      "reasonNames": "${JSON.parse(data).reasonNames}",
+      "insuranceNames": "${JSON.parse(data).insuranceNames}",
+      "refercaseUrgent": "${JSON.parse(data).refercaseUrgent}",
+      "refercaseDescription": "${JSON.parse(data).refercaseDescription}",
+      "refercaseNPI": "${JSON.parse(data).refercaseNPI}",
+      "refercaseVisitDate": "${JSON.parse(data).refercaseVisitDate}",
+      "refercaseVisitTime": "${JSON.parse(data).refercaseVisitTime}",
+      "doctorID": "${JSON.parse(data).doctorID}",
+      "refercaseHospitalAdmission": "${JSON.parse(data).refercaseHospitalAdmission}",
+      "documents": ${JSON.stringify(JSON.parse(data).documents)},
+      "refercaseID":"${JSON.parse(data).refercaseID}",
+      "patientID":"${JSON.parse(data).patientID}",
+      "tzID":"${JSON.parse(data).tzID}"
+    }]`;
+    form.append('json', json);
+    return this.http
+      .post<Array<AddEditReReferResponse>>(environment.apiBaseUrl + `${this.editReferUrl}`, form, this.httpOptions)
+      .pipe(shareReplay(), retry(2), catchError(this.handleError));
+  }
+  today = (data: string): Observable<Array<DashboardResponse>> => {
     if (!this.todayAppontments$) {
       const timer$ = timer(0, REFRESH_INTERVAL);
       this.todayAppontments$ = timer$.pipe(
@@ -219,7 +372,7 @@ export class FacilityService {
     }
     return this.todayAppontments$;
   }
-  other = (data: string) => {
+  other = (data: string): Observable<Array<DashboardResponse>> => {
     if (!this.otherAppointments$) {
       const timer$ = timer(0, REFRESH_INTERVAL);
       this.otherAppointments$ = timer$.pipe(
@@ -230,35 +383,55 @@ export class FacilityService {
     }
     return this.otherAppointments$;
   }
-  facDashboardToday(data: string): Observable<any> {
+  facDashboardToday(data: string): Observable<Array<DashboardResponse>> {
     const form = new FormData();
     const json = `[{
       "facilityuserID": "${JSON.parse(data).facilityuserID}",
       "facilityID": "${JSON.parse(data).facilityID}",
       "languageID": "${JSON.parse(data).languageID}",
+      "refercaseStatus":"${JSON.parse(data).refercaseStatus}",
+      "patientName":"${JSON.parse(data).patientName}",
+      "referbydoctorName":"${JSON.parse(data).referbydoctorName}",
+      "insuranceNames":"${JSON.parse(data).insuranceNames}",
+      "patientGender":"${JSON.parse(data).patientGender}",
+      "refercaseUrgent":"${JSON.parse(data).refercaseUrgent}",
+      "reasonIDs":"${JSON.parse(data).reasonIDs}",
+      "refercaseVisitTime":"${JSON.parse(data).refercaseVisitTime}",
+      "startDate":"${JSON.parse(data).startDate}",
+      "endDate":"${JSON.parse(data).endDate}",
       "apiType": "Android",
       "apiVersion": "1.0"
     }]`;
     form.append('json', json);
     return this.http
-      .post<any>(environment.apiBaseUrl + '' + this.homeUrl, form, this.httpOptions)
-      .pipe(map(res => res[0].today), retry(2), catchError(this.handleError));
+      .post<Array<DashboardResponse>>(environment.apiBaseUrl + '' + this.homeUrl, form, this.httpOptions)
+      .pipe(retry(2), catchError(this.handleError));
   }
-  facDashboardOther(data: string): Observable<any> {
+  facDashboardOther(data: string): Observable<Array<DashboardResponse>> {
     const form = new FormData();
     const json = `[{
       "facilityuserID": "${JSON.parse(data).facilityuserID}",
       "facilityID": "${JSON.parse(data).facilityID}",
       "languageID": "${JSON.parse(data).languageID}",
+      "refercaseStatus":"${JSON.parse(data).refercaseStatus}",
+      "patientName":"${JSON.parse(data).patientName}",
+      "referbydoctorName":"${JSON.parse(data).referbydoctorName}",
+      "insuranceNames":"${JSON.parse(data).insuranceNames}",
+      "patientGender":"${JSON.parse(data).patientGender}",
+      "refercaseUrgent":"${JSON.parse(data).refercaseUrgent}",
+      "reasonIDs":"${JSON.parse(data).reasonIDs}",
+      "refercaseVisitTime":"${JSON.parse(data).refercaseVisitTime}",
+      "startDate":"${JSON.parse(data).startDate}",
+      "endDate":"${JSON.parse(data).endDate}",
       "apiType": "Android",
       "apiVersion": "1.0"
     }]`;
     form.append('json', json);
     return this.http
-      .post<any>(environment.apiBaseUrl + `${this.homeUrl}`, form, this.httpOptions)
-      .pipe(map(res => res[0].other), retry(2), catchError(this.handleError));
+      .post<Array<DashboardResponse>>(environment.apiBaseUrl + `${this.homeUrl}`, form, this.httpOptions)
+      .pipe(retry(2), catchError(this.handleError));
   }
-  referralReceivedUpcomming = (data: string) => {
+  referralReceivedUpcomming = (data: string): Observable<Array<ReceivedResponse>> => {
     if (!this.referralReceivedUpcomming$) {
       const timer$ = timer(0, REFRESH_INTERVAL);
       this.referralReceivedUpcomming$ = timer$.pipe(
@@ -269,7 +442,7 @@ export class FacilityService {
     }
     return this.referralReceivedUpcomming$;
   }
-  referralReceivedPrivious = (data: string) => {
+  referralReceivedPrivious = (data: string): Observable<Array<ReceivedResponse>> => {
     if (!this.referralReceivedPrivious$) {
       const timer$ = timer(0, REFRESH_INTERVAL);
       this.referralReceivedPrivious$ = timer$.pipe(
@@ -280,7 +453,7 @@ export class FacilityService {
     }
     return this.referralReceivedPrivious$;
   }
-  referralCancelled = (data: string) => {
+  referralCancelled = (data: string): Observable<Array<ReceivedResponse>> => {
     if (!this.referralCancelled$) {
       const timer$ = timer(0, REFRESH_INTERVAL);
       this.referralCancelled$ = timer$.pipe(
@@ -291,7 +464,7 @@ export class FacilityService {
     }
     return this.referralCancelled$;
   }
-  referralReceivedAll = (data: string) => {
+  referralReceivedAll = (data: string): Observable<Array<ReceivedResponse>> => {
     if (!this.referralReceivedListsAll$) {
       const timer$ = timer(0, REFRESH_INTERVAL);
       this.referralReceivedListsAll$ = timer$.pipe(
@@ -302,7 +475,7 @@ export class FacilityService {
     }
     return this.referralReceivedListsAll$;
   }
-  referralReceivedLists(data: string): Observable<any> {
+  referralReceivedLists(data: string): Observable<Array<ReceivedResponse>> {
     const form = new FormData();
     const json = `[{
       "apiType":"Android",
@@ -310,6 +483,13 @@ export class FacilityService {
       "languageID":"${JSON.parse(data).languageID}",
       "facilityID":"${JSON.parse(data).facilityID}",
       "refercaseStatus":"${JSON.parse(data).refercaseStatus}",
+      "patientName":"${JSON.parse(data).patientName}",
+      "referbydoctorName":"${JSON.parse(data).referbydoctorName}",
+      "insuranceNames":"${JSON.parse(data).insuranceNames}",
+      "patientGender":"${JSON.parse(data).patientGender}",
+      "refercaseUrgent":"${JSON.parse(data).refercaseUrgent}",
+      "reasonIDs":"${JSON.parse(data).reasonIDs}",
+      "refercaseVisitTime":"${JSON.parse(data).refercaseVisitTime}",
       "startDate":"${JSON.parse(data).startDate}",
       "endDate":"${JSON.parse(data).endDate}",
       "page":"${JSON.parse(data).page}",
@@ -318,8 +498,8 @@ export class FacilityService {
       }]`;
     form.append('json', json);
     return this.http
-      .post<any>(environment.apiBaseUrl + `${this.referralReceivedUrl}`, form, this.httpOptions)
-      .pipe(map(res => res[0].data), retry(2), catchError(this.handleError));
+      .post<Array<ReceivedResponse>>(environment.apiBaseUrl + `${this.referralReceivedUrl}`, form, this.httpOptions)
+      .pipe(retry(2), catchError(this.handleError));
   }
   referralReceivedCount = (data: string) => {
     if (!this.referralReceivedListsCount$) {
@@ -351,7 +531,7 @@ export class FacilityService {
       .post<any>(environment.apiBaseUrl + `${this.referralReceivedUrl}`, form, this.httpOptions)
       .pipe(retry(2), catchError(this.handleError));
   }
-  referralSent = (data: string) => {
+  referralSent = (data: string): Observable<Array<SentResponse>> => {
     if (!this.referralSentLists$) {
       const timer$ = timer(0, REFRESH_INTERVAL);
       this.referralSentLists$ = timer$.pipe(
@@ -362,7 +542,7 @@ export class FacilityService {
     }
     return this.referralSentLists$;
   }
-  referralSentLists(data: string): Observable<any> {
+  referralSentLists(data: string): Observable<Array<SentResponse>> {
     const form = new FormData();
     const json = `[{
       "apiType": "Android",
@@ -370,17 +550,25 @@ export class FacilityService {
       "languageID": "${JSON.parse(data).languageID}",
       "facilityID": "${JSON.parse(data).facilityID}",
       "refercaseStatus": "${JSON.parse(data).refercaseStatus}",
+      "patientName":"${JSON.parse(data).patientName}",
+      "referbydoctorName":"${JSON.parse(data).referbydoctorName}",
+      "insuranceNames":"${JSON.parse(data).insuranceNames}",
+      "patientGender":"${JSON.parse(data).patientGender}",
+      "refercaseUrgent":"${JSON.parse(data).refercaseUrgent}",
+      "reasonIDs":"${JSON.parse(data).reasonIDs}",
+      "refercaseVisitTime":"${JSON.parse(data).refercaseVisitTime}",
+      "startDate":"${JSON.parse(data).startDate}",
+      "endDate":"${JSON.parse(data).endDate}",
       "page": "${JSON.parse(data).page}",
       "pagesize": "10",
       "doctorID": "${JSON.parse(data).doctorID}"
     }]`;
     form.append('json', json);
     return this.http
-      .post<any>(environment.apiBaseUrl + `${this.referralSentUrl}`, form, this.httpOptions)
-      .pipe(map(res => res[0].data), retry(2), catchError(this.handleError));
+      .post<Array<SentResponse>>(environment.apiBaseUrl + `${this.referralSentUrl}`, form, this.httpOptions)
+      .pipe(retry(2), catchError(this.handleError));
   }
-
-  notifyList = (data: string) => {
+  notifyList = (data: string): Observable<Array<NotifyResponse>> => {
     if (!this.notifyList$) {
       this.notifyList$ = this.notificationLists(data).pipe(
         takeUntil(this.reloadNotify$),
@@ -389,7 +577,7 @@ export class FacilityService {
     }
     return this.notifyList$;
   }
-  notificationLists(data: string): Observable<any> {
+  notificationLists(data: string): Observable<Array<NotifyResponse>> {
     const form = new FormData();
     const json = `[{
       "loginuserID":"${JSON.parse(data).loginuserID}",
@@ -402,8 +590,8 @@ export class FacilityService {
       }]`;
     form.append('json', json);
     return this.http
-      .post<any>(environment.apiBaseUrl + `${this.notifyListsUrl}`, form, this.httpOptions)
-      .pipe(map(res => res[0].data), retry(2), catchError(this.handleError));
+      .post<Array<NotifyResponse>>(environment.apiBaseUrl + `${this.notifyListsUrl}`, form, this.httpOptions)
+      .pipe(catchError(this.handleError));
   }
   referralReceived(data: string): Observable<any> {
     const form = new FormData();
@@ -451,18 +639,22 @@ export class FacilityService {
       .post<any>(environment.apiBaseUrl + `${this.updateNotifyUrl}`, form, this.httpOptions)
       .pipe(retry(2), catchError(this.handleError));
   }
-  deleteNotification(data: string): Observable<any> {
+  deleteNotification(data: string): Observable<Array<DeleteResponse>> {
     const form = new FormData();
     const json = `[{
       "loginuserID": "${JSON.parse(data).loginuserID}",
       "languageID": "${JSON.parse(data).languageID}",
       "notificationID": "${JSON.parse(data).notificationID}",
+      "startDate": "${JSON.parse(data).startDate}",
+      "endDate": "${JSON.parse(data).endDate}",
+      "deleteAll": "${JSON.parse(data).deleteAll}",
+      "userType": "Facility",
       "apiType": "Android",
       "apiVersion": "1.0"
     }]`;
     form.append('json', json);
     return this.http
-      .post<any>(environment.apiBaseUrl + `${this.deleteNotifyUrl}`, form, this.httpOptions)
+      .post<Array<DeleteResponse>>(environment.apiBaseUrl + `${this.deleteNotifyUrl}`, form, this.httpOptions)
       .pipe(shareReplay(), retry(2), catchError(this.handleError));
   }
   acceptReferral(data: string): Observable<any> {
@@ -489,6 +681,8 @@ export class FacilityService {
       "apiVersion": "1.0",
       "languageID": "${JSON.parse(data).languageID}",
       "refercaseID": "${JSON.parse(data).refercaseID}",
+      "tzID": "${JSON.parse(data).tzID}",
+      "timelineRemarks": "${JSON.parse(data).timelineRemarks}",
       "newDate": "${JSON.parse(data).newDate}",
       "newTime": "${JSON.parse(data).newTime}",
       "doctorID": "${JSON.parse(data).doctorID}",
@@ -497,6 +691,30 @@ export class FacilityService {
     form.append('json', json);
     return this.http
       .post<any>(environment.apiBaseUrl + `${this.rejectReferralUrl}`, form, this.httpOptions)
+      .pipe(shareReplay(), retry(2), catchError(this.handleError));
+  }
+  rejectReRefer(data: string): Observable<Array<AddEditReReferResponse>> {
+    const form = new FormData();
+    const json = `[{
+      "apiType": "Android",
+      "apiVersion": "1.0",
+      "languageID": "${JSON.parse(data).languageID}",
+      "refercaseID": "${JSON.parse(data).refercaseID}",
+      "refercaseHospitalAdmission":"${JSON.parse(data).refercaseHospitalAdmission}",
+      "refercaseUrgent":"${JSON.parse(data).refercaseUrgent}",
+      "facilityID": "${JSON.parse(data).facilityID}",
+      "specialityID": "${JSON.parse(data).specialityID}",
+      "reasonID": "${JSON.parse(data).reasonID}",
+      "refercaseVisitDate":"${JSON.parse(data).refercaseVisitDate}",
+      "refercaseVisitTime": "${JSON.parse(data).refercaseVisitTime}",
+      "doctorID": "${JSON.parse(data).doctorID}",
+      "refercaseOrgCaseID":"${JSON.parse(data).refercaseOrgCaseID}",
+      "documents": ${JSON.stringify(JSON.parse(data).documents)},
+      "tzID":"${JSON.parse(data).tzID}"
+    }]`;
+    form.append('json', json);
+    return this.http
+      .post<Array<AddEditReReferResponse>>(environment.apiBaseUrl + `${this.rejectReReferUrl}`, form, this.httpOptions)
       .pipe(shareReplay(), retry(2), catchError(this.handleError));
   }
   unSubscribe = () => {

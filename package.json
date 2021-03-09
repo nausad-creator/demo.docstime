@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "start:prod": "ng build --prod && angular-http-server -p 8085 -o --path dist/docstime",
+    "start:prod": "ng build --prod && angular-http-server -p 4040 -o --path dist/docstime",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -48,6 +48,7 @@
     "ngx-infinite-scroll": "^9.1.0",
     "ngx-owl-carousel-o": "^4.0.0",
     "ngx-sharebuttons": "^8.0.5",
+    "ngx-skeleton-loader": "^2.9.1",
     "ngx-spinner": "^10.0.1",
     "ngx-toastr": "^13.1.0",
     "rxjs": "~6.6.3",

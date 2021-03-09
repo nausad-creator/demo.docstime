@@ -6,9 +6,10 @@
     <div class="row align-items-center">
         <div class="col-md-5 text-appont">
             <p class="m-0">{{reasonName | titlecase}}</p>
-            <p *ngIf="refDocName">Referred By:<br> <span class="text-dark">{{preFixDRstr === 'DR.' ? (refDocName | titlecase) : 'Dr. ' + (refDocName | titlecase)}}
-                <br>{{specialityName | titlecase}}
-              </span></p>
+            <a *ngIf="refDocName">Referred By:</a>
+            <h5 class="text-dark" style="margin-top: .4rem; margin-bottom: .4rem;" *ngIf="refDocName">{{preFixDRstr === 'DR.' ? (refDocName | titlecase) : 'Dr. ' + (refDocName | titlecase)}}</h5>
+            <!-- <span class="text-dark" *ngIf="specialityName"> {{specialityName | titlecase}}</span> -->
+            <p class="m-0" *ngIf="specialityName"> {{specialityName | titlecase}}</p>
         </div>
         <div class="col-md-3 icons-dated">
             <p class="m-0" *ngIf="refercaseVisitDate"><i class="ti-calendar"></i> {{refercaseVisitDate | date : 'mediumDate'}}</p>

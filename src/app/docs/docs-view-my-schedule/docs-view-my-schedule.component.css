@@ -63,3 +63,15 @@ a.disabled {
 .sb-text {
   font-weight: bold;
 }
+.lengMax{
+  min-width:450px; 
+}
+.lengMin{
+  min-width:350px; 
+}
+.lengExtraMax{
+  min-width:520px; 
+}
+.lengSmall{
+  min-width:300px; 
+}

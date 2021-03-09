@@ -23,7 +23,9 @@
                   <div class="row">
                     <div class="col-lg-3 col-md-12">
                       <div class="fi-profile-photo">
-                        <span class="imagebox cursr"><label for="photoupload"><img id="blah-b" class="cursr" [defaultImage]="'assets/img/user-icon.png'" [lazyLoad]="url" [errorImage]="'assets/img/user-icon.png'" alt=""></label></span>
+                        <span class="imagebox cursr"><label for="photoupload"><img id="blah-b" class="cursr"
+                              [defaultImage]="'assets/img/user-icon.png'" [lazyLoad]="url"
+                              [errorImage]="'assets/img/user-icon.png'" alt=""></label></span>
                         <label for="photoupload" class="fi-custom-upladfile cursr">
                           <input (change)="onSelectFile($event)" multiple="" accept="image/*" id="photoupload"
                             name="photoupload" type="file"><span class="photoupload-link cursr">Upload Photo</span>
@@ -39,8 +41,9 @@
                         </div>
                         <div class="form-group col-md-6">
                           <label>Email Address<span class="required-field"></span></label>
-                          <input type="email" id="EmailAddress" formControlName="doctorEmail" name="doctorEmail"
-                            placeholder="Enter email" class="form-control" value="">
+                          <input type="email" id="EmailAddress"
+                            formControlName="doctorEmail" name="doctorEmail" placeholder="Enter email"
+                            class="form-control">
                           <small class="text-danger small"
                             *ngIf="basicProfile.controls['doctorEmail'].hasError('pattern') && (basicProfile.controls['doctorEmail'].dirty || basicProfile.controls['doctorEmail'].touched )">Please
                             enter valid email.</small>
@@ -49,36 +52,44 @@
                             enter email.</small>
                         </div>
                         <div class="form-group col-md-4 ">
-                              <!-- <span class="flag-img"><img [src]="flag" alt="flag"></span> -->
-                              <!-- <select name="userCountryCode" formControlName="userCountryCode"
+                          <!-- <span class="flag-img"><img [src]="flag" alt="flag"></span> -->
+                          <!-- <select name="userCountryCode" formControlName="userCountryCode"
                                 (change)="onChangeCode($event.target.value)" class="countrycode select-css cursr"
                                 required>
                                 <option class="option" *ngFor="let option of countryCodeOptions" [value]="option.code">
                                   {{option.code}}</option>
                               </select> -->
-                              <label>Mobile Number<span class="required-field"></span></label>
-                              <input type="text" id="MobileNumber" maxlength="10" pattern="[1-9]{1}[0-9]{9}"
-                                formControlName="doctorMobile" name="doctorMobile" placeholder="Enter mobile number"
-                                class="form-control" value="">
-                              <small class="text-danger small"
-                                *ngIf=" basicProfile.controls['doctorMobile'].hasError('required') && (basicProfile.controls['doctorMobile'].dirty || basicProfile.controls['doctorMobile'].touched)">Please
-                                enter mobile number</small>
-                              <small class="text-danger small"
-                                *ngIf="basicProfile.controls['doctorMobile'].hasError('pattern') && (basicProfile.controls['doctorMobile'].dirty || basicProfile.controls['doctorMobile'].touched)">Mobile
-                                Number must be only 10 digit</small>
+                          <label>Mobile Number<span class="required-field"></span></label>
+                          <input type="text" oninput="this.value = this.value.replace(/^\s+/g, '')" id="MobileNumber" maxlength="10"
+                            pattern="[1-9]{1}[0-9]{9}" formControlName="doctorMobile" name="doctorMobile"
+                            placeholder="Enter mobile number" class="form-control">
+                          <small class="text-danger small"
+                            *ngIf=" basicProfile.controls['doctorMobile'].hasError('required') && (basicProfile.controls['doctorMobile'].dirty || basicProfile.controls['doctorMobile'].touched)">Please
+                            enter mobile number</small>
+                          <small class="text-danger small"
+                            *ngIf="basicProfile.controls['doctorMobile'].hasError('pattern') && (basicProfile.controls['doctorMobile'].dirty || basicProfile.controls['doctorMobile'].touched)">Mobile
+                            Number must be only 10 digit</small>
                         </div>
                         <div class="form-group col-md-4">
                           <label class="active">Gender<span class="required-field"></span></label>
                           <input type="text" id="doctorGender" formControlName="doctorGender"
-                            placeholder="Enter fax-number" name="doctorGender" class="form-control" value="" readonly>
+                            placeholder="Enter fax-number" name="doctorGender" class="form-control" readonly>
                           <small class="text-danger small"
                             *ngIf="basicProfile.controls['doctorGender'].hasError('required') && (basicProfile.controls['doctorGender'].dirty || basicProfile.controls['doctorGender'].touched)">Please
                             Enter Gender.</small>
                         </div>
                         <div class="form-group col-md-4">
                           <label>Fax Number<span class="required-field"></span></label>
-                          <input type="text" id="MobileNumber" formControlName="doctorFax"
-                            placeholder="Enter fax-number" name="doctorFax" class="form-control" value="">
+                          <!-- <a class="forgotpin" (click)="openVerificationFax()" *ngIf="faxChanged">Verify</a> -->
+                          <input type="text" maxlength="10" id="MobileNumber"
+                            oninput="this.value = this.value.replace(/^\s+/g, '')" formControlName="doctorFax"
+                            placeholder="Enter fax-number" name="doctorFax" class="form-control">
+                          <small class="text-danger small"
+                            *ngIf=" basicProfile.controls['doctorFax'].hasError('required') && (basicProfile.controls['doctorFax'].dirty || basicProfile.controls['doctorFax'].touched)">Please
+                            enter fax.</small>
+                          <small class="text-danger small"
+                            *ngIf="basicProfile.controls['doctorFax'].hasError('pattern') && (basicProfile.controls['doctorFax'].dirty || basicProfile.controls['doctorFax'].touched)">Fax
+                            Number must be only 10 digit.</small>
                         </div>
                         <!-- <div class="form-group col-md-4">
                           <label>Date of Birth</label>
@@ -89,8 +100,9 @@
                         </div> -->
                         <div class="form-group col-md-12">
                           <label>About Me</label>
-                          <textarea type="text" placeholder="About...?" formControlName="doctorAbout" name="doctorAbout"
-                            id="about" class="form-control"></textarea>
+                          <textarea type="text" placeholder="About...?"
+                            oninput="this.value = this.value.replace(/^\s+/g, '')" formControlName="doctorAbout"
+                            name="doctorAbout" id="about" class="form-control"></textarea>
                         </div>
                       </div>
                       <div class="regerv_btn"><a (click)="onUpdateBasicClick(basicProfile.value)"

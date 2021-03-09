@@ -7,7 +7,15 @@ import { HomeService } from 'src/app/home.service';
 import { DocsService } from '../docs.service';
 import * as moment from 'moment';
 import { environment } from 'src/environments/environment';
-
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { VerificationComponent } from './verification/verification.component';
+interface ChangeEmailMobile {
+  logindoctorID: string;
+  changeDoctorMobile: string;
+  changeDoctorEmail: string;
+  changeDoctorOldMobile: string;
+  changeDoctorOldEmail: string;
+}
 @Component({
   selector: 'app-my-profile',
   templateUrl: './my-profile.component.html',
@@ -18,7 +26,7 @@ export class MyProfileComponent implements OnInit {
   docData: any;
   url: string;
   maxSize = 2048000;
-  baseUrl = `${environment.apiBaseUrl}/backend/web/uploads`;
+  baseUrl = `${environment.fileUrl}`;
   selectedFiles: File;
   basicProfile: FormGroup;
   profProfile: FormGroup;
@@ -31,13 +39,15 @@ export class MyProfileComponent implements OnInit {
     { code: '+65', flag: 'assets/img/flag_usa_1.png' }
   ];
   flag = 'assets/img/flag_india_1.png'; // default
+  bsModalRef: BsModalRef;
   constructor(
     private docService: DocsService,
     private spinner: NgxSpinnerService,
     private service: HomeService,
     private toastr: ToastrService,
     private fb: FormBuilder,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private modalService: BsModalService
   ) { }
 
   ngOnInit(): void {
@@ -54,7 +64,9 @@ export class MyProfileComponent implements OnInit {
       ),
       ])],
       doctorDOB: [this.docData.doctorDOB ? this.docData.doctorDOB : '', Validators.compose([])],
-      doctorFax: [this.docData.doctorFax ? this.docData.doctorFax : '', Validators.compose([Validators.required])],
+      doctorFax: [this.docData.doctorFax ? this.docData.doctorFax
+        .split('(').join('-').split(')').join('-').split('-').join(' ').trim().split(' ').join('') : '',
+      Validators.compose([Validators.required, Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')])],
       doctorGender: [this.docData.doctorGender ? this.docData.doctorGender : '',
       Validators.compose([Validators.required])],
       doctorAbout: [this.docData.doctorAbout ? this.docData.doctorAbout : ''],
@@ -62,7 +74,9 @@ export class MyProfileComponent implements OnInit {
       doctorProfileImage: [this.docData.doctorProfileImage ? this.docData.doctorProfileImage : ''],
       doctorFirstName: [this.docData.doctorFirstName ? this.docData.doctorFirstName : ''],
       doctorLastName: [this.docData.doctorLastName ? this.docData.doctorLastName : ''],
-      doctorMobile: [this.docData.doctorMobile ? this.docData.doctorMobile : '', Validators.compose([Validators.required,
+      doctorMobile: [this.docData.doctorMobile ? this.docData.doctorMobile
+        .split('(').join('-').split(')').join('-').split('-').join(' ').trim().split(' ').join('') : '',
+      Validators.compose([Validators.required,
       Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')
       ])],
       userCountryCode: [this.countryCodeOptions[0].code, Validators.compose([
@@ -84,14 +98,20 @@ export class MyProfileComponent implements OnInit {
     this.cd.markForCheck();
   }
 
-  onRemove = ($event: any) => {
-    console.log($event);
-  }
   onChangeCode = (code: string) => {
     this.flag = this.countryCodeOptions.filter((data) => data.code === code)[0].flag;
   }
 
   onUpdateBasicClick = (post: any) => {
+    if (post.doctorEmail !== this.docData.doctorEmail ||
+      post.doctorMobile !== this.docData.doctorMobile
+        .split('(').join('-').split(')').join('-').split('-').join(' ').trim().split(' ').join('')) {
+      this.onVerifyChange();
+    } else {
+      this.updateBasic(post);
+    }
+  }
+  updateBasic = (post: any) => {
     post.doctorProfileImage = this.service.getDocLocal() ? this.service.getDocLocal().doctorProfileImage :
       this.service.getDocSession().doctorProfileImage;
     this.updateDocProfile(post).then((response: Array<any>) => {
@@ -151,7 +171,7 @@ export class MyProfileComponent implements OnInit {
           languageID: '1',
           logindoctorID: this.docData.doctorID,
           doctorDOB: this.basicProfile.get('doctorDOB').value ?
-          moment(this.basicProfile.get('doctorDOB').value).format('YYYY-MM-DD') : '',
+            moment(this.basicProfile.get('doctorDOB').value).format('YYYY-MM-DD') : '',
           doctorFullName: post.doctorFullName ? post.doctorFullName : this.basicProfile.get('doctorFullName').value,
           doctorEmail: post.doctorEmail ? post.doctorEmail : this.basicProfile.get('doctorEmail').value,
           doctorMobile: post.doctorMobile ? post.doctorMobile : this.basicProfile.get('doctorMobile').value,
@@ -224,9 +244,9 @@ export class MyProfileComponent implements OnInit {
             const reader = new FileReader();
             reader.readAsDataURL(this.selectedFiles);
             reader.onload = () => {
-            this.url = reader.result as string;
-            this.cd.markForCheck();
-          };
+              this.url = reader.result as string;
+              this.cd.markForCheck();
+            };
             this.updateLogo(fulFilled[0].fileName);
           })
           .catch((error) => {
@@ -239,7 +259,6 @@ export class MyProfileComponent implements OnInit {
       }
     }
   }
-
   uploadFiles = (file: File) => {
     return new Promise((resolve, reject) => {
       const data = {
@@ -262,7 +281,6 @@ export class MyProfileComponent implements OnInit {
       });
     });
   }
-
   updateLogo = (doctorProfileImage: string) => {
     const data = {
       languageID: '1',
@@ -273,7 +291,7 @@ export class MyProfileComponent implements OnInit {
       if (response[0].status === 'true') {
         this.docData = response[0].data[0];
         this.service.getDocLocal() ? this.service.setDocLocal(JSON.stringify(response[0].data[0]))
-        : this.service.setDocSession(JSON.stringify(response[0].data[0]));
+          : this.service.setDocSession(JSON.stringify(response[0].data[0]));
         this.toastr.success('Profile Picture Updated');
         this.service.nextCount(response[0].data[0].doctorProfileImage);
         this.spinner.hide();
@@ -287,5 +305,52 @@ export class MyProfileComponent implements OnInit {
         console.error(error);
       }
     );
+  }
+  onVerifyChange = () => {
+    this.spinner.show();
+    const data: ChangeEmailMobile = {
+      logindoctorID: this.docData.doctorID,
+      changeDoctorEmail: this.basicProfile.get('doctorEmail').value,
+      changeDoctorMobile: this.basicProfile.get('doctorMobile').value,
+      changeDoctorOldEmail: this.docData.doctorEmail,
+      changeDoctorOldMobile: this.docData.doctorMobile
+        .split('(').join('-').split(')').join('-').split('-').join(' ').trim().split(' ').join(''),
+    };
+    this.verifyChange(JSON.stringify(data))
+      .then((res: boolean) => {
+        if (res) {
+          this.openVerification(data);
+        }
+        if (!res) {
+          this.toastr.error('Error occured, please try again later');
+        }
+      }).catch(err => console.error(err)).finally(() => this.spinner.hide());
+  }
+  verifyChange = (data: string) => {
+    return new Promise((resolve, reject) => {
+      this.docService.checkForChange(data).subscribe(
+        res => {
+          if (res[0].status === 'true') {
+            resolve(true);
+          }
+          if (res[0].status === 'false') {
+            resolve(false);
+          }
+        }, error => reject(error));
+    });
+  }
+  openVerification = (res: ChangeEmailMobile) => {
+    const initialState = {
+      list: [{
+        res
+      }]
+    };
+    this.bsModalRef = this.modalService.show(VerificationComponent, { id: 274, initialState });
+    this.bsModalRef.content.event.subscribe((response: string) => {
+      const data = JSON.parse(response);
+      if (data.res === 'confirmed') {
+        this.updateBasic(this.basicProfile.value);
+      }
+    });
   }
 }

@@ -1,288 +1,318 @@
 {
   "/doctor/doctor-login-password/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/doctor/doctor-home/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/cmspage/get-cmspage/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/contactus/contactus/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/faq/faq-list/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/doctor/change-password/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/doctor/doctor-update-profile-picture/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/doctor/doctor-update-notification-settings/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/doctor/doctor-update-profile/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/doctor/file-upload/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/degrees/get-degrees-list/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/speciality/get-speciality-list/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/refercase/refer-received-list/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/refercase/accept-case/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/refercase/reject-case/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/refercase/refer-sent-list/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/consultaionreason/get-consultaionreason-list/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/refercase/refer-new-case/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/documenttype/get-documenttype-list/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/insurance/get-insurance-list/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/facilityuser/facility-home/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/facilityuser/facilityuser-login/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/facilityuser/facilityuser-update-profile/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/facilityuser/facilityuser-change-password/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/facilityuser/facilityuser-update-notification-settings/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/facilityuser/facility-update-profile/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/facilityuser/facilityuser-profile-picture-update/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/doctor/doctor-list/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/refercase/refer-existing-case/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/facilityuser/facilityuser-forgot-password/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/facilityuser/reset-password/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/facilityuser/otp-verification/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/facilityuser/otp-resend/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/notification/get-notification-list/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/notification/update-notification-read-status/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/notification/delete-notification/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/doctor/get-npi-information/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/doctor/doctor-registration/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/doctor/otp-verification/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/doctor/check-doctor-duplication/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/doctor/reset-password/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/doctor/otp-resend/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/doctor/doctor-forgot-password/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/doctoraddress/add-address/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/notification/reset-badge-count/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/facility/facility-join/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/contactus/requestmeeting/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
   },
   "/contactus/joindocstime/*": {
-    "target": "https://www.docstime.com/backend/web/index.php/v1",
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
+    "secure": false,
+    "loglevel": "debug",
+    "changeOrigin": true
+  },
+  "/refercase/edit-refer-case/*": {
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
+    "secure": false,
+    "loglevel": "debug",
+    "changeOrigin": true
+  },
+  "/refercase/delete-case/*": {
+    "target": "http://demo.docstime.com//backend/web/index.php/v2",
+    "secure": false,
+    "loglevel": "debug",
+    "changeOrigin": true
+  },
+  "/doctor/doctor-change-mobile-email/*": {
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
+    "secure": false,
+    "loglevel": "debug",
+    "changeOrigin": true
+  },
+  "/doctor/change-otp-verification/*": {
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
+    "secure": false,
+    "loglevel": "debug",
+    "changeOrigin": true
+  },
+  "/refercase/reject-re-refer-case/*": {
+    "target": "http://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true

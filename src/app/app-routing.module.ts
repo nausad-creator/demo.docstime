@@ -8,7 +8,18 @@ import { ListPracticeComponent } from './list-practice/list-practice.component';
 import { NotUserGuard } from './not-user.guard';
 
 const routes: Routes = [
-  { path: '', component: HomeComponent, canActivate: [NotUserGuard] },
+  {
+    path: '', component: HomeComponent, canActivate: [NotUserGuard], data: {
+      seo: {
+        title: 'Online Doctor Appointment System in USA | Child Specialist Doctor, Family Physicians and Primary Care Physicians Appointment Booking System in USA | DocsTime',
+        metaTags: [
+          { name: 'keywords', content: 'online doctor appointment in USA, doctor appointment booking system USA, online doctor appointment system USA, online doctor appointment system website USA, family physicians appointment booking system, online medical appointment booking system USA, doctors accepting new patients in USA, top primary care physicians appointment booking, child specialist doctor online appointment US, free online doctor consultation appointment USA' },
+          { name: 'description', content: 'DocsTime specializes in developing Online Doctor Appointment System in USA. Our highly experienced team of Doctor understands your requirements well, contact us today.' },
+          { name: 'robots', content: 'index, follow' }
+        ]
+      }
+    }
+  },
   { path: '*', redirectTo: 'home', pathMatch: 'full' },
   {
     path: 'home', component: HomeComponent, data: {
@@ -85,7 +96,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, {
-    onSameUrlNavigation: 'reload',
+    onSameUrlNavigation: 'ignore',
     relativeLinkResolution: 'legacy',
     preloadingStrategy: PreloadAllModules
   })],

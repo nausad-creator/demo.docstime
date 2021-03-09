@@ -1,31 +1,41 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, Observable, concat, of } from 'rxjs';
-import { distinctUntilChanged, tap, switchMap, catchError } from 'rxjs/operators';
+import { distinctUntilChanged, tap, switchMap, catchError, map } from 'rxjs/operators';
 import { HomeService } from 'src/app/home.service';
 import { DocsService } from '../docs.service';
 import { Location } from '@angular/common';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { AlertModalComponent } from '../alert-modal/alert-modal.component';
-
+import { Doctors, Documents, FileUpload, Reasons, Refer, Speciality, Upload } from '../docs.interface';
+interface Doctor {
+  doctorAddress: string;
+  doctorFirstName: string;
+  doctorFullName: string;
+  doctorID: string;
+  doctorLastName: string;
+  doctorNPI: string;
+}
 @Component({
   selector: 'app-doctor-add-refer',
   templateUrl: './doctor-add-refer.component.html',
-  styleUrls: ['./doctor-add-refer.component.css']
+  styleUrls: ['./doctor-add-refer.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DoctorAddReferComponent implements OnInit {
   genders = ['Male', 'Female'];
   peopleLoading = false;
-  loading = false;
+  loadingDoctors = false;
   isNPI = true;
   documents = [];
   documentTypeList = [];
   selectedTypes = [];
   minTime: Date;
+  startAt: Date;
   min: Date;
   maxDate = new Date();
   referCaseForm: FormGroup;
@@ -35,6 +45,7 @@ export class DoctorAddReferComponent implements OnInit {
   specialityList$: Observable<Array<any>>;
   insuranceList$: Observable<Array<any>>;
   reasonsList$: Observable<Array<any>>;
+  doctorList$: Observable<Array<Doctors>>;
   @ViewChild('dateOfBirth', { static: true }) dateOfBirth: ElementRef;
   @ViewChild('visitDate', { static: true }) visitDate: ElementRef;
   constructor(
@@ -64,7 +75,7 @@ export class DoctorAddReferComponent implements OnInit {
       patientGender: [null, Validators.compose([Validators.required])],
       facilityID: ['0'],
       specialityID: [null, Validators.compose([Validators.required])],
-      insuranceName: [null, Validators.compose([])],
+      insuranceNames: [null, Validators.compose([])],
       reasonID: ['0'],
       reasonIDs: ['', Validators.compose([Validators.required])],
       reasonNames: [''],
@@ -80,6 +91,9 @@ export class DoctorAddReferComponent implements OnInit {
     let month: any;
     let day: any;
     const dtToday = new Date();
+    let hour = dtToday.getHours();
+    const minutes = dtToday.getMinutes();
+    const seconds = dtToday.getSeconds();
     month = dtToday.getMonth() + 1;
     day = dtToday.getDate();
     const year = dtToday.getFullYear();
@@ -89,7 +103,18 @@ export class DoctorAddReferComponent implements OnInit {
     if (day < 10) {
       day = '0' + day.toString();
     }
+    if (minutes >= 45) {
+      hour++;
+    }
     this.min = new Date(year, month - 1, day);
+    this.startAt = new Date
+      (
+        year, month - 1, day, hour,
+        minutes >= 0 && minutes < 15 ? 15 :
+          minutes >= 15 && minutes < 30 ? 30 :
+            minutes >= 30 && minutes < 45 ? 45 :
+              minutes >= 45 ? 0 : 15, seconds
+      );
   }
 
   ngOnInit(): void {
@@ -97,6 +122,7 @@ export class DoctorAddReferComponent implements OnInit {
     this.insuranceList$ = this.service.getInsuranceLists;
     this.docuTypeList$ = this.service.getDocumentTypeLists;
     this.getSpeciality();
+    this.getDoctorLists();
     this.docuTypeList$.subscribe(
       (response) => {
         if (response[0].status === 'true') {
@@ -107,31 +133,21 @@ export class DoctorAddReferComponent implements OnInit {
         } else { console.error(response[0].message); }
       }, errror => console.error(errror));
     this.referCaseForm.get('refercaseVisitTime').valueChanges.pipe().subscribe(() => { this.check(); });
-    this.referCaseForm.get('refercaseVisitDate').valueChanges.pipe().subscribe(() => {
-      const date1 = new Date();
-      date1.setHours(0, 0, 0, 0);
-      const date2 = new Date(this.referCaseForm.get('refercaseVisitDate').value);
-      if (date1.getTime() === date2.getTime()) {
-        this.minTime = new Date();
-      } else {
-        this.minTime = null;
-      }
-      this.referCaseForm.get('refercaseVisitTime').patchValue('', { emitEvent: false });
-      this.referCaseForm.get('refercaseVisitTime').updateValueAndValidity({ emitEvent: false });
-      this.cd.markForCheck();
-    });
+    this.referCaseForm.get('refercaseVisitDate').valueChanges.pipe().subscribe(() => { this.timeAndDate(); });
     this.referCaseForm.get('refercaseHospitalAdmission').valueChanges.pipe()
       .subscribe((val) => val ? this.modalService.show(AlertModalComponent,
         { id: 97, animated: false, ignoreBackdropClick: true, keyboard: false, class: 'modal-sm modal-dialog-centered' }
       ) : '');
     this.referCaseForm.get('specialityID').valueChanges.pipe()
       .subscribe((val) => {
-        if (val.length > 1) {
-          this.isNPI = false;
-        }
-        if (val.length === 1) {
-          this.referCaseForm.get('refercaseNPI').patchValue('', { emitEvent: false });
-          this.isNPI = true;
+        if (val) {
+          if (val.length > 1) {
+            this.isNPI = false;
+          }
+          if (val.length === 1) {
+            this.referCaseForm.get('refercaseNPI').patchValue(null, { emitEvent: false });
+            this.isNPI = true;
+          }
         }
       });
     this.cd.markForCheck();
@@ -147,6 +163,48 @@ export class DoctorAddReferComponent implements OnInit {
       this.cd.markForCheck();
     }
   }
+  timeAndDate = () => {
+    const date1 = new Date();
+    let month: any;
+    let day: any;
+    const dtToday = new Date();
+    const year = dtToday.getFullYear();
+    let hour = dtToday.getHours();
+    month = dtToday.getMonth() + 1;
+    day = dtToday.getDate();
+    const minutes = dtToday.getMinutes();
+    const seconds = dtToday.getSeconds();
+    if (month < 10) {
+      month = '0' + month.toString();
+    }
+    if (day < 10) {
+      day = '0' + day.toString();
+    }
+    if (minutes >= 45) {
+      hour++;
+    }
+    const date2 = new Date(this.referCaseForm.get('refercaseVisitDate').value);
+    date2.setHours(hour, minutes, 0, 0);
+    date1.setHours(hour, minutes, 0, 0);
+    if (date1.getTime() === date2.getTime()) {
+      this.minTime = new Date();
+      this.cd.markForCheck();
+    } else {
+      this.minTime = null;
+      this.cd.markForCheck();
+    }
+    this.startAt = new Date
+      (
+        year, month - 1, day, hour,
+        minutes >= 0 && minutes < 15 ? 15 :
+          minutes >= 15 && minutes < 30 ? 30 :
+            minutes >= 30 && minutes < 45 ? 45 :
+              minutes >= 45 ? 0 : 15, seconds
+      );
+    this.referCaseForm.get('refercaseVisitTime').patchValue('', { emitEvent: false });
+    this.referCaseForm.get('refercaseVisitTime').updateValueAndValidity({ emitEvent: false });
+    this.cd.markForCheck();
+  }
   getSpeciality = () => {
     this.specialityList$ = concat(
       of([]), // default items
@@ -158,6 +216,42 @@ export class DoctorAddReferComponent implements OnInit {
           tap(() => this.peopleLoading = false)
         ))
       ));
+  }
+  getDoctorLists = () => {
+    this.doctorList$ = concat(
+      of([]), // default items
+      this.doctorInput$.pipe(
+        distinctUntilChanged(),
+        tap(() => this.loadingDoctors = true),
+        switchMap(term => !isNaN(term ? +term.charAt(0) : null) ? this.onSearchByNPI(term) : this.onSearchByName(term))
+      )) as Observable<Array<Doctors>>;
+  }
+  onSearchByNPI = (term: string) => {
+    return this.docService.searchDoctors(term ? term.replace(/^\s+/g, '') : term).pipe(
+      map(res => res[0].data.map(npi => {
+        return {
+          doctorFullName: npi.doctorNPI,
+          doctorNPI: npi.doctorNPI
+        };
+      })),
+      catchError(() => of([])), // empty list on error
+      tap(() => this.loadingDoctors = false)
+    ) as Observable<Array<Doctors>>;
+  }
+  onSearchByName = (term: string) => {
+    return this.docService.searchDoctors(term ? term.replace(/^\s+/g, '') : term).pipe(
+      map(res => res[0].data.map(npi => {
+        return {
+          doctorFullName: npi.doctorFullName,
+          doctorNPI: npi.doctorNPI
+        };
+      })),
+      catchError(() => of([])), // empty list on error
+      tap(() => this.loadingDoctors = false)
+    ) as Observable<Array<Doctors>>;
+  }
+  trackByFnDoctor = (item: Doctor) => {
+    return item.doctorID;
   }
   onChangeHospital = ($event: boolean) => {
     if ($event) {
@@ -175,7 +269,7 @@ export class DoctorAddReferComponent implements OnInit {
     } else {
       this.referCaseForm.get('specialityID').patchValue(null, { emitEvent: false });
       this.referCaseForm.get('specialityID').enable({ emitEvent: false });
-      this.referCaseForm.get('refercaseNPI').patchValue('', { emitEvent: false });
+      this.referCaseForm.get('refercaseNPI').patchValue(null, { emitEvent: false });
       this.isNPI = true;
       this.referCaseForm.get('specialityID').updateValueAndValidity({ emitEvent: false });
     }
@@ -219,7 +313,7 @@ export class DoctorAddReferComponent implements OnInit {
     return ((typeof val === 'function') || (typeof val === 'object'));
   }
   // refer form submit
-  onSubmitRefer = async (post: any) => {
+  onSubmitRefer = async (post: Refer) => {
     this.markFormTouched(this.referCaseForm);
     if (!post.patientDOB && post.refercaseUrgent && !post.refercaseVisitDate) {
       this.referCaseForm.get('patientDOB').setErrors({ emptyDOB: true });
@@ -242,7 +336,7 @@ export class DoctorAddReferComponent implements OnInit {
       this.referCaseForm.get('refercaseVisitDate').setErrors(null);
       this.spinner.show();
       for (const doc of this.documents) {
-        doc.documentFilename = await this.uploadFiles(doc).then((res: Array<any>) => res[0].fileName).catch(error => error);
+        doc.documentFilename = await this.uploadFiles(doc).then((res: Array<Upload>) => res[0].fileName).catch(error => error);
       }
       const data = {
         languageID: '1',
@@ -255,11 +349,11 @@ export class DoctorAddReferComponent implements OnInit {
         facilityID: post.facilityID,
         specialityID: this.referCaseForm.get('specialityID').value.length > 0 ?
           this.specialIDconvert(this.referCaseForm.get('specialityID').value) : '',
-        reasonID: post.reasonIDs.length > 0 ? this.reasonsConvertStrint(post.reasonIDs).trim() : '',
+        reasonID: post.reasonIDs.length > 0 ? this.reasonsConvertString(post.reasonIDs).trim() : '',
         reasonIDs: '0',
-        insuranceNames: post.insuranceName && this.isObject(post.insuranceName) ? post.insuranceName.label.trim() :
-          post.insuranceName && !this.isObject(post.insuranceName) ? post.insuranceName.trim() : '',
-        reasonNames: post.reasonIDs.length > 0 ? this.reasonsConvertNameStrint(post.reasonIDs).trim() : '',
+        insuranceNames: post.insuranceNames && this.isObject(post.insuranceNames) ? post.insuranceNames.label.trim() :
+          post.insuranceNames && !this.isObject(post.insuranceNames) ? post.insuranceNames.trim() : '',
+        reasonNames: post.reasonIDs.length > 0 ? this.reasonsConvertNameString(post.reasonIDs).trim() : '',
         refercaseVisitDate: post.refercaseVisitDate ? moment(post.refercaseVisitDate, 'YYYY-MM-DD').format('YYYY-MM-DD') : '',
         refercaseVisitTime: post.refercaseVisitTime ? moment(post.refercaseVisitTime, 'h:mm:ss A').format('HH:mm:ss') : '',
         doctorID: this.service.getDocLocal() ? this.service.getDocLocal().doctorID : this.service.getDocSession().doctorID,
@@ -267,43 +361,46 @@ export class DoctorAddReferComponent implements OnInit {
         refercaseUrgent: post.refercaseUrgent ? 'Yes' : 'No',
         refercaseDescription: post.refercaseDescription ? post.refercaseDescription : '',
         refercaseNPI: post.refercaseNPI ? post.refercaseNPI : '',
-        documents: this.documents.length > 0 ? this.documents.map((document) => ({
+        documents: this.documents.length > 0 ? this.documents.map((document: Documents) => ({
           documenttypeID: document.documenttypeID,
           documentFilename: document.documentFilename
         })) : ''
       };
-      this.docService.addRefer(JSON.stringify(data)).subscribe((response) => {
-        if (response[0].status === 'true') {
-          this.documentTypeList.forEach(doc => doc.file = []);
-          this.documentTypeList.forEach((doc) => doc.checked = false);
-          this.docService.forceReloadSentList();
-          setTimeout(() => {
-            this.referCaseForm.reset();
-            this.spinner.hide();
-            this.toastr.success('Your Refer Created successfully.');
-            this.router.navigate([`${'/doctor/referrals-sent'}`]);
-          }, 500);
-        } else {
-          this.spinner.hide();
-          this.toastr.error(response[0].message);
-        }
-      }, error => {
-        this.spinner.hide();
-        this.toastr.error('some error occured, please try again later');
-        console.error(error);
-      });
+      this.refer(JSON.stringify(data));
     }
   }
-  reasonsConvertStrint = (post: Array<any>) => {
-    const reason = post.map((res: { reasonID: string; }) => Object.keys(res).length > 1 ? res.reasonID : '0');
+  refer = (data: string) => {
+    this.docService.addRefer(data).subscribe((response) => {
+      if (response[0].status === 'true') {
+        this.documentTypeList.forEach(doc => doc.file = []);
+        this.documentTypeList.forEach((doc) => doc.checked = false);
+        this.docService.forceReloadSentList();
+        setTimeout(() => {
+          this.referCaseForm.reset();
+          this.spinner.hide();
+          this.toastr.success('Your Refer Created successfully.');
+          this.router.navigate([`${'/doctor/referrals-sent'}`]);
+        }, 500);
+      } else {
+        this.spinner.hide();
+        this.toastr.error(response[0].message);
+      }
+    }, error => {
+      this.spinner.hide();
+      this.toastr.error('some error occured, please try again later');
+      console.error(error);
+    });
+  }
+  reasonsConvertString = (post: Array<Reasons>) => {
+    const reason = post.map((res: Reasons) => Object.keys(res).length > 1 ? res.reasonID : '0');
     return reason.toString();
   }
-  reasonsConvertNameStrint = (post: Array<any>) => {
-    const reason = post.map((res: { reasonName: string; }) => res.reasonName);
+  reasonsConvertNameString = (post: Array<Reasons>) => {
+    const reason = post.map((res: Reasons) => res.reasonName);
     return reason.toString();
   }
-  specialIDconvert = (post: Array<any>) => {
-    const specials = post.map((spc: { specialityID: string; }) => spc.specialityID);
+  specialIDconvert = (post: Array<Speciality>) => {
+    const specials = post.map((spc: Speciality) => spc.specialityID);
     return specials.toString();
   }
   markFormTouched = (group: FormGroup | FormArray) => {
@@ -327,30 +424,30 @@ export class DoctorAddReferComponent implements OnInit {
     }
     return invalid;
   }
-  onSelectFile = async ($event: any, documenttypeID: string) => {
-    if ($event.target.files.length > 0 && $event.target.files.length < 50) {
+  onSelectFile = async ($event: Event, documenttypeID: string) => {
+    if (($event.target as HTMLInputElement).files.length > 0) {
       const file = await this.goThroughLoop($event, documenttypeID);
       const copyFile = [];
       copyFile.push(file);
       setTimeout(() => {
         this.documentTypeList.forEach(docs => {
           if (docs.documenttypeID === copyFile[0].documenttypeID) {
-            copyFile[0].file.map((f: any) => docs.file.push(f));
+            copyFile[0].file.map((f: FileUpload) => docs.file.push(f));
             this.cd.markForCheck();
           }
         });
         this.cd.markForCheck();
       }, 100);
     }
-    if ($event.target.files.length > 50) {
+    if (($event.target as HTMLInputElement).files.length > 50) {
       window.alert(`Images will Not Be more than 50`);
     }
   }
-  goThroughLoop = ($event: any, documenttypeID: string) => {
+  goThroughLoop = ($event: Event, documenttypeID: string) => {
     return new Promise((resolve, reject) => {
       const fileArr = { documenttypeID, file: [] };
-      if ($event.target.files.length > 0) {
-        for (const file of $event.target.files) {
+      if (($event.target as HTMLInputElement).files.length > 0) {
+        for (const file of ($event.target as HTMLInputElement).files) {
           const reader = new FileReader();
           reader.readAsDataURL(file);
           reader.onload = () => {
@@ -376,7 +473,7 @@ export class DoctorAddReferComponent implements OnInit {
     const indexInDoc = this.documents.map(doc => doc.documentFilename).indexOf(fileName);
     this.documents.splice(indexInDoc, 1);
   }
-  uploadFiles = (doc: any) => {
+  uploadFiles = (doc: FileUpload) => {
     return new Promise((resolve, reject) => {
       const data = {
         file: doc.file,

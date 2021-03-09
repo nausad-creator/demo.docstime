@@ -72,3 +72,6 @@
     /* background-color: rgb(41, 39, 39);
     border-color: rgb(41, 39, 39); */
   }
+  .sb-text {
+    font-weight: bold;
+  }

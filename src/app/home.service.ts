@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable, Subject, throwError } from 'rxjs';
 import { catchError, map, retry, shareReplay, takeUntil } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../environments/environment';
+import { Doctors } from './facility/docs.interface';
 
 const CACHE_SIZE = 1;
 
@@ -23,7 +24,7 @@ export class HomeService {
   private degree$: Observable<Array<any>>;
   private document$: Observable<Array<any>>;
   private insurance$: Observable<Array<any>>;
-  private doctors$: Observable<Array<any>>;
+  private doctors$: Observable<Array<Doctors>>;
   private footerContent$: Observable<Array<any>>;
 
   // urls
@@ -540,7 +541,7 @@ export class HomeService {
       .post<any>(environment.apiBaseUrl + this.specialityListsUrl, form, this.httpOptions)
       .pipe(map(res => res[0].data), retry(2), catchError(this.handleError));
   }
-  get getDoctors(): Observable<any> {
+  get getDoctors(): Observable<Array<Doctors>> {
     if (!this.doctors$) {
       this.doctors$ = this.doctorLists('').pipe(
         takeUntil(this.reload$),
@@ -548,7 +549,7 @@ export class HomeService {
     }
     return this.doctors$;
   }
-  doctorLists(term: string): Observable<any> {
+  doctorLists(term: string): Observable<Array<Doctors>> {
     const form = new FormData();
     const json = `[{
       "languageID":"1",
@@ -560,8 +561,22 @@ export class HomeService {
       }]`;
     form.append('json', json);
     return this.http
-      .post<any>(environment.apiBaseUrl + this.doctorListUrl, form, this.httpOptions)
-      .pipe(map(res => res[0].data), retry(2), catchError(this.handleError));
+      .post<Array<Doctors>>(environment.apiBaseUrl + this.doctorListUrl, form, this.httpOptions)
+      .pipe(retry(2), catchError(this.handleError));
+  }
+  searchDoctorsNPI = (searchWord: string): Observable<Array<Doctors>> => {
+    const form = new FormData();
+    const json = `[{
+      "referCaseSearch":"${true}",
+      "searchWord":"${searchWord}",
+      "languageID":"1",
+      "apiType":"Android",
+      "apiVersion":"1.0"
+      }]`;
+    form.append('json', json);
+    return this.http
+      .post<Array<Doctors>>(environment.apiBaseUrl + this.doctorListUrl, form, this.httpOptions)
+      .pipe(retry(2), catchError(this.handleError));
   }
   get getDocumentTypeLists(): any {
     if (!this.document$) {
