@@ -87,7 +87,6 @@ export class CancelledComponent implements OnInit, OnDestroy {
     });
   }
   onAppliedFilter = (filter: string) => {
-    this.spinner.show();
     this.pageCancelled = 0;
     this.cancelled.page = this.pageCancelled.toString();
     this.cancelled.patientName = JSON.parse(filter).patientName ? JSON.parse(filter).patientName.trim() : '';
@@ -110,7 +109,6 @@ export class CancelledComponent implements OnInit, OnDestroy {
     }, err => console.error(err));
   }
   onAppliedSorting = (sorting: string) => {
-    this.spinner.show();
     this.pageCancelled = 0;
     this.cancelled.page = this.pageCancelled.toString();
     this.cancelled.patientName = '';
@@ -133,7 +131,6 @@ export class CancelledComponent implements OnInit, OnDestroy {
     }, err => console.error(err));
   }
   onResetFilter = () => {
-    this.spinner.show();
     this.pageCancelled = 0;
     this.cancelled.page = this.pageCancelled.toString();
     this.cancelled.patientName = '';
@@ -141,8 +138,8 @@ export class CancelledComponent implements OnInit, OnDestroy {
     this.cancelled.referbydoctorName = '';
     this.cancelled.refercaseUrgent = '';
     this.cancelled.insuranceNames = '';
-    this.cancelled.startDate = this.service.getDocLocal() ? moment(this.service.getDocLocal().doctorCreatedDate).format('YYYY-MM-DD')
-      : moment(this.service.getDocSession().doctorCreatedDate).format('YYYY-MM-DD');
+    this.cancelled.startDate = this.service.getFaLocal() ? moment(this.service.getFaLocal().facilityuserCreatedDate).format('YYYY-MM-DD')
+    : moment(this.service.getFaSession().facilityuserCreatedDate).format('YYYY-MM-DD');
     this.cancelled.endDate = moment(currentDate).format('YYYY-MM-DD');
     this.cancelled$ = this.filter(JSON.stringify(this.cancelled)) as Observable<Array<ReferralReceived>>;
     this.subscriptionReset = this.cancelled$.subscribe((res) => {

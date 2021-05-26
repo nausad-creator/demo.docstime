@@ -23,7 +23,7 @@
             <div class="">
               <!-- not sent -->
               <div class="content-referral" *ngIf="caseViewData && from !== 'sent'">
-                <h5 *ngIf="caseViewData.refFacilityName">Primary Facility</h5>
+                <h5 class="mb-0" *ngIf="caseViewData.refFacilityName">Primary Facility</h5>
                 <div class="selected-users d-flex mb-3" *ngIf="caseViewData.refFacilityName">
                   <a style="cursor: pointer;" class="primary-items" style="min-width:250px;">
                     <div class="lefttext">
@@ -34,7 +34,7 @@
                 </div>
                 <div class="row">
                   <div class="listinfor col-sm-6" *ngIf="caseViewData.refDocName || caseViewData.refSpecialityName">
-                    <h5>Referred by</h5>
+                    <h5 class="mb-0">Referred by</h5>
                     <div class="selected-users d-flex mb-3" *ngIf="caseViewData.refDocName">
                       <a style="cursor: pointer;" class="usersdeta-items" [ngClass]="
                   {
@@ -46,16 +46,16 @@
                           aria-controls="multiCollapseExample1">
                           <h4 class="mb-0"
                             *ngIf="caseViewData.refDocName !== null && caseViewData.refDocName !== undefined">
-                            {{preFixDRstr === 'DR.' ? ((caseViewData.refDocName  | truncate ) | titlecase) : 'Dr. ' + ((caseViewData.refDocName  | truncate ) | titlecase)}}
+                            {{preFixDRstr === 'DR.' ? ((caseViewData.refDocName  | truncate ) | titlecase) : (('Dr. ' + caseViewData.refDocName  | truncate ) | titlecase)}}
                           </h4>
                           <p class="mb-0" *ngIf="caseViewData.refSpecialityName">
                             {{caseViewData.refSpecialityName | titlecase}}</p>
                         </div>
                         <div class="collapse multi-collapse" id="multiCollapseExample1">
                           <div class="toggledbody pt-3">
-                            <div class="listinfor text-white" *ngIf="caseViewData.referdocMobile"> <i
+                            <div class="listinfor text-white" (click)="phone(caseViewData.referdocMobile)" *ngIf="caseViewData.referdocMobile"> <i
                                 class="ti-mobile text-white"></i> &nbsp; {{caseViewData.referdocMobile}} </div>
-                            <div class="listinfor text-white" *ngIf="caseViewData.refDoctorEmail"> <i
+                            <div class="listinfor text-white" (click)="mail(caseViewData.refDoctorEmail)" *ngIf="caseViewData.refDoctorEmail"> <i
                                 class="ti-email text-white"></i> &nbsp; {{caseViewData.refDoctorEmail}} </div>
                             <div class="listinfor text-white" *ngIf="caseViewData.referdocFax"> <i
                                 class="fa fa-fax text-white" aria-hidden="true"></i> &nbsp; {{caseViewData.referdocFax}}
@@ -76,7 +76,7 @@
                     </div>
                   </div>
                   <div class="listinfor col-sm-6" *ngIf="caseViewData.doctorFullName || caseViewData.specialityName">
-                    <h5>Referred to</h5>
+                    <h5 class="mb-0">Referred to</h5>
                     <div class="selected-users d-flex mb-3" *ngIf="caseViewData.doctorFullName">
                       <a style="cursor: pointer;" class="usersdeta-items" [ngClass]="
                       {
@@ -88,16 +88,16 @@
                           aria-controls="multiCollapseExample1">
                           <h4 class="mb-0"
                             *ngIf="caseViewData.doctorFullName !== null && caseViewData.doctorFullName !== undefined">
-                            {{preFixDRstrSent === 'DR.' ? ((caseViewData.doctorFullName  | truncate ) | titlecase) : 'Dr. ' + ((caseViewData.doctorFullName  | truncate ) | titlecase)}}
+                            {{preFixDRstrSent === 'DR.' ? ((caseViewData.doctorFullName  | truncate ) | titlecase) : (('Dr. ' + caseViewData.doctorFullName  | truncate ) | titlecase)}}
                           </h4>
                           <p class="mb-0" *ngIf="caseViewData.specialityName">
                             {{caseViewData.specialityName | titlecase}}</p>
                         </div>
                         <div class="collapse multi-collapse" id="multiCollapseExample2">
                           <div class="toggledbody pt-3">
-                            <div class="listinfor text-white" *ngIf="caseViewData.doctorMobile"> <i
+                            <div class="listinfor text-white" (click)="phone(caseViewData.doctorMobile)" *ngIf="caseViewData.doctorMobile"> <i
                                 class="ti-mobile text-white"></i> &nbsp; {{caseViewData.doctorMobile}} </div>
-                            <div class="listinfor text-white" *ngIf="caseViewData.doctorEmail"> <i
+                            <div class="listinfor text-white" (click)="mail(caseViewData.doctorEmail)" *ngIf="caseViewData.doctorEmail"> <i
                                 class="ti-email text-white"></i> &nbsp; {{caseViewData.doctorEmail}} </div>
                             <div class="listinfor text-white" *ngIf="caseViewData.doctorFax"> <i
                                 class="fa fa-fax text-white" aria-hidden="true"></i> &nbsp; {{caseViewData.doctorFax}}
@@ -142,7 +142,7 @@
               <div class="content-referral" *ngIf="caseViewData && from === 'sent'">
                 <div class="row">
                   <div class="listinfor col-sm-6" *ngIf="caseViewData.doctorFullName || caseViewData.specialityName">
-                    <h5>Referred to</h5>
+                    <h5 class="mb-0">Referred to</h5>
 
                     <div class="selected-users d-flex mb-3" *ngIf="caseViewData.doctorFullName">
                       <a style="cursor: pointer;" class="usersdeta-items" [ngClass]="
@@ -155,16 +155,16 @@
                           aria-controls="multiCollapseExample1">
                           <h4 class="mb-0"
                             *ngIf="caseViewData.doctorFullName !== null && caseViewData.doctorFullName !== undefined">
-                            {{preFixDRstrSent === 'DR.' ? ((caseViewData.doctorFullName  | truncate ) | titlecase) : 'Dr. ' + ((caseViewData.doctorFullName  | truncate ) | titlecase)}}
+                            {{preFixDRstrSent === 'DR.' ? ((caseViewData.doctorFullName  | truncate ) | titlecase) : (('Dr. ' + caseViewData.doctorFullName  | truncate ) | titlecase)}}
                           </h4>
                           <p class="mb-0" *ngIf="caseViewData.specialityName">
                             {{caseViewData.specialityName | titlecase}}</p>
                         </div>
                         <div class="collapse multi-collapse" id="multiCollapseExample2">
                           <div class="toggledbody pt-3">
-                            <div class="listinfor text-white" *ngIf="caseViewData.doctorMobile"> <i
+                            <div class="listinfor text-white" (click)="phone(caseViewData.doctorMobile)" *ngIf="caseViewData.doctorMobile"> <i
                                 class="ti-mobile text-white"></i> &nbsp; {{caseViewData.doctorMobile}} </div>
-                            <div class="listinfor text-white" *ngIf="caseViewData.doctorEmail"> <i
+                            <div class="listinfor text-white" (click)="mail(caseViewData.doctorEmail)" *ngIf="caseViewData.doctorEmail"> <i
                                 class="ti-email text-white"></i> &nbsp; {{caseViewData.doctorEmail}} </div>
                             <div class="listinfor text-white" *ngIf="caseViewData.doctorFax"> <i
                                 class="fa fa-fax text-white" aria-hidden="true"></i> &nbsp; {{caseViewData.doctorFax}}
@@ -184,7 +184,7 @@
                     </div>
                   </div>
                   <div class="listinfor col-sm-6" *ngIf="caseViewData.refDocName || caseViewData.refSpecialityName">
-                    <h5>Referred by</h5>
+                    <h5 class="mb-0">Referred by</h5>
                     <div class="selected-users d-flex mb-3" *ngIf="caseViewData.refDocName">
                       <a style="cursor: pointer;" class="usersdeta-items" [ngClass]="
                   {
@@ -196,16 +196,16 @@
                           aria-controls="multiCollapseExample1">
                           <h4 class="mb-0"
                             *ngIf="caseViewData.refDocName !== null && caseViewData.refDocName !== undefined">
-                            {{preFixDRstr === 'DR.' ? ((caseViewData.refDocName  | truncate ) | titlecase) : 'Dr. ' + ((caseViewData.refDocName  | truncate ) | titlecase)}}
+                            {{preFixDRstr === 'DR.' ? ((caseViewData.refDocName  | truncate ) | titlecase) : (('Dr. ' + caseViewData.refDocName  | truncate ) | titlecase)}}
                           </h4>
                           <p class="mb-0" *ngIf="caseViewData.refSpecialityName">
                             {{caseViewData.refSpecialityName | titlecase}}</p>
                         </div>
                         <div class="collapse multi-collapse" id="multiCollapseExample4">
                           <div class="toggledbody pt-3">
-                            <div class="listinfor text-white" *ngIf="caseViewData.referdocMobile"> <i
+                            <div class="listinfor text-white" (click)="phone(caseViewData.referdocMobile)" *ngIf="caseViewData.referdocMobile"> <i
                                 class="ti-mobile text-white"></i> &nbsp; {{caseViewData.referdocMobile}} </div>
-                            <div class="listinfor text-white" *ngIf="caseViewData.refDoctorEmail"> <i
+                            <div class="listinfor text-white" (click)="mail(caseViewData.refDoctorEmail)" *ngIf="caseViewData.refDoctorEmail"> <i
                                 class="ti-email text-white"></i> &nbsp; {{caseViewData.refDoctorEmail}} </div>
                             <div class="listinfor text-white" *ngIf="caseViewData.referdocFax"> <i
                                 class="fa fa-fax text-white" aria-hidden="true"></i> &nbsp; {{caseViewData.referdocFax}}
@@ -251,9 +251,9 @@
                 <div class="row">
                   <div class="listinfor col-sm-6" *ngIf="caseViewData.patientFirstName"> <i class="ti-user"></i> &nbsp;
                     {{caseViewData.patientFirstName}}</div>
-                  <div class="listinfor col-sm-6" *ngIf="caseViewData.patientEmail"> <i class="ti-email"></i> &nbsp;
+                  <div class="listinfor col-sm-6" title="mail" style="cursor: pointer;" (click)="mail(caseViewData.patientEmail)" *ngIf="caseViewData.patientEmail"> <i class="ti-email"></i> &nbsp;
                     {{caseViewData.patientEmail}}</div>
-                  <div class="listinfor col-sm-6" *ngIf="caseViewData.patientMobile"> <i class="ti-mobile"></i> &nbsp;
+                  <div class="listinfor col-sm-6" title="phone" style="cursor: pointer;" (click)="phone(caseViewData.patientMobile)" *ngIf="caseViewData.patientMobile"> <i class="ti-mobile"></i> &nbsp;
                     {{caseViewData.patientMobile}}</div>
                   <div class="listinfor col-sm-6" *ngIf="caseViewData.patientGender"> <i class="ti-target"></i> &nbsp;
                     {{caseViewData.patientGender}}</div>
@@ -333,13 +333,12 @@
                 <h4 class="mb-3">Attach Documents</h4>
                 <div class="row" *ngIf="caseViewData.documents.length > 0">
                   <div class="imageitems col-md-4" *ngFor="let item of caseViewData.documents | converUrl">
-
                     <h *ngIf="item.ImageData.length > 0">{{item.documenttypeName}}</h>
-
                     <div *ngIf="item.ImageData.length > 0">
-                      <a (click)="openInNewWindow(url)" style="cursor: pointer;" *ngFor="let url of item.ImageData">
-                        <img [defaultImage]="url" [lazyLoad]="url" offset="100"
-                          style="width: 171px; height: 163px; margin-bottom: 3px;" alt="note"></a>
+                      <a style="cursor: pointer;" *ngFor="let url of item.ImageData"><img
+                          style="width: 171px; height: 163px; margin-bottom: 3px; display: inline; margin: 0px; border: 1px solid #ced4da; cursor:pointer; border-radius: .25rem;" defaultImage="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAUFBQUFBQYGBgYICQgJCAwLCgoLDBINDg0ODRIbERQRERQRGxgdGBYYHRgrIh4eIisyKigqMjw2NjxMSExkZIYBCgoKCgoKCwwMCw8RDxEPFxUTExUXIhkaGRoZIjQhJiEhJiE0LjguKy44LlNBOjpBU2BRTFFgdGhodJOLk8DA///AABEIAAUABQMBEQACEQEDEQH/xABcAAEAAAAAAAAAAAAAAAAAAAAHEAEAAgEFAAAAAAAAAAAAAAACAQMRAAQFB0EBAQEAAAAAAAAAAAAAAAAAAAMEEQAABQUAAAAAAAAAAAAAAAAAAQIDQRITISKR/9oADAMBAAIRAxEAPwAZjt2+oGm3hNumMwmLmIUx7ic6mtPQ/iNSC1plsuj/2Q==" [lazyLoad]="url"
+                          offset="300" [errorImage]="'assets/img/error_not_found.png'" alt="note" title="uploaded file"
+                          (click)="openImage(url)"></a>
                     </div>
                   </div>
                 </div>
@@ -357,7 +356,7 @@
               <a style="cursor: pointer;" *ngIf="caseViewData.refercaseStatus === 'Pending'"
                 class="btn btn-outline-primary btn-sm" (click)="openModalConfirm(caseViewData)">Confirm/Reschedule</a>
               <a style="cursor: pointer; margin-left: 5px;" *ngIf="caseViewData.refercaseStatus === 'Pending'"
-                class="btn btn-outline-primary btn-sm" (click)="openModalReject(caseViewData)">Reject/Rerefer</a>
+                class="btn btn-outline-primary btn-sm" (click)="openModalReject(caseViewData)">Reject</a>
               <div class="col-md-4 text-xl-right btnsgrp-appointment"
                 *ngIf="caseViewData.refercaseStatus === 'Accepted'">
                 <div class="text-success" style="float: left; margin-top: 10px;"><img src="assets/img/check-icon.svg"
@@ -368,16 +367,20 @@
                 <div class="text-danger" style="float: left; margin-top: 10px;"><img src="assets/img/close-icon.svg"
                     alt="" height="15px">Rejected</div>
               </div>
-              <a style="cursor: pointer; float: right;" *ngIf="from === 'insideSent'"
+              <div class="col-md-4 text-xl-right btnsgrp-appointment"
+                *ngIf="caseViewData.refercaseStatus === 'Expired'">
+                <div class="text-muted" style="float: left; margin-top: 10px;"><i class="ti-na"></i> Expired</div>
+              </div>
+              <a style="cursor: pointer; float: right;" *ngIf="from === 'insideSent' && caseViewData.refercaseStatus !== 'Pending'"
                 (click)="onClickRereferSent(caseViewData)"
-                [ngClass]="{'btn-outline-primary btn-sm' : caseViewData.refercaseReRefferred === 'No', 'btn disabled' : caseViewData.refercaseReRefferred === 'Yes'}">Re-Refer</a>
+                [ngClass]="{'btn-outline-primary btn-sm' : caseViewData.refercaseReRefferred === 'No', 'btn disabled' : caseViewData.refercaseReRefferred === 'Yes'}">Refer Case</a>
             </div>
             <!-- for dashboard and received -->
             <div class="btns-" *ngIf="from === 'dashboard' || from === 'received' || from === 'notifications'">
               <a style="cursor: pointer;" *ngIf="caseViewData.refercaseStatus === 'Pending'"
                 class="btn btn-outline-primary btn-sm" (click)="openModalConfirm(caseViewData)">Confirm/Reschedule</a>
               <a style="cursor: pointer; margin-left: 5px;" *ngIf="caseViewData.refercaseStatus === 'Pending'"
-                class="btn btn-outline-primary btn-sm" (click)="openModalReject(caseViewData)">Reject/Rerefer</a>
+                class="btn btn-outline-primary btn-sm" (click)="openModalReject(caseViewData)">Reject</a>
               <div class="col-md-4 text-xl-right btnsgrp-appointment"
                 *ngIf="caseViewData.refercaseStatus === 'Accepted'">
                 <div class="text-success" style="float: left; margin-top: 10px;"><img src="assets/img/check-icon.svg"
@@ -388,15 +391,19 @@
                 <div class="text-danger" style="float: left; margin-top: 10px;"><img src="assets/img/close-icon.svg"
                     alt="" height="15px">Rejected</div>
               </div>
-              <a style="cursor: pointer; float: right;" *ngIf="from === 'dashboard'"
+              <div class="col-md-4 text-xl-right btnsgrp-appointment"
+                *ngIf="caseViewData.refercaseStatus === 'Expired'">
+                <div class="text-muted" style="float: left; margin-top: 10px;"><i class="ti-na"></i> Expired</div>
+              </div>
+              <a style="cursor: pointer; float: right;" *ngIf="from === 'dashboard' && caseViewData.refercaseStatus !== 'Pending'"
                 (click)="onClickRereferDashboard(caseViewData)"
-                [ngClass]="{'btn-outline-primary btn-sm' : caseViewData.refercaseReRefferred === 'No', 'btn disabled' : caseViewData.refercaseReRefferred === 'Yes'}">Re-Refer</a>
-              <a style="cursor: pointer; float: right;" *ngIf="from === 'received'"
+                [ngClass]="{'btn-outline-primary btn-sm' : caseViewData.refercaseReRefferred === 'No', 'btn disabled' : caseViewData.refercaseReRefferred === 'Yes' || caseViewData.refercaseStatus === 'Expired'}">Refer Case</a>
+              <a style="cursor: pointer; float: right;" *ngIf="from === 'received' && caseViewData.refercaseStatus !== 'Pending'"
                 (click)="onClickRereferReceived(caseViewData)"
-                [ngClass]="{'btn-outline-primary btn-sm' : caseViewData.refercaseReRefferred === 'No', 'btn disabled' : caseViewData.refercaseReRefferred === 'Yes'}">Re-Refer</a>
-              <a style="cursor: pointer; float: right;" *ngIf="from === 'notifications'"
+                [ngClass]="{'btn-outline-primary btn-sm' : caseViewData.refercaseReRefferred === 'No', 'btn disabled' : caseViewData.refercaseReRefferred === 'Yes' || caseViewData.refercaseStatus === 'Expired'}">Refer Case</a>
+              <a style="cursor: pointer; float: right;" *ngIf="from === 'notifications' && caseViewData.refercaseStatus !== 'Pending'"
                 (click)="onClickRereferNotification(caseViewData)"
-                [ngClass]="{'btn-outline-primary btn-sm' : caseViewData.refercaseReRefferred === 'No', 'btn disabled' : caseViewData.refercaseReRefferred === 'Yes'}">Re-Refer</a>
+                [ngClass]="{'btn-outline-primary btn-sm' : caseViewData.refercaseReRefferred === 'No', 'btn disabled' : caseViewData.refercaseReRefferred === 'Yes' || caseViewData.refercaseStatus === 'Expired'}">Refer Case</a>
             </div>
             <!-- for sent -->
             <div class="btns-" *ngIf="from === 'sent'">
@@ -426,29 +433,33 @@
               </div>
               <a style="cursor: pointer; float: right;" *ngIf="from === 'sent'"
                 (click)="onClickRereferSent(caseViewData)"
-                [ngClass]="{'btn-outline-primary btn-sm' : caseViewData.refercaseReRefferred === 'No', 'btn disabled' : caseViewData.refercaseReRefferred === 'Yes'}">Re-Refer</a>
+                [ngClass]="{'btn-outline-primary btn-sm' : caseViewData.refercaseReRefferred === 'No', 'btn disabled' : caseViewData.refercaseReRefferred === 'Yes'}">Refer Case</a>
             </div>
             <!-- for doctorsList -->
             <div class="btns-" *ngIf="from === 'doctorsList'">
               <a style="cursor: pointer;" *ngIf="caseViewData.refercaseStatus === 'Pending'"
                 class="btn btn-outline-primary btn-sm" (click)="openModalConfirm(caseViewData)">Confirm/Reschedule</a>
               <a style="cursor: pointer; margin-left: 5px;" *ngIf="caseViewData.refercaseStatus === 'Pending'"
-                class="btn btn-outline-primary btn-sm" (click)="openModalReject(caseViewData)">Reject/Rerefer</a>
+                class="btn btn-outline-primary btn-sm" (click)="openModalReject(caseViewData)">Reject</a>
               <div class="col-md-4 text-xl-right btnsgrp-appointment"
                 *ngIf="caseViewData.refercaseStatus === 'Accepted'">
                 <div class="text-success" style="float: left; margin-top: 10px;"><img src="assets/img/check-icon.svg"
                     alt="" height="15px">Confirmed</div>
               </div>
-              <a style="cursor: pointer; float: right;" *ngIf="from === 'doctorsList'"
+              <div class="col-md-4 text-xl-right btnsgrp-appointment"
+                *ngIf="caseViewData.refercaseStatus === 'Expired'">
+                <div class="text-muted" style="float: left; margin-top: 10px;"><i class="ti-na"></i> Expired</div>
+              </div>
+              <a style="cursor: pointer; float: right;" *ngIf="from === 'doctorsList' && caseViewData.refercaseStatus !== 'Pending'"
                 (click)="onClickRereferDoctorsList(caseViewData)"
-                [ngClass]="{'btn-outline-primary btn-sm' : caseViewData.refercaseReRefferred === 'No', 'btn disabled' : caseViewData.refercaseReRefferred === 'Yes'}">Re-Refer</a>
+                [ngClass]="{'btn-outline-primary btn-sm' : caseViewData.refercaseReRefferred === 'No', 'btn disabled' : caseViewData.refercaseReRefferred === 'Yes' || caseViewData.refercaseStatus === 'Expired'}">Refer Case</a>
             </div>
             <!-- inside add-case -->
             <div class="btns-" *ngIf="from === 'add-case'">
               <a style="cursor: pointer;" *ngIf="caseViewData.refercaseStatus === 'Pending'"
                 class="btn btn-outline-primary btn-sm" (click)="openModalConfirm(caseViewData)">Confirm/Reschedule</a>
               <a style="cursor: pointer; margin-left: 5px;" *ngIf="caseViewData.refercaseStatus === 'Pending'"
-                class="btn btn-outline-primary btn-sm" (click)="openModalReject(caseViewData)">Reject/Rerefer</a>
+                class="btn btn-outline-primary btn-sm" (click)="openModalReject(caseViewData)">Reject</a>
               <div class="col-md-4 text-xl-right btnsgrp-appointment"
                 *ngIf="caseViewData.refercaseStatus === 'Accepted'">
                 <div class="text-success" style="float: left; margin-top: 10px;"><img src="assets/img/check-icon.svg"
@@ -459,9 +470,13 @@
                 <div class="text-danger" style="float: left; margin-top: 10px;"><img src="assets/img/close-icon.svg"
                     alt="" height="15px">Rejected</div>
               </div>
-              <a style="cursor: pointer; float: right;" *ngIf="from === 'add-case'"
+              <div class="col-md-4 text-xl-right btnsgrp-appointment"
+                *ngIf="caseViewData.refercaseStatus === 'Expired'">
+                <div class="text-muted" style="float: left; margin-top: 10px;"><i class="ti-na"></i> Expired</div>
+              </div>
+              <a style="cursor: pointer; float: right;" *ngIf="from === 'add-case' && caseViewData.refercaseStatus !== 'Pending'"
                 (click)="onClickRereferAdd(caseViewData)"
-                [ngClass]="{'btn-outline-primary btn-sm' : caseViewData.refercaseReRefferred === 'No', 'btn disabled' : caseViewData.refercaseReRefferred === 'Yes'}">Re-Refer</a>
+                [ngClass]="{'btn-outline-primary btn-sm' : caseViewData.refercaseReRefferred === 'No', 'btn disabled' : caseViewData.refercaseReRefferred === 'Yes' || caseViewData.refercaseStatus === 'Expired'}">Refer Case</a>
             </div>
           </div>
         </div>

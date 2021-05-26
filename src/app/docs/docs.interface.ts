@@ -44,6 +44,7 @@ export interface ReferCase {
     refFacilityBadgeCount: string;
     refFacilityName: string;
     refSpecialityName: string;
+    refDoctorEmail: string;
     refercaseConfirmedDate: string;
     refercaseCreatedDate: string;
     refercaseDescription: string;

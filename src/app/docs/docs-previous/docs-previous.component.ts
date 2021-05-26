@@ -82,7 +82,6 @@ export class DocsPreviousComponent implements OnInit, OnDestroy {
     });
   }
   onAppliedFilter = (filter: string) => {
-    this.spinner.show();
     this.pagePrevious = 0;
     this.privious.page = this.pagePrevious.toString();
     this.privious.patientName = JSON.parse(filter).patientName ? JSON.parse(filter).patientName.trim() : '';
@@ -105,7 +104,6 @@ export class DocsPreviousComponent implements OnInit, OnDestroy {
     });
   }
   onAppliedSorting = (sorting: string) => {
-    this.spinner.show();
     this.pagePrevious = 0;
     this.privious.page = this.pagePrevious.toString();
     this.privious.patientName = '';
@@ -128,7 +126,6 @@ export class DocsPreviousComponent implements OnInit, OnDestroy {
     });
   }
   onResetFilter = () => {
-    this.spinner.show();
     this.pagePrevious = 0;
     this.privious.page = this.pagePrevious.toString();
     this.privious.patientName = '';

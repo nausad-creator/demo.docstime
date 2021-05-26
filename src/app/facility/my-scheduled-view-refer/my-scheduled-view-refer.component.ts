@@ -102,7 +102,7 @@ export class MyScheduledViewReferComponent implements OnInit {
         doctorID: post.doctorID
       }]
     };
-    this.bsModalRef = this.modalService.show(RejectReceivedModalComponent, { id: 911, initialState });
+    this.bsModalRef = this.modalService.show(RejectReceivedModalComponent, { id: 911, initialState, class: 'modal-sm' });
     this.bsModalRef.content.event.subscribe((res: any) => {
       const data = JSON.parse(res);
       if (data.res === 'confirmed') {
@@ -124,12 +124,26 @@ export class MyScheduledViewReferComponent implements OnInit {
     this.store.setReferView(JSON.stringify(data));
     this.router.navigate([`${this.url ? this.url : '/facility/facility-my-schedule'}`]);
   }
-  openInNewWindow = (file: string) => {
-    window.open(file);
-  }
+  // openInNewWindow = (file: string) => {
+  //   window.open(file);
+  // }
   onClickRereferSchedule = (data: any) => {
     data.url = this.url;
     this.store.setRerefer(JSON.stringify(data));
     this.router.navigate(['/facility/my-schedule-re-refer-case']);
+  }
+  openImage = (src: string) => {
+    ($ as any).magnificPopup.open({
+      items: {
+        src: `${src}`,
+      },
+      type: 'image'
+    });
+  }
+  mail = (email?: string) => {
+    window.location.href = `mailto:${email}?subject=&body=`; // add the links to body
+  }
+  phone = (phone?: string) => {
+    window.location.href = `tel:${phone}`; // add the links to body
   }
 }

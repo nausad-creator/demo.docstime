@@ -2,23 +2,23 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, In
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { ReferCase } from '../docs.interface';
 import { TimelineComponent } from '../timeline/timeline.component';
-interface TimeLine{
-doctorFax: string;
-doctorFullName: string;
-doctorID: string;
-doctorMobile: string;
-doctorProfileImage: string;
-facilityID: string;
-facilityLogo: string;
-facilityName: string;
-newTime: string;
-refercaseID: string;
-timelineDate: string;
-timelineID: string;
-timelineRemarks: string;
-timelineStatus: string;
-tzCountryCode: string;
-tzID: string;
+interface TimeLine {
+  doctorFax: string;
+  doctorFullName: string;
+  doctorID: string;
+  doctorMobile: string;
+  doctorProfileImage: string;
+  facilityID: string;
+  facilityLogo: string;
+  facilityName: string;
+  newTime: string;
+  refercaseID: string;
+  timelineDate: string;
+  timelineID: string;
+  timelineRemarks: string;
+  timelineStatus: string;
+  tzCountryCode: string;
+  tzID: string;
 }
 @Component({
   selector: 'app-share-referral-sent',

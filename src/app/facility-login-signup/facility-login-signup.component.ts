@@ -92,7 +92,7 @@ export class FacilityLoginSignupComponent implements OnInit, DoCheck {
       const data: FacilityLogin = {
         facilityuserPassword: post.facilityuserPassword,
         facilityuserEmail: post.facilityuserEmail,
-        languageID: '1',
+        languageID: post.languageID,
       };
       this.facilityLogin(JSON.stringify(data)).then((success: Array<any>) => {
         this.facilityService.unSubscribe();

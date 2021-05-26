@@ -1,36 +1,29 @@
-<div class="appointmen-list card mb-3">
-  <div class="d-flex text-appont" style="cursor: pointer;" (click)="onClickView(wholeOBject)">
+<div class="appointmen-list card mb-3" style="cursor: pointer;" (click)="onClickView(wholeOBject)">
+  <div class="d-flex text-appont">
     <a style="cursor: pointer;" class="referred-btn">
       <h5 class="m-0 text-dark">{{fullName | titlecase}}</h5></a>
     <p class="m-0 text-dark ml-auto">{{genderAtZero + '/' + age + ' ' + 'yrs' + '' + (refSpecialityName | titlecase)}}</p>
   </div>
   <div class="row align-items-center">
-    <div class="col-md-5 text-appont" style="cursor: pointer;" (click)="onClickView(wholeOBject)">
+    <div class="col-md-5 text-appont">
         <p class="m-0">{{reasonName | titlecase}}</p>
         <a *ngIf="refDocName">Referred By:</a>
-        <h5 class="text-dark" style="margin-top: .4rem; margin-bottom: .4rem;" *ngIf="refDocName">{{preFixDRstr === 'DR.' ? (refDocName | titlecase) : 'Dr. ' + (refDocName | titlecase)}}</h5>
+        <h5 class="text-dark" style="margin-top: .4rem; margin-bottom: .4rem;" [title]="preFixDRstr === 'DR.' ? refDocName : 'Dr. ' + refDocName" *ngIf="refDocName">{{preFixDRstr === 'DR.' ? (refDocName | titlecase) : 'Dr. ' + (refDocName | titlecase)}}</h5>
         <p class="m-0" *ngIf="specialityName"> {{specialityName | titlecase}}</p>
-        <!-- <span class="text-dark" *ngIf="specialityName"> {{specialityName | titlecase}}</span> -->
     </div>
-    <div class="col-md-3 icons-dated" style="cursor: pointer;" (click)="onClickView(wholeOBject)">
-      <p class="m-0" *ngIf="refercaseVisitDate"><i class="ti-calendar"></i> {{refercaseVisitDate | date : 'mediumDate'}}</p>
-      <p class="m-0" *ngIf="refercaseVisitTime"><i class="ti-time"></i>{{convertedTime}}</p>
+    <div class="col-md-3 icons-dated">
+        <p class="m-0" *ngIf="refercaseVisitDate"><i class="ti-calendar"></i> {{refercaseVisitDate | date : 'mediumDate'}}</p>
+        <p class="m-0" *ngIf="refercaseVisitTime"><i class="ti-time"></i> {{convertedTime}}</p>
     </div>
-    <div class="col-md-4 text-xl-right btnsgrp-appointment" style="cursor: pointer;" (click)="onClickView(wholeOBject)">
-      <p class="text-dark sb-text mb-2" *ngIf="refercaseUrgent === 'Yes'">Urgent Consult</p>
-      <p class="text-dark sb-text mb-2" *ngIf="refercaseUrgent === 'No'"></p>																	
+    <div class="col-md-4 text-xl-right btnsgrp-appointment">
+      <p class="mb-2 actiontimeline-icons">
+        <a class="comment cursr" title="Mail" (click)="mail(wholeOBject.patientEmail); $event.stopPropagation();"><i class="fa fa-envelope"></i></a> 
+     </p>
+        <p  class="text-dark sb-text mb-2" *ngIf="refercaseUrgent === 'Yes'">Urgent Consult</p>
     </div>
-    <div class="col-md-12 text-right" *ngIf="refercaseStatus === 'Pending'">
-      <a (click)="openModalConfirm()" class="btn btn-outline-primary btn-sm">Confirm/Reschedule</a>
-      <a (click)="openModalReject()" class="btn btn-outline-primary m-1 btn-sm">Reject/Rerefer</a>	
-      <!-- <button type="button" class="btn btn-primary m-1 btn-sm" disabled>Disable</button>	 -->
+    <div class="col-md-12 text-right">
+      <a (click)="openModalConfirm(); $event.stopPropagation();" class="btn btn-outline-primary btn-sm" *ngIf="refercaseStatus === 'Pending'">Confirm/Reschedule</a>
+      <a (click)="openModalReject(); $event.stopPropagation();" class="btn btn-outline-primary m-1 btn-sm" *ngIf="refercaseStatus === 'Pending'">Reject</a>	
     </div>
-    <!-- <div class="col-md-4 text-xl-right btnsgrp-appointment" *ngIf="refercaseStatus === 'Pending'">
-      <p class="text-dark sb-text mb-2" *ngIf="refercaseUrgent === 'Yes'">Urgent Consult</p>
-      <a style="cursor: pointer;
-      border-color: #007bff; margin-bottom: 5px;" class="btn btn-outline-primary" (click)="openModalConfirm()">Confirm/Reschedule</a>
-      <a style="cursor: pointer;
-      border-color: #007bff;" class="btn btn-outline-primary" (click)="openModalReject()">Reject Re-refer</a>
-    </div> -->
   </div> 
 </div>

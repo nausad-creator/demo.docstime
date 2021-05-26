@@ -294,7 +294,7 @@
     "changeOrigin": true
   },
   "/refercase/delete-case/*": {
-    "target": "https://demo.docstime.com//backend/web/index.php/v2",
+    "target": "http://3.221.188.196//backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true

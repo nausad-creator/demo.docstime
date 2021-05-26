@@ -56,7 +56,9 @@ export class ShareScheduleAppointmentsComponent implements OnInit {
     time[0] < 10 ? (time[0] = '0' + time[0]) : (time[0] = time[0]);
     return time[0] + '' + time[1] + '' + time[2] + ' ' + time[5]; // return adjusted time or original string
   }
-
+  mail = (email?: string) => {
+    window.location.href = `mailto:${email}?subject=&body=`; // add the links to body
+  }
   onClickViewUpcomming = (referral: ReferCase) => {
     this.view.emit(JSON.stringify(referral));
   }

@@ -1,5 +1,5 @@
-<div class="appointmen-list card mb-3">
-  <div class="d-flex text-appont cursr" (click)="onClickViewReferral(wholeObject)">
+<div class="appointmen-list card mb-3 cursr" (click)="onClickViewReferral(wholeObject)">
+  <div class="d-flex text-appont cursr">
     <a style="cursor: pointer;" class="referred-btn">
       <h5 class="m-0 text-dark">{{fullName | titlecase}}</h5>
     </a>
@@ -7,41 +7,37 @@
     </p>
   </div>
   <div class="row align-items-center">
-    <div class="col-md-5 text-appont cursr" (click)="onClickViewReferral(wholeObject)">
+    <div class="col-md-5 text-appont cursr" >
       <p class="m-0">{{reasonName | titlecase}}</p>
       <a *ngIf="doctorFullName || specialityName">Referred To:</a>
       <h5 class="text-dark" style="margin-top: .4rem; margin-bottom: .4rem;" *ngIf="doctorFullName">{{preFixDRstr === 'DR.' ? (doctorFullName | titlecase) : 'Dr. ' + (doctorFullName | titlecase)}}</h5>
       <br *ngIf="!doctorFullName">
-      <!-- <span class="text-dark" *ngIf="specialityName"> {{specialityName | titlecase}}</span> -->
       <p class="m-0" *ngIf="specialityName"> {{specialityName | titlecase}}</p>
     </div>
     <div class="col-md-3 icons-dated">
-      <p (click)="onClickViewReferral(wholeObject)" class="m-0 cursr"
-        *ngIf="refercaseVisitDate !== null && refercaseVisitDate !== undefined"><i
-          class="ti-calendar"></i>{{refercaseVisitDate | date : 'mediumDate'}}</p>
-      <p (click)="onClickViewReferral(wholeObject)" class="m-0 cursr" *ngIf="refercaseVisitTime"><i class="ti-time"></i>
-        {{convertedTime}}</p>
+      <p class="m-0 cursr"  [style.visibility]="'hidden'" *ngIf="!refercaseVisitDate">some random text</p>
+      <p class="m-0 cursr"  [style.visibility]="'hidden'" *ngIf="!refercaseVisitTime">some random text</p>
+      <p  class="m-0 cursr" *ngIf="refercaseVisitDate"><i class="ti-calendar"></i>{{refercaseVisitDate | date : 'mediumDate'}}</p>
+      <p  class="m-0 cursr" *ngIf="refercaseVisitTime"><i class="ti-time"></i>{{convertedTime}}</p>
       <p class="m-0 actiontimeline-icons">
-        <a class="comment cursr" (click)="openMail()"><i class="ti-comment"></i></a> 
-        <a class="timeline cursr" data-toggle="modal" (click)="openTimeLine(timeline)" *ngIf="timeline.length > 0"><i class="ti-time"></i></a></p>
+        <a class="comment cursr" title="Mail" (click)="openMail(); $event.stopPropagation();"><i class="ti-comment"></i></a> 
+        <a class="timeline cursr" title="Timeline" data-toggle="modal" (click)="openTimeLine(timeline); $event.stopPropagation();" *ngIf="timeline.length > 0"><i class="ti-time"></i></a>
+      </p>
+      <div class="text-success cursr m-0"  [style.visibility]="'hidden'">some random text.</div>
     </div>
-    <div class="col-md-4 text-xl-right btnsgrp-appointment cursr" *ngIf="refercaseStatus === 'Pending'"
-      (click)="onClickViewReferral(wholeObject)">
+    <div class="col-md-4 text-xl-right btnsgrp-appointment cursr" *ngIf="refercaseStatus === 'Pending'" >
       <p class="text-dark sb-text mb-2" *ngIf="refercaseUrgent === 'Yes'">Urgent Consult</p>
       <div class="text-warning"><img src="assets/img/warning-icon.svg" alt="" height="15px"> Pending</div>
     </div>
-    <div class="col-md-4 text-xl-right btnsgrp-appointment cursr" *ngIf="refercaseStatus === 'Rejected'"
-      (click)="onClickViewReferral(wholeObject)">
+    <div class="col-md-4 text-xl-right btnsgrp-appointment cursr" *ngIf="refercaseStatus === 'Rejected'" >
       <p class="text-dark sb-text mb-2" *ngIf="refercaseUrgent === 'Yes'">Urgent Consult</p>
       <div class="text-danger"><img src="assets/img/close-icon.svg" alt="" height="15px"> Rejected</div>
     </div>
-    <div class="col-md-4 text-xl-right btnsgrp-appointment cursr" *ngIf="refercaseStatus === 'Accepted'"
-      (click)="onClickViewReferral(wholeObject)">
+    <div class="col-md-4 text-xl-right btnsgrp-appointment cursr" *ngIf="refercaseStatus === 'Accepted'" >
       <p class="text-dark sb-text mb-2" *ngIf="refercaseUrgent === 'Yes'">Urgent Consult</p>
       <div class="text-success"><img src="assets/img/check-icon.svg" alt="" height="15px"> Confirmed</div>
     </div>
-    <div class="col-md-4 text-xl-right btnsgrp-appointment cursr" *ngIf="refercaseStatus === 'Expired'"
-      (click)="onClickViewReferral(wholeObject)">
+    <div class="col-md-4 text-xl-right btnsgrp-appointment cursr" *ngIf="refercaseStatus === 'Expired'" >
       <p class="text-dark sb-text mb-2" *ngIf="refercaseUrgent === 'Yes'">Urgent Consult</p>
       <div class="text-muted"><i class="ti-na"></i> Expired</div>
     </div>

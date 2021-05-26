@@ -110,7 +110,6 @@ export class DocsUpcommingComponent implements OnInit, OnDestroy {
     }
   }
   onAppliedFilter = (filter: string) => {
-    this.spinner.show();
     this.pageSchedule = 0;
     this.upcomming.page = this.pageSchedule.toString();
     this.upcomming.patientName = JSON.parse(filter).patientName ? JSON.parse(filter).patientName.trim() : '';
@@ -133,7 +132,6 @@ export class DocsUpcommingComponent implements OnInit, OnDestroy {
     });
   }
   onAppliedSorting = (sorting: string) => {
-    this.spinner.show();
     this.pageSchedule = 0;
     this.upcomming.page = this.pageSchedule.toString();
     this.upcomming.patientName = '';
@@ -156,7 +154,6 @@ export class DocsUpcommingComponent implements OnInit, OnDestroy {
     });
   }
   onResetFilter = () => {
-    this.spinner.show();
     this.pageSchedule = 0;
     this.upcomming.page = this.pageSchedule.toString();
     this.upcomming.patientName = '';

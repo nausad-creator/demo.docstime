@@ -33,7 +33,7 @@ export class SharedNewAppointmentComponent implements OnInit {
   @Input() doctorID: string;
   @Input() refercaseSentTZID: string;
   @Input() wholeOBject: ReferCase;
-  @Output() view: EventEmitter<any> = new EventEmitter();
+  @Output() view: EventEmitter<string> = new EventEmitter();
   @Output() updateView: EventEmitter<any> = new EventEmitter();
   @Output() updateViewToday: EventEmitter<any> = new EventEmitter();
   genderAtZero: string;
@@ -120,7 +120,7 @@ export class SharedNewAppointmentComponent implements OnInit {
       }]
     };
     this.store.setRejectrefer(JSON.stringify(this.wholeOBject));
-    this.bsModalRef = this.modalService.show(RejectReceivedModalComponent, { id: 911, initialState });
+    this.bsModalRef = this.modalService.show(RejectReceivedModalComponent, { id: 911, initialState, class: 'modal-sm' });
     this.bsModalRef.content.event.subscribe((res: string) => {
       const data = JSON.parse(res);
       if (data.res === 'confirmed') {
@@ -128,9 +128,10 @@ export class SharedNewAppointmentComponent implements OnInit {
       }
     });
   }
-
+  mail = (email?: string) => {
+    window.location.href = `mailto:${email}?subject=&body=`; // add the links to body
+  }
   onClickView = (referral: ReferCase) => {
     this.view.emit(JSON.stringify(referral));
   }
-
 }

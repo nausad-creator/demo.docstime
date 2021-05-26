@@ -10,6 +10,7 @@ import { Location } from '@angular/common';
 import { DocStore } from '../doc-store.service';
 import { ReferCase } from '../docs.interface';
 import { DeleteConfirmationComponent } from './delete-confirmation/delete-confirmation.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-doctor-view-refer',
@@ -97,7 +98,7 @@ export class DoctorViewReferComponent implements OnInit {
       }]
     };
     this.store.setRejectrefer(JSON.stringify(post));
-    this.bsModalRef = this.modalService.show(RejectReceivedModalComponent, { id: 911, initialState });
+    this.bsModalRef = this.modalService.show(RejectReceivedModalComponent, { id: 911, initialState, class: 'modal-sm' });
     this.bsModalRef.content.event.subscribe((res: string) => {
       const data = JSON.parse(res);
       if (data.res === 'confirmed') {
@@ -163,9 +164,9 @@ export class DoctorViewReferComponent implements OnInit {
     time[0] < 10 ? (time[0] = '0' + time[0]) : (time[0] = time[0]);
     return time[0] + '' + time[1] + '' + time[2] + ' ' + time[5];
   }
-  openInNewWindow = (file: string) => {
-    window.open(file);
-  }
+  // openInNewWindow = (file: string) => {
+  //   window.open(file);
+  // }
   onClickRereferDashboard = (data: ReferCase) => {
     this.store.setRerefer(JSON.stringify(data));
     this.router.navigate(['/doctor/dashboard/re-refer-case']);
@@ -214,5 +215,19 @@ export class DoctorViewReferComponent implements OnInit {
         this.location.back();
       }
     });
+  }
+  openImage = (src: string) => {
+    ($ as any).magnificPopup.open({
+      items: {
+        src: `${src}`,
+      },
+      type: 'image'
+    });
+  }
+  mail = (email?: string) => {
+    window.location.href = `mailto:${email}?subject=&body=`; // add the links to body
+  }
+  phone = (phone?: string) => {
+    window.location.href = `tel:${phone}`; // add the links to body
   }
 }

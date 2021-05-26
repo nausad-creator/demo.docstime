@@ -1,14 +1,13 @@
 <div class="appointmen-list card mb-3" style="cursor: pointer;" (click)="onClickViewPrivious(wholeObject)">
     <div class="d-flex text-appont">
-        <a style="cursor: pointer;" class="referred-btn"><h5 class="m-0 text-dark">{{fullName | titlecase}}</h5></a>
+        <a class="referred-btn"><h5 class="m-0 text-dark">{{fullName | titlecase}}</h5></a>
         <p class="m-0 text-dark ml-auto">{{genderAtZero + '/' + age + ' ' + 'yrs' + '' + (refSpecialityName | titlecase)}}</p>
       </div>
     <div class="row align-items-center">
         <div class="col-md-5 text-appont">
             <p class="m-0">{{reasonName | titlecase}}</p>
             <a *ngIf="refDocName">Referred By:</a>
-            <h5 class="text-dark" style="margin-top: .4rem; margin-bottom: .4rem;" *ngIf="refDocName">{{preFixDRstr === 'DR.' ? (refDocName | titlecase) : 'Dr. ' + (refDocName | titlecase)}}</h5>
-            <!-- <span class="text-dark" *ngIf="specialityName"> {{specialityName | titlecase}}</span> -->
+            <h5 class="text-dark" style="margin-top: .4rem; margin-bottom: .4rem;" [title]="preFixDRstr === 'DR.' ? refDocName : 'Dr. ' + refDocName" *ngIf="refDocName">{{preFixDRstr === 'DR.' ? (refDocName | titlecase) : 'Dr. ' + (refDocName | titlecase)}}</h5>
             <p class="m-0" *ngIf="specialityName"> {{specialityName | titlecase}}</p>
         </div>
         <div class="col-md-3 icons-dated">
@@ -16,8 +15,11 @@
             <p class="m-0" *ngIf="refercaseVisitTime"><i class="ti-time"></i> {{convertedTime}}</p>
         </div>
         <div class="col-md-4 text-xl-right btnsgrp-appointment" *ngIf="refercaseStatus === 'Accepted' || refercaseStatus === 'Completed'">
+            <p class="mb-2 actiontimeline-icons">
+                <a class="comment cursr" title="Mail" (click)="mail(wholeObject.patientEmail); $event.stopPropagation();"><i class="fa fa-envelope"></i></a> 
+             </p>
             <p class="text-dark sb-text mb-2" *ngIf="refercaseUrgent === 'Yes'">Urgent Consult</p>
             <div class="text-primary"><img src="assets/img/done.svg" alt="" height="15px">Completed</div>
-          </div>
+        </div>
     </div>
 </div>

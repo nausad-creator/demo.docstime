@@ -6,22 +6,22 @@
     </button>
   </div>
   <div class="modal-body">
-    <p [hidden]="rejectDefault">Do you want to Re-Refer or reject the referral?</p>
+    <p [hidden]="rejectDefault">Do you want to reject the referral?</p>
     <form class="" [formGroup]="rejectForm" [hidden]="!rejectDefault">
       <div class="row">
         <div class="col-sm-12">
-          <label for="Discription">Remark</label>
+          <label for="Discription">Remarks</label>
           <div class="form-group">
             <textarea class="form-control" formControlName="rejectRemark" name="Discription" id="Discription"
-              type="text" placeholder="Write here..." rows="3"></textarea>
+              type="text" placeholder="Write here...(Optional)" rows="3"></textarea>
           </div>
         </div>
       </div>
     </form>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="onReRefer(); onCloseReject(911)"
-      [hidden]="rejectDefault">Re-refer</button>
+    <!-- <button type="button" class="btn btn-primary" (click)="onReRefer(); onCloseReject(911)"
+      [hidden]="rejectDefault">Re-refer</button> -->
     <button type="button" class="btn btn-primary" (click)="rejectDefault = true"
       [hidden]="rejectDefault">Reject</button>
     <button type="button" class="btn btn-primary" (click)="onReject(rejectForm.value)"

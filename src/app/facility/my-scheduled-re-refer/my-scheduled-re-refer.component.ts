@@ -254,7 +254,18 @@ export class MyScheduledReReferComponent implements OnInit {
         distinctUntilChanged(),
         tap(() => this.loading = true),
         switchMap(term => this.service.doctorLists(term ? term.replace(/^\s+/g, '') : term).pipe(
-          map(res => res[0].data),
+          map(res => res[0].data.map((d) => {
+            return {
+              doctorAddress: d.doctorAddress,
+              doctorFirstName: d.doctorFirstName,
+              doctorFullName: `${d.doctorFullName}, ${d.degreeName}`,
+              doctorID: d.doctorID,
+              doctorLastName: d.doctorLastName,
+              doctorNPI: d.doctorNPI,
+              degreeID: d.degreeID,
+              degreeName: d.degreeName,
+            };
+          })),
           catchError(() => of([])), // empty list on error
           tap(() => this.loading = false)
         ))

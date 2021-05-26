@@ -317,6 +317,8 @@ export interface Doctors {
         doctorID: string;
         doctorLastName: string;
         doctorNPI: string;
+        degreeID: string;
+        degreeName: string;
     }>;
     npidata: Array<{
         doctorAddress: string;

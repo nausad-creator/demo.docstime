@@ -155,9 +155,6 @@ export class FacilityDashboardComponent implements OnInit {
     this.show += 5;
     this.cd.markForCheck();
   }
-  onScrollUp = () => {
-    console.log('scrolled up!!');
-  }
   navigateToMySchedule = () => {
     this.router.navigate(['/facility/facility-my-schedule']);
   }

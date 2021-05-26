@@ -101,7 +101,7 @@ export class ShareReferralReceivedComponent implements OnInit {
       }]
     };
     this.store.setRejectrefer(JSON.stringify(this.wholeObject));
-    this.bsModalRef = this.modalService.show(RejectReceivedModalComponent, { id: 911, initialState });
+    this.bsModalRef = this.modalService.show(RejectReceivedModalComponent, { id: 911, initialState, class: 'modal-sm' });
     this.bsModalRef.content.event.subscribe((res: string) => {
       const data = JSON.parse(res);
       if (data.res === 'confirmed') {
@@ -111,5 +111,8 @@ export class ShareReferralReceivedComponent implements OnInit {
   }
   onClickViewReferral = (referral: ReferCase) => {
     this.view.emit(JSON.stringify(referral));
+  }
+  mail = (email?: string) => {
+    window.location.href = `mailto:${email}?subject=&body=`; // add the links to body
   }
 }

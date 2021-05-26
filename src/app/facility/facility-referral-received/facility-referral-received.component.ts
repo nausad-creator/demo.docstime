@@ -16,7 +16,7 @@ const currentDate = new Date();
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FacilityReferralReceivedComponent implements OnInit, OnDestroy {
-  scheduledAll$: Observable<Array<any>>;
+  scheduledAll$: Observable<ReferralReceived[]>;
   forceReload$ = new Subject<void>();
   throttle = 10;
   scrollDistance = 0.3;
@@ -58,8 +58,8 @@ export class FacilityReferralReceivedComponent implements OnInit, OnDestroy {
     this.data.facilityID = this.service.getFaLocal() ? this.service.getFaLocal().facilityID : this.service.getFaSession().facilityID;
     this.data.startDate = moment(currentDate).format('YYYY-MM-DD');
     // getting data
-    const initialValue$ = this.getDataOnce() as Observable<Array<ReferralReceived>>;
-    const updates$ = this.forceReload$.pipe(mergeMap(() => this.getDataOnce() as Observable<Array<ReferralReceived>>));
+    const initialValue$ = this.getDataOnce() as Observable<ReferralReceived[]>;
+    const updates$ = this.forceReload$.pipe(mergeMap(() => this.getDataOnce() as Observable<ReferralReceived[]>));
     this.scheduledAll$ = merge(initialValue$, updates$);
     this.subscriptionInitial = this.scheduledAll$.subscribe(res => res ? this.all = res : this.all = [], err => console.error(err));
     this.cd.markForCheck();
@@ -71,7 +71,7 @@ export class FacilityReferralReceivedComponent implements OnInit, OnDestroy {
         this.isEmpty = c[0].recordcount > 0 ? true : false;
       }),
       map(res => res[0].data),
-      take(1), catchError(() => of([]))) as Observable<Array<ReferralReceived>>;
+      take(1), catchError(() => of([]))) as Observable<ReferralReceived[]>;
   }
   forceReload = () => {
     this.page = 0;

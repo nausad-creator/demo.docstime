@@ -8,11 +8,11 @@
       <div class="row align-items-center">
         <div class="col-md-5 text-appont">
             <p class="m-0">{{reasonName | titlecase}}</p>
-            <a class="d-flex align-items-center" style="cursor:pointer;color:#007bff;">
+            <a class="d-flex align-items-center" style="color:#007bff;">
               <div class="img-candate mr-2"><img alt="candidate" [defaultImage]="'assets/img/user-icon.png'" [lazyLoad]="url" [errorImage]="'assets/img/user-icon.png'"
                 alt="candidate" height="50"></div>
               <div class="nameCandate">
-                <h5 class=" mb-0 ng-star-inserted" *ngIf="doctorFullName">{{preFixDRstr === 'DR.' ? (doctorFullName | titlecase) : 'Dr. ' + (doctorFullName | titlecase)}}</h5>
+                <h5 class=" mb-0 ng-star-inserted" [title]="preFixDRstr === 'DR.' ? doctorFullName : 'Dr. ' + doctorFullName" *ngIf="doctorFullName">{{preFixDRstr === 'DR.' ? (doctorFullName | titlecase) : 'Dr. ' + (doctorFullName | titlecase)}}</h5>
                 <p class="mb-0 ng-star-inserted" *ngIf="specialityName">{{specialityName | titlecase}}</p>
               </div>
             </a>
@@ -22,8 +22,11 @@
           <p class="m-0" *ngIf="refercaseVisitTime"><i class="ti-time"></i>{{convertedTime}}</p>
         </div>
         <div class="col-md-4 text-xl-right btnsgrp-appointment" *ngIf="refercaseStatus === 'Rejected'">
+            <p class="mb-2 actiontimeline-icons">
+            <a class="comment cursr" title="Mail" (click)="mail(wholeObject.patientEmail); $event.stopPropagation();"><i class="fa fa-envelope"></i></a> 
+            </p>
             <p class="text-dark sb-text mb-2" *ngIf="refercaseUrgent === 'Yes'">Urgent Consult</p>
-            <div class="text-alert"><img src="assets/img/icons8-cancel (1).svg" alt="" height="15px"> Cancelled</div>
+            <div  class="text-alert"><img src="assets/img/icons8-cancel (1).svg" alt="" height="15px"> Cancelled</div>
           </div>
       </div>
     </div> 

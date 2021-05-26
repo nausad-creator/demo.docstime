@@ -89,7 +89,6 @@ export class PreviousComponent implements OnInit, OnDestroy {
     });
   }
   onAppliedFilter = (filter: string) => {
-    this.spinner.show();
     this.pagePrevious = 0;
     this.privious.page = this.pagePrevious.toString();
     this.privious.patientName = JSON.parse(filter).patientName ? JSON.parse(filter).patientName.trim() : '';
@@ -112,7 +111,6 @@ export class PreviousComponent implements OnInit, OnDestroy {
     }, err => console.error(err));
   }
   onAppliedSorting = (sorting: string) => {
-    this.spinner.show();
     this.pagePrevious = 0;
     this.privious.page = this.pagePrevious.toString();
     this.privious.patientName = '';
@@ -135,7 +133,6 @@ export class PreviousComponent implements OnInit, OnDestroy {
     }, err => console.error(err));
   }
   onResetFilter = () => {
-    this.spinner.show();
     this.pagePrevious = 0;
     this.privious.page = this.pagePrevious.toString();
     this.privious.patientName = '';
@@ -143,8 +140,8 @@ export class PreviousComponent implements OnInit, OnDestroy {
     this.privious.referbydoctorName = '';
     this.privious.refercaseUrgent = '';
     this.privious.insuranceNames = '';
-    this.privious.startDate = this.service.getDocLocal() ? moment(this.service.getDocLocal().doctorCreatedDate).format('YYYY-MM-DD')
-      : moment(this.service.getDocSession().doctorCreatedDate).format('YYYY-MM-DD');
+    this.privious.startDate = this.service.getFaLocal() ? moment(this.service.getFaLocal().facilityuserCreatedDate).format('YYYY-MM-DD')
+      : moment(this.service.getFaSession().facilityuserCreatedDate).format('YYYY-MM-DD');
     this.privious.endDate = moment(currentDate).format('YYYY-MM-DD');
     this.scheduledPrevious$ = this.filter(JSON.stringify(this.privious)) as Observable<Array<ReferralReceived>>;
     this.subscriptionReset = this.scheduledPrevious$.subscribe((res) => {

@@ -1,5 +1,5 @@
 <div class="appointmen-list card mb-3" style="cursor: pointer;" (click)="onClickViewUpcomming(wholeObject)">
-    <div class="d-flex text-appont" style="cursor: pointer;">
+    <div class="d-flex text-appont">
         <a style="cursor: pointer;" class="referred-btn"><h5 class="m-0 text-dark">{{fullName | titlecase}}</h5></a>
         <p class="m-0 text-dark ml-auto">{{genderAtZero + '/' + age + ' ' + 'yrs' + '' + (refSpecialityName | titlecase)}}</p>
       </div>
@@ -7,17 +7,19 @@
         <div class="col-md-5 text-appont">
             <p class="m-0">{{reasonName | titlecase}}</p>
             <a *ngIf="refDocName">Referred By:</a>
-           <h5 class="text-dark" style="margin-top: .4rem; margin-bottom: .4rem;" *ngIf="refDocName">{{preFixDRstr === 'DR.' ? (refDocName | titlecase) : 'Dr. ' + (refDocName | titlecase)}}</h5>
+           <h5 class="text-dark" style="margin-top: .4rem; margin-bottom: .4rem;" [title]="preFixDRstr === 'DR.' ? refDocName : 'Dr. ' + refDocName" *ngIf="refDocName">{{preFixDRstr === 'DR.' ? (refDocName | titlecase) : 'Dr. ' + (refDocName | titlecase)}}</h5>
            <p class="m-0" *ngIf="specialityName"> {{specialityName | titlecase}}</p>
-           <!-- <span class="" *ngIf="specialityName"> {{specialityName | titlecase}}</span> -->
         </div>
         <div class="col-md-3 icons-dated">
             <p class="m-0" *ngIf="refercaseVisitDate"><i class="ti-calendar"></i> {{refercaseVisitDate | date : 'mediumDate'}}</p>
             <p class="m-0" *ngIf="refercaseVisitTime"><i class="ti-time"></i> {{convertedTime}}</p>
         </div>
         <div class="col-md-4 text-xl-right btnsgrp-appointment" *ngIf="refercaseStatus === 'Accepted'">
+            <p class="mb-2 actiontimeline-icons">
+                <a class="comment cursr" title="Mail" (click)="mail(wholeObject.patientEmail); $event.stopPropagation();"><i class="fa fa-envelope"></i></a> 
+             </p>
             <p class="text-dark sb-text mb-2" *ngIf="refercaseUrgent === 'Yes'">Urgent Consult</p>
-            <div class="text-success"><img src="assets/img/check-icon.svg" alt="" height="15px"> Confirmed</div>
-          </div>
+            <div  class="text-success"><img src="assets/img/check-icon.svg" alt="" height="15px"> Confirmed</div>
+        </div>
     </div>
 </div>

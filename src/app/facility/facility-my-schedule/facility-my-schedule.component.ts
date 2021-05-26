@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import * as moment from 'moment';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { FacilityService } from '../facility.service';
 const currentDate = new Date();
 @Component({
@@ -30,7 +31,12 @@ export class FacilityMyScheduleComponent implements OnInit {
     { id: 'Last_week', value: 'Last Week' },
     { id: 'last_30_days', value: 'Last 30 days' }
   ];
-  constructor(private router: Router, private cd: ChangeDetectorRef, private service: FacilityService) { }
+  constructor(
+    private router: Router,
+    private cd: ChangeDetectorRef,
+    private service: FacilityService,
+    private spinner: NgxSpinnerService
+    ) { }
   ngOnInit(): void {
     this.component = this.router.url ? this.router.url.split('/')[3] : '';
     this.router.events.forEach((event) => {
@@ -58,47 +64,64 @@ export class FacilityMyScheduleComponent implements OnInit {
   }
   onAppliedFilter = (filter: string) => {
     this.service.filter(filter);
+    this.spinner.show();
   }
   onResetFilter = () => {
     this.service.resetFilter('reset');
+    this.spinner.show();
   }
   onChangeUpcomming = (sort: string) => {
     if (sort === 'Today') {
+      this.spinner.show();
       this.data.startDate = moment(currentDate, 'YYYY-MM-DD').format('YYYY-MM-DD');
       this.data.endDate = moment(currentDate, 'YYYY-MM-DD').format('YYYY-MM-DD');
       this.service.sorting(JSON.stringify(this.data));
     }
     if (sort === 'Tomorrow') {
+      this.spinner.show();
       this.data.startDate = moment(this.addDays(currentDate, 1), 'YYYY-MM-DD').format('YYYY-MM-DD');
       this.data.endDate = moment(this.addDays(currentDate, 1), 'YYYY-MM-DD').format('YYYY-MM-DD');
       this.service.sorting(JSON.stringify(this.data));
     }
     if (sort === 'Next_Week') {
+      this.spinner.show();
       this.data.startDate = moment(this.addDays(currentDate, 1), 'YYYY-MM-DD').format('YYYY-MM-DD');
       this.data.endDate = moment(this.addDays(currentDate, 7), 'YYYY-MM-DD').format('YYYY-MM-DD');
       this.service.sorting(JSON.stringify(this.data));
     }
     if (sort === 'Next_30_days') {
+      this.spinner.show();
       this.data.startDate = moment(this.addDays(currentDate, 1), 'YYYY-MM-DD').format('YYYY-MM-DD');
       this.data.endDate = moment(this.addDays(currentDate, 30), 'YYYY-MM-DD').format('YYYY-MM-DD');
       this.service.sorting(JSON.stringify(this.data));
     }
+    if (sort === null) {
+      this.spinner.show();
+      this.service.resetFilter('reset');
+    }
   }
   onChangePrevious = (sort: string) => {
     if (sort === 'Yesderday') {
+      this.spinner.show();
       this.data.startDate = moment(this.substractDays(currentDate, 1), 'YYYY-MM-DD').format('YYYY-MM-DD');
       this.data.endDate = moment(this.substractDays(currentDate, 1), 'YYYY-MM-DD').format('YYYY-MM-DD');
       this.service.sorting(JSON.stringify(this.data));
     }
     if (sort === 'Last_week') {
+      this.spinner.show();
       this.data.startDate = moment(this.substractDays(currentDate, 7), 'YYYY-MM-DD').format('YYYY-MM-DD');
       this.data.endDate = moment(this.substractDays(currentDate, 1), 'YYYY-MM-DD').format('YYYY-MM-DD');
       this.service.sorting(JSON.stringify(this.data));
     }
     if (sort === 'last_30_days') {
+      this.spinner.show();
       this.data.startDate = moment(this.substractDays(currentDate, 30), 'YYYY-MM-DD').format('YYYY-MM-DD');
       this.data.endDate = moment(this.substractDays(currentDate, 1), 'YYYY-MM-DD').format('YYYY-MM-DD');
       this.service.sorting(JSON.stringify(this.data));
+    }
+    if (sort === null) {
+      this.spinner.show();
+      this.service.resetFilter('reset');
     }
   }
   addDays = (date: string | number | Date, days: number) => {

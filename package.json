@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "start:prod": "ng build --prod && angular-http-server -p 4040 -o --path dist/docstime",
+    "start:prod": "ng build --prod && angular-http-server -p 9091 -o --path dist/docstime",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",

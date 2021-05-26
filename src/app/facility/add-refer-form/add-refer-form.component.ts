@@ -227,11 +227,22 @@ export class AddReferFormComponent implements OnInit {
         distinctUntilChanged(),
         tap(() => this.loading = true),
         switchMap(term => this.service.doctorLists(term ? term.replace(/^\s+/g, '') : term).pipe(
-          map(res => res[0].data),
+          map(res => res[0].data.map((d) => {
+            return {
+              doctorAddress: d.doctorAddress,
+              doctorFirstName: d.doctorFirstName,
+              doctorFullName: `${d.doctorFullName}, ${d.degreeName}`,
+              doctorID: d.doctorID,
+              doctorLastName: d.doctorLastName,
+              doctorNPI: d.doctorNPI,
+              degreeID: d.degreeID,
+              degreeName: d.degreeName,
+            };
+          })),
           catchError(() => of([])), // empty list on error
           tap(() => this.loading = false)
         ))
-      )) as Observable<Array<Doctors>>;
+      )) as Observable<Doctors[]>;
   }
   getDoctorListsNPI = () => {
     this.doctorListNPI$ = concat(
@@ -252,19 +263,19 @@ export class AddReferFormComponent implements OnInit {
       })),
       catchError(() => of([])), // empty list on error
       tap(() => this.loadingDoctors = false)
-    ) as Observable<Array<Doctors>>;
+    ) as Observable<Doctors[]>;
   }
   onSearchByName = (term: string) => {
     return this.service.searchDoctorsNPI(term ? term.replace(/^\s+/g, '') : term).pipe(
       map(res => res[0].data.map(npi => {
         return {
-          doctorFullName: npi.doctorFullName,
+          doctorFullName: `${npi.doctorFullName}`,
           doctorNPI: npi.doctorNPI
         };
       })),
       catchError(() => of([])), // empty list on error
       tap(() => this.loadingDoctors = false)
-    ) as Observable<Array<Doctors>>;
+    ) as Observable<Doctors[]>;
   }
   trackByFnDoctor = (item: Doctor) => {
     return item.doctorID;
