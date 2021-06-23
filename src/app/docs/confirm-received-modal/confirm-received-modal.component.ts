@@ -189,10 +189,8 @@ export class ConfirmReceivedModalComponent implements OnInit {
         languageID: '1',
         refercaseID: this.refercaseID,
         facilityID: this.facilityID,
-        newDate: this.confirmForm.get('refercaseVisitDate').value ?
-        moment(this.confirmForm.get('refercaseVisitDate').value, 'YYYY-MM-DD').format('YYYY-MM-DD') : '',
-        newTime: this.confirmForm.get('refercaseVisitTime').value ?
-        moment(this.confirmForm.get('refercaseVisitTime').value, 'h:mm:ss A').format('HH:mm:ss') : '',
+        newDate: this.confirmForm.get('refercaseVisitDate').value ? moment(this.confirmForm.get('refercaseVisitDate').value, 'YYYY-MM-DD').format('YYYY-MM-DD') : '',
+        newTime: this.confirmForm.get('refercaseVisitTime').value ? moment(this.confirmForm.get('refercaseVisitTime').value, 'h:mm:ss A').format('HH:mm:ss') : '',
         doctorID: this.service.getDocLocal() ? this.service.getDocLocal().doctorID : this.service.getDocSession().doctorID
       };
       this.docService.acceptReferral(JSON.stringify(data)).subscribe(

@@ -125,13 +125,28 @@
                           <input type="text" id="nipi" formControlName="doctorNPI" name="doctorNPI" class="form-control"
                             readonly>
                         </div>
-                        <div class="form-group col-lg-4 col-md-6">
+                        <div class="form-group col-lg-8 col-md-6">
                           <label for="specialityList">Specialty<span class="required-field"></span></label>
-                          <ng-select [closeOnSelect]="true" [searchable]="true" appearance="outline"
-                            placeholder="Enter Speciality" formControlName="specialityIDs" class="custom"
-                            labelForId="specialityList" name="specialityName">
-                            <ng-option *ngFor="let spec of (specialityList$ | async)" [value]="spec.specialityID">
-                              {{spec.specialityName}}</ng-option>
+                          <ng-select 
+                          [items]="specialityList$ | async" 
+                          [multiple]="true"
+                          [closeOnSelect]="true" 
+                          [searchable]="true" 
+                          bindLabel="specialityName"
+                          bindValue="specialityID"
+                          placeholder="Enter Speciality" formControlName="specialityIDs" 
+                          class="custom2"
+                          labelForId="specialityList" 
+                          name="specialityName">
+                            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                              <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                <span class="ng-value-label">{{item.specialityName}}</span>
+                                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                              </div>
+                              <div class="ng-value" *ngIf="items.length > 2">
+                                <span class="ng-value-label">{{items.length - 2}} more...</span>
+                              </div>
+                            </ng-template>
                           </ng-select>
                           <small class="text-danger small"
                             *ngIf="profProfile.controls['specialityIDs'].hasError('required') && (profProfile.controls['specialityIDs'].dirty || profProfile.controls['specialityIDs'].touched)">Please

@@ -81,14 +81,12 @@ export class ConfirmedReceivedModalComponent implements OnInit {
     this.fullName = this.list[0].name ? this.list[0].name : '';
     this.convertedTime = this.list[0].convertedTime !== 'Undefined' && this.list[0].convertedTime ? this.list[0].convertedTime : '';
     this.genderAtZero = this.list[0].genderAtZero ? this.list[0].genderAtZero : '';
-    this.refercaseVisitDate = this.list[0].refercaseVisitDate !== 'Undefined' && this.list[0].refercaseVisitDate ?
-      this.list[0].refercaseVisitDate : '';
+    this.refercaseVisitDate = this.list[0].refercaseVisitDate !== 'Undefined' && this.list[0].refercaseVisitDate ? this.list[0].refercaseVisitDate : '';
     this.age = this.list[0].age ? this.list[0].age : '';
     this.reasonName = this.list[0].reasonName ? this.list[0].reasonName : '';
     this.refercaseID = this.list[0].refercaseID ? this.list[0].refercaseID : '';
     this.refSpecialityName = this.list[0].refSpecialityName ? this.list[0].refSpecialityName : '';
-    this.refercaseVisitTime = this.list[0].refercaseVisitTime !== 'Undefined' &&
-      this.list[0].refercaseVisitTime ? this.list[0].refercaseVisitTime : '';
+    this.refercaseVisitTime = this.list[0].refercaseVisitTime !== 'Undefined' && this.list[0].refercaseVisitTime ? this.list[0].refercaseVisitTime : '';
     this.facilityID = this.list[0].facilityID;
     this.doctorID = this.list[0].doctorID;
     // form data
@@ -191,10 +189,8 @@ export class ConfirmedReceivedModalComponent implements OnInit {
         languageID: '1',
         refercaseID: this.refercaseID,
         facilityID: this.service.getFaLocal() ? this.service.getFaLocal().facilityID : this.service.getFaSession().facilityID,
-        newDate: this.confirmForm.get('refercaseVisitDate').value ?
-        moment(this.confirmForm.get('refercaseVisitDate').value, 'YYYY-MM-DD').format('YYYY-MM-DD') : '',
-        newTime: this.confirmForm.get('refercaseVisitTime').value ?
-        moment(this.confirmForm.get('refercaseVisitTime').value, 'h:mm:ss A').format('HH:mm:ss') : '',
+        newDate: this.confirmForm.get('refercaseVisitDate').value ? moment(this.confirmForm.get('refercaseVisitDate').value, 'YYYY-MM-DD').format('YYYY-MM-DD') : '',
+        newTime: this.confirmForm.get('refercaseVisitTime').value ? moment(this.confirmForm.get('refercaseVisitTime').value, 'h:mm:ss A').format('HH:mm:ss') : '',
         doctorID: this.doctorID ? this.doctorID : '0'
       };
       this.facilityService.acceptReferral(JSON.stringify(data)).subscribe(

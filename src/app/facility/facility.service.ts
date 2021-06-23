@@ -45,6 +45,7 @@ export class FacilityService {
   private referralReceivedListsCount$: Observable<Array<ReceivedCount>>;
   // urls
   private changePasswordUrl = '/facilityuser/facilityuser-change-password';
+  private removeDoctorUrl = '/doctor/doctor-remove-request';
   private updateProfileUrl = '/facilityuser/facilityuser-update-profile';
   private updateInfoUrl = '/facilityuser/facility-update-profile';
   private uploadFileUrl = '/doctor/file-upload';
@@ -54,6 +55,7 @@ export class FacilityService {
   private referralSentUrl = '/refercase/refer-sent-list';
   private referralReceivedUrl = '/refercase/refer-received-list';
   private confirmReferralUrl = '/refercase/accept-case';
+  private validateNumberUrl = '/settings/validate-us-number';
   private rejectReferralUrl = '/refercase/reject-case';
   private createReferUrl = '/refercase/refer-new-case';
   private createreReferUrl = '/refercase/refer-existing-case';
@@ -158,6 +160,21 @@ export class FacilityService {
     form.append('json', json);
     return this.http
       .post<Array<DeleteResponse>>(environment.apiBaseUrl + this.deleteCaseUrl, form, this.httpOptions)
+      .pipe(shareReplay(), retry(2), catchError(this.handleError));
+  }
+  removeDoctor = (data: string): Observable<Array<DeleteResponse>> => {
+    const form = new FormData();
+    const json = `[{
+      "languageID":"${JSON.parse(data).languageID}",
+      "logindoctorID":"${JSON.parse(data).logindoctorID}",
+      "facilityID":"${JSON.parse(data).facilityID}",
+      "removeRemark":"${JSON.parse(data).removeRemark}",
+      "apiType":"Android",
+      "apiVersion":"1.0"
+    }]`;
+    form.append('json', json);
+    return this.http
+      .post<Array<DeleteResponse>>(environment.apiBaseUrl + this.removeDoctorUrl, form, this.httpOptions)
       .pipe(shareReplay(), retry(2), catchError(this.handleError));
   }
   searchDoctors = (searchWord: string): Observable<Array<Doctors>> => {
@@ -361,6 +378,10 @@ export class FacilityService {
       .post<Array<AddEditReReferResponse>>(environment.apiBaseUrl + `${this.editReferUrl}`, form, this.httpOptions)
       .pipe(shareReplay(), retry(2), catchError(this.handleError));
   }
+  destroyToday = () => {
+    this.todayAppontments$ = null;
+    this.reloadToday$.next();
+    }
   today = (data: string): Observable<Array<DashboardResponse>> => {
     if (!this.todayAppontments$) {
       const timer$ = timer(0, REFRESH_INTERVAL);
@@ -372,6 +393,10 @@ export class FacilityService {
     }
     return this.todayAppontments$;
   }
+  destroyOther = () => {
+    this.otherAppointments$ = null;
+    this.reloadOthers$.next();
+    }
   other = (data: string): Observable<Array<DashboardResponse>> => {
     if (!this.otherAppointments$) {
       const timer$ = timer(0, REFRESH_INTERVAL);
@@ -389,7 +414,7 @@ export class FacilityService {
       "facilityuserID": "${JSON.parse(data).facilityuserID}",
       "facilityID": "${JSON.parse(data).facilityID}",
       "languageID": "${JSON.parse(data).languageID}",
-      "refercaseStatus":"${JSON.parse(data).refercaseStatus}",
+      "refercaseStatus":"${JSON.parse(data).refercaseStatus ? JSON.parse(data).refercaseStatus : ''}",
       "patientName":"${JSON.parse(data).patientName}",
       "referbydoctorName":"${JSON.parse(data).referbydoctorName}",
       "insuranceNames":"${JSON.parse(data).insuranceNames}",
@@ -399,7 +424,7 @@ export class FacilityService {
       "refercaseVisitTime":"${JSON.parse(data).refercaseVisitTime}",
       "startDate":"${JSON.parse(data).startDate}",
       "endDate":"${JSON.parse(data).endDate}",
-      "apiType": "Android",
+      "apiType": "web",
       "apiVersion": "1.0"
     }]`;
     form.append('json', json);
@@ -413,7 +438,7 @@ export class FacilityService {
       "facilityuserID": "${JSON.parse(data).facilityuserID}",
       "facilityID": "${JSON.parse(data).facilityID}",
       "languageID": "${JSON.parse(data).languageID}",
-      "refercaseStatus":"${JSON.parse(data).refercaseStatus}",
+      "refercaseStatus":"${JSON.parse(data).refercaseStatus ? JSON.parse(data).refercaseStatus : ''}",
       "patientName":"${JSON.parse(data).patientName}",
       "referbydoctorName":"${JSON.parse(data).referbydoctorName}",
       "insuranceNames":"${JSON.parse(data).insuranceNames}",
@@ -423,13 +448,17 @@ export class FacilityService {
       "refercaseVisitTime":"${JSON.parse(data).refercaseVisitTime}",
       "startDate":"${JSON.parse(data).startDate}",
       "endDate":"${JSON.parse(data).endDate}",
-      "apiType": "Android",
+      "apiType": "web",
       "apiVersion": "1.0"
     }]`;
     form.append('json', json);
     return this.http
       .post<Array<DashboardResponse>>(environment.apiBaseUrl + `${this.homeUrl}`, form, this.httpOptions)
       .pipe(retry(2), catchError(this.handleError));
+  }
+  destroyUpcoming = () => {
+    this.referralReceivedUpcomming$ = null;
+    this.reloadUpcomming$.next();
   }
   referralReceivedUpcomming = (data: string): Observable<Array<ReceivedResponse>> => {
     if (!this.referralReceivedUpcomming$) {
@@ -442,6 +471,10 @@ export class FacilityService {
     }
     return this.referralReceivedUpcomming$;
   }
+  destroyPrivious = () => {
+    this.referralReceivedPrivious$ = null;
+    this.reloadPrivious$.next();
+  }
   referralReceivedPrivious = (data: string): Observable<Array<ReceivedResponse>> => {
     if (!this.referralReceivedPrivious$) {
       const timer$ = timer(0, REFRESH_INTERVAL);
@@ -453,6 +486,10 @@ export class FacilityService {
     }
     return this.referralReceivedPrivious$;
   }
+  destroyCancelled = () => {
+    this.referralCancelled$ = null;
+    this.reloadCancelled$.next();
+  }
   referralCancelled = (data: string): Observable<Array<ReceivedResponse>> => {
     if (!this.referralCancelled$) {
       const timer$ = timer(0, REFRESH_INTERVAL);
@@ -463,6 +500,10 @@ export class FacilityService {
       );
     }
     return this.referralCancelled$;
+  }
+  destroyReceivedAll = () => {
+    this.referralReceivedListsAll$ = null;
+    this.reloadReceivedAll$.next();
   }
   referralReceivedAll = (data: string): Observable<Array<ReceivedResponse>> => {
     if (!this.referralReceivedListsAll$) {
@@ -478,11 +519,11 @@ export class FacilityService {
   referralReceivedLists(data: string): Observable<Array<ReceivedResponse>> {
     const form = new FormData();
     const json = `[{
-      "apiType":"Android",
+      "apiType":"web",
       "apiVersion":"1.0",
       "languageID":"${JSON.parse(data).languageID}",
       "facilityID":"${JSON.parse(data).facilityID}",
-      "refercaseStatus":"${JSON.parse(data).refercaseStatus}",
+      "refercaseStatus":"${JSON.parse(data).refercaseStatus ? JSON.parse(data).refercaseStatus : ''}",
       "patientName":"${JSON.parse(data).patientName}",
       "referbydoctorName":"${JSON.parse(data).referbydoctorName}",
       "insuranceNames":"${JSON.parse(data).insuranceNames}",
@@ -515,7 +556,7 @@ export class FacilityService {
   referralReceivedListsForCount(data: string): Observable<any> {
     const form = new FormData();
     const json = `[{
-      "apiType":"Android",
+      "apiType":"web",
       "apiVersion":"1.0",
       "languageID":"${JSON.parse(data).languageID}",
       "facilityID":"${JSON.parse(data).facilityID}",
@@ -530,6 +571,10 @@ export class FacilityService {
     return this.http
       .post<any>(environment.apiBaseUrl + `${this.referralReceivedUrl}`, form, this.httpOptions)
       .pipe(retry(2), catchError(this.handleError));
+  }
+  destroySentList = () => {
+    this.referralSentLists$ = null;
+    this.reloadSentList$.next();
   }
   referralSent = (data: string): Observable<Array<SentResponse>> => {
     if (!this.referralSentLists$) {
@@ -592,6 +637,19 @@ export class FacilityService {
     return this.http
       .post<Array<NotifyResponse>>(environment.apiBaseUrl + `${this.notifyListsUrl}`, form, this.httpOptions)
       .pipe(catchError(this.handleError));
+  }
+  validateNumber = (data: string): Observable<{ status: string }> => {
+    const form = new FormData();
+    const json = `[{
+      "apiType": "Android",
+      "apiVersion": "1.0",
+      "languageID": "${JSON.parse(data).languageID}",
+      "mobile": "${JSON.parse(data).mobile}"
+    }]`;
+    form.append('json', json);
+    return this.http
+      .post<{ status: string }>(environment.apiBaseUrl + `${this.validateNumberUrl}`, form, this.httpOptions)
+      .pipe(map(r => r[0]), shareReplay(), retry(2), catchError(this.handleError));
   }
   referralReceived(data: string): Observable<any> {
     const form = new FormData();

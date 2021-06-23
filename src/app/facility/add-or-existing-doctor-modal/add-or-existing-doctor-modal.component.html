@@ -55,25 +55,21 @@
         </select> -->
           <label for="mobile" class="text-uppercase text-primary">Phone Number<span
               class="required-field"></span></label>
-          <input type="text" maxlength="10" id="mobile" placeholder="Enter Phone number" formControlName="doctorMobile" class="form-control" name="mobile" required />
+          <input type="text" mask="(000) 000-0000" id="mobile" maxlength="14" placeholder="Enter Phone number" formControlName="doctorMobile" class="form-control" name="mobile" required />
           <small class="text-danger small"
             *ngIf=" addDoctorForm.controls['doctorMobile'].hasError('required') && (addDoctorForm.controls['doctorMobile'].dirty || addDoctorForm.controls['doctorMobile'].touched)">Please
             enter phone number.</small>
-          <small class="text-danger small"
-            *ngIf="addDoctorForm.controls['doctorMobile'].hasError('pattern') && (addDoctorForm.controls['doctorMobile'].dirty || addDoctorForm.controls['doctorMobile'].touched)">Phone
-            number must be only 10 digit.</small>
+          <small class="text-danger small" *ngIf="addDoctorForm.controls.doctorMobile.errors">{{addDoctorForm.controls.doctorMobile.errors.message}}</small>
           <small class="text-danger" *ngIf="addDoctorForm.controls['doctorMobile'].hasError('mobileExist')">Phone number already exist.</small>
         </div>
         <div class="form-group">
           <label for="Fax" class="text-uppercase text-primary">Fax Number<span class="required-field"></span></label>
-          <input type="text" maxlength="10" formControlName="doctorFax" id="Fax" class="form-control" name="Fax"
+          <input type="text" mask="(000) 000-0000" maxlength="14" formControlName="doctorFax" id="Fax" class="form-control" name="Fax"
             placeholder="Enter Fax number" value="" required />
           <small class="text-danger small"
             *ngIf=" addDoctorForm.controls['doctorFax'].hasError('required') && (addDoctorForm.controls['doctorFax'].dirty || addDoctorForm.controls['doctorFax'].touched)">Please
             enter fax.</small>
-          <small class="text-danger small"
-            *ngIf="addDoctorForm.controls['doctorFax'].hasError('pattern') && (addDoctorForm.controls['doctorFax'].dirty || addDoctorForm.controls['doctorFax'].touched)">Fax
-            Number must be only 10 digit.</small>
+          <small class="text-danger small" *ngIf="addDoctorForm.controls.doctorFax.errors">{{addDoctorForm.controls.doctorFax.errors.message}}</small>
         </div>
         <div class="form-group">
           <label for="Gender" class="text-uppercase text-primary">Gender<span class="required-field"></span></label>

@@ -36,12 +36,8 @@ export class PreviousAppointmentComponent implements OnInit {
     this.refSpecialityName = this.refSpecialityName ? `/${this.refSpecialityName}` : '';
     this.genderAtZero = this.patientGender ? this.patientGender.charAt(0) : '';
     this.preFixDRstr = this.doctorFullName.substr(0, 3);
-    this.fullName = this.patientFirstName && this.patientLastName ?
-      `${this.patientFirstName} ${this.patientLastName}`
-      : this.patientFirstName && !this.patientLastName ?
-        this.patientFirstName : !this.patientFirstName && this.patientLastName ? this.patientLastName : '';
-    this.convertedTime = this.refercaseVisitTime !== null && this.refercaseVisitTime !== undefined && this.refercaseVisitTime ?
-      this.tConvert(this.refercaseVisitTime) : '';
+    this.fullName = this.patientFirstName && this.patientLastName ? `${this.patientFirstName} ${this.patientLastName}` : this.patientFirstName && !this.patientLastName ? this.patientFirstName : !this.patientFirstName && this.patientLastName ? this.patientLastName : '';
+    this.convertedTime = this.refercaseVisitTime !== null && this.refercaseVisitTime !== undefined && this.refercaseVisitTime ? this.tConvert(this.refercaseVisitTime) : '';
     this.url = `${this.baseUrl}/doctor/${this.doctorProfileImage}`;
     this.cd.markForCheck();
   }

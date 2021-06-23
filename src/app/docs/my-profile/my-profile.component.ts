@@ -9,6 +9,7 @@ import * as moment from 'moment';
 import { environment } from 'src/environments/environment';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { VerificationComponent } from './verification/verification.component';
+import { Speciality } from 'src/app/facility/docs.interface';
 interface ChangeEmailMobile {
   logindoctorID: string;
   changeDoctorMobile: string;
@@ -56,38 +57,24 @@ export class MyProfileComponent implements OnInit {
     this.cd.markForCheck();
     // form Data
     this.basicProfile = this.fb.group({
-      doctorFullName: [this.docData.doctorFullName ? this.docData.doctorFullName : '',
-      Validators.compose([Validators.required])],
-      doctorEmail: [this.docData.doctorEmail ? this.docData.doctorEmail : '', Validators.compose([Validators.required,
-      Validators.pattern(
-        /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      ),
-      ])],
+      doctorFullName: [this.docData.doctorFullName ? this.docData.doctorFullName : '', Validators.compose([Validators.required])],
+      doctorEmail: [this.docData.doctorEmail ? this.docData.doctorEmail : '', Validators.compose([Validators.required, Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)])],
       doctorDOB: [this.docData.doctorDOB ? this.docData.doctorDOB : '', Validators.compose([])],
-      doctorFax: [this.docData.doctorFax ? this.docData.doctorFax
-        .split('(').join('-').split(')').join('-').split('-').join(' ').trim().split(' ').join('') : '',
-      Validators.compose([Validators.required, Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')])],
-      doctorGender: [this.docData.doctorGender ? this.docData.doctorGender : '',
-      Validators.compose([Validators.required])],
+      doctorFax: [this.docData.doctorFax ? this.docData.doctorFax.split('(').join('-').split(')').join('-').split('-').join(' ').trim().split(' ').join('') : '', Validators.compose([Validators.required, Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')])],
+      doctorGender: [this.docData.doctorGender ? this.docData.doctorGender : '', Validators.compose([Validators.required])],
       doctorAbout: [this.docData.doctorAbout ? this.docData.doctorAbout : ''],
       doctorAddress: [this.docData.doctorAddress ? this.docData.doctorAddress : ''],
       doctorProfileImage: [this.docData.doctorProfileImage ? this.docData.doctorProfileImage : ''],
       doctorFirstName: [this.docData.doctorFirstName ? this.docData.doctorFirstName : ''],
       doctorLastName: [this.docData.doctorLastName ? this.docData.doctorLastName : ''],
-      doctorMobile: [this.docData.doctorMobile ? this.docData.doctorMobile
-        .split('(').join('-').split(')').join('-').split('-').join(' ').trim().split(' ').join('') : '',
-      Validators.compose([Validators.required,
-      Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')
-      ])],
-      userCountryCode: [this.countryCodeOptions[0].code, Validators.compose([
-        Validators.required
-      ])],
+      doctorMobile: [this.docData.doctorMobile ? this.docData.doctorMobile.split('(').join('-').split(')').join('-').split('-').join(' ').trim().split(' ').join('') : '', Validators.compose([Validators.required, Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')])],
+      userCountryCode: [this.countryCodeOptions[0].code, Validators.compose([Validators.required])],
     });
     this.profProfile = this.fb.group({
-      specialityIDs: [this.docData.specialityIDs && this.docData.specialityIDs !== 'undefined' && this.docData.specialityIDs !== '0' ?
-        this.docData.specialityIDs : null, Validators.compose([Validators.required])],
-      degreeID: [this.docData.degreeID && this.docData.degreeID !== 'undefined' && this.docData.degreeID !== '0' ?
-        this.docData.degreeID : null, Validators.compose([Validators.required])],
+      specialityIDs: [this.docData.specialityIDs && this.docData.specialityIDs !== 'undefined' && this.docData.specialityIDs !== '0' ? this.docData.specialityIDs.split(',').map((s: string) => {
+        return s;
+      }) : null, Validators.compose([Validators.required])],
+      degreeID: [this.docData.degreeID && this.docData.degreeID !== 'undefined' && this.docData.degreeID !== '0' ? this.docData.degreeID : null, Validators.compose([Validators.required])],
       doctorNPI: [this.docData.doctorNPI ? this.docData.doctorNPI : ''],
       facilityName: [this.docData.facilityName ? this.docData.facilityName : ''],
       facility: [this.docData.facility.length > 0 ? this.convertFacilityString(this.docData.facility) : '']
@@ -103,27 +90,26 @@ export class MyProfileComponent implements OnInit {
   }
 
   onUpdateBasicClick = (post: any) => {
-    if (post.doctorEmail !== this.docData.doctorEmail ||
-      post.doctorMobile !== this.docData.doctorMobile
-        .split('(').join('-').split(')').join('-').split('-').join(' ').trim().split(' ').join('')) {
+    if (post.doctorEmail !== this.docData.doctorEmail || post.doctorMobile !== this.docData.doctorMobile.split('(').join('-').split(')').join('-').split('-').join(' ').trim().split(' ').join('')) {
       this.onVerifyChange();
     } else {
       this.updateBasic(post);
     }
   }
   updateBasic = (post: any) => {
-    post.doctorProfileImage = this.service.getDocLocal() ? this.service.getDocLocal().doctorProfileImage :
-      this.service.getDocSession().doctorProfileImage;
+    post.doctorProfileImage = this.service.getDocLocal() ? this.service.getDocLocal().doctorProfileImage : this.service.getDocSession().doctorProfileImage;
     this.updateDocProfile(post).then((response: Array<any>) => {
       if (response.length > 0) {
-        this.service.getDocLocal() ? this.service.setDocLocal(JSON.stringify(response[0]))
-          : this.service.setDocSession(JSON.stringify(response[0]));
+        this.service.getDocLocal() ? this.service.setDocLocal(JSON.stringify(response[0])) : this.service.setDocSession(JSON.stringify(response[0]));
         setTimeout(() => {
           this.spinner.hide();
           this.ngOnInit();
           this.cd.markForCheck();
           this.service.nextCount(response[0].doctorFullName);
-          this.toastr.success('Profile updated successfully');
+          this.toastr.success('Profile updated successfully', '', {
+            positionClass: 'toast-center-center-request',
+            timeOut: 1500
+          });
         }, 500);
       } else {
         this.spinner.hide();
@@ -136,12 +122,10 @@ export class MyProfileComponent implements OnInit {
     });
   }
   onUpdateProfessionalClick = (post: any) => {
-    post.doctorProfileImage = this.service.getDocLocal() ? this.service.getDocLocal().doctorProfileImage :
-      this.service.getDocSession().doctorProfileImage;
+    post.doctorProfileImage = this.service.getDocLocal() ? this.service.getDocLocal().doctorProfileImage : this.service.getDocSession().doctorProfileImage;
     this.updateDocProfile(post).then((response: Array<any>) => {
       if (response.length > 0) {
-        this.service.getDocLocal() ? this.service.setDocLocal(JSON.stringify(response[0]))
-          : this.service.setDocSession(JSON.stringify(response[0]));
+        this.service.getDocLocal() ? this.service.setDocLocal(JSON.stringify(response[0])) : this.service.setDocSession(JSON.stringify(response[0]));
         setTimeout(() => {
           this.spinner.hide();
           this.ngOnInit();
@@ -170,14 +154,13 @@ export class MyProfileComponent implements OnInit {
         const data = {
           languageID: '1',
           logindoctorID: this.docData.doctorID,
-          doctorDOB: this.basicProfile.get('doctorDOB').value ?
-            moment(this.basicProfile.get('doctorDOB').value).format('YYYY-MM-DD') : '',
+          doctorDOB: this.basicProfile.get('doctorDOB').value ? moment(this.basicProfile.get('doctorDOB').value).format('YYYY-MM-DD') : '',
           doctorFullName: post.doctorFullName ? post.doctorFullName : this.basicProfile.get('doctorFullName').value,
           doctorEmail: post.doctorEmail ? post.doctorEmail : this.basicProfile.get('doctorEmail').value,
           doctorMobile: post.doctorMobile ? post.doctorMobile : this.basicProfile.get('doctorMobile').value,
           doctorFirstName: post.doctorFirstName ? post.doctorFirstName : this.basicProfile.get('doctorFirstName').value,
           doctorLastName: post.doctorLastName ? post.doctorLastName : this.basicProfile.get('doctorLastName').value,
-          specialityIDs: post.specialityIDs ? post.specialityIDs : this.profProfile.get('specialityIDs').value,
+          specialityIDs: post.specialityIDs.length > 0 ? post.specialityIDs.join(',') : this.profProfile.get('specialityIDs').value,
           doctorGender: post.doctorGender ? post.doctorGender : this.basicProfile.get('doctorGender').value,
           doctorFax: post.doctorFax ? post.doctorFax : this.basicProfile.get('doctorFax').value,
           doctorProfileImage: post.doctorProfileImage ? post.doctorProfileImage : this.basicProfile.get('doctorProfileImage').value,
@@ -197,7 +180,10 @@ export class MyProfileComponent implements OnInit {
       }
     });
   }
-
+  specialIDconvert = (post: Speciality[]) => {
+    const specials = post.map((spc: Speciality) => spc.specialityID);
+    return specials.toString();
+  }
   findInvalidControlsBasic = () => {
     const invalid = [];
     const controls = this.basicProfile.controls;
@@ -239,8 +225,7 @@ export class MyProfileComponent implements OnInit {
       this.spinner.show();
       if (event.target.files[0].size <= this.maxSize) {
         this.selectedFiles = event.target.files[0] as File;
-        await this.uploadFiles(this.selectedFiles)
-          .then((fulFilled) => {
+        await this.uploadFiles(this.selectedFiles).then((fulFilled) => {
             const reader = new FileReader();
             reader.readAsDataURL(this.selectedFiles);
             reader.onload = () => {
@@ -248,8 +233,7 @@ export class MyProfileComponent implements OnInit {
               this.cd.markForCheck();
             };
             this.updateLogo(fulFilled[0].fileName);
-          })
-          .catch((error) => {
+          }).catch((error) => {
             this.spinner.hide();
             console.error(error);
           });
@@ -290,8 +274,7 @@ export class MyProfileComponent implements OnInit {
     this.docService.updateProfilePic(JSON.stringify(data)).subscribe((response) => {
       if (response[0].status === 'true') {
         this.docData = response[0].data[0];
-        this.service.getDocLocal() ? this.service.setDocLocal(JSON.stringify(response[0].data[0]))
-          : this.service.setDocSession(JSON.stringify(response[0].data[0]));
+        this.service.getDocLocal() ? this.service.setDocLocal(JSON.stringify(response[0].data[0])) : this.service.setDocSession(JSON.stringify(response[0].data[0]));
         this.toastr.success('Profile Picture Updated');
         this.service.nextCount(response[0].data[0].doctorProfileImage);
         this.spinner.hide();
@@ -313,11 +296,9 @@ export class MyProfileComponent implements OnInit {
       changeDoctorEmail: this.basicProfile.get('doctorEmail').value,
       changeDoctorMobile: this.basicProfile.get('doctorMobile').value,
       changeDoctorOldEmail: this.docData.doctorEmail,
-      changeDoctorOldMobile: this.docData.doctorMobile
-        .split('(').join('-').split(')').join('-').split('-').join(' ').trim().split(' ').join(''),
+      changeDoctorOldMobile: this.docData.doctorMobile.split('(').join('-').split(')').join('-').split('-').join(' ').trim().split(' ').join(''),
     };
-    this.verifyChange(JSON.stringify(data))
-      .then((res: boolean) => {
+    this.verifyChange(JSON.stringify(data)).then((res: boolean) => {
         if (res) {
           this.openVerification(data);
         }

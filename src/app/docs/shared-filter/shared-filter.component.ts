@@ -122,13 +122,13 @@ export class SharedFilterComponent implements OnInit, DoCheck {
   genders = ['Male', 'Female'];
   statusSent = [
     { label: 'Confirmed', value: 'Accepted' },
-    { label: 'Unconfirmed', value: 'Pending' },
+    { label: 'Pending', value: 'Pending' },
     { label: 'Rejected', value: 'Rejected' },
     { label: 'Expired', value: 'Expired' }
   ];
   statusReceived = [
     { label: 'Confirmed', value: 'Accepted' },
-    { label: 'Unconfirmed', value: 'Pending' },
+    { label: 'Pending', value: 'Pending' },
     { label: 'Cancelled', value: 'Cancelled' },
     { label: 'Expired', value: 'Expired' }
   ];

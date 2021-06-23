@@ -1,7 +1,7 @@
 <div class="appointmen-list card mb-3">
-    <div class="row align-items-center">
-        <div class="col-md-12 text-appont">
-            <a (click)="onClickView(wholeObject)" style="cursor: pointer;color: #007bff" class="d-flex align-items-center">
+    <div class="row align-items-center" style="cursor: pointer;color: #007bff" (click)="onClickView(wholeObject)">
+        <div class="col-md-8 text-appont">
+            <a class="d-flex align-items-center">
                 <div class="img-candate">
                     <img [defaultImage]="'assets/img/user-icon.png'" [lazyLoad]="url" [errorImage]="'assets/img/user-icon.png'"
                         alt="candidate">
@@ -11,6 +11,14 @@
                     <p class="text-dark mb-0" *ngIf="specialityName && specialityName !== null && specialityName !== undefined">
                         <span>{{specialityName}}</span></p>
                 </div>
+            </a>
+        </div>
+        <div class="col-md-4 text-appont">
+            <a *ngIf="wholeObject.facilityID !== facilityID && !wholeObject.isPending" title="Delete" (click)="onDelete(wholeObject.doctorID); $event.stopPropagation();" style="cursor: pointer;color: #dd5709; float: right;" class="d-flex align-items-center">
+                <i class="fa fa-trash" aria-hidden="true"></i>
+            </a>
+            <a *ngIf="wholeObject.facilityID !== facilityID && wholeObject.isPending" title="Pending" style="color: #dd5709; float: right;" class="d-flex align-items-center">
+                <i class="fa fa-clock-o" aria-hidden="true"></i>&nbsp;Pending
             </a>
         </div>
     </div>

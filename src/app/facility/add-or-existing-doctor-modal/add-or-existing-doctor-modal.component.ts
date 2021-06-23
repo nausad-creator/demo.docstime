@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormArray, AbstractControl, ValidationErrors } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
@@ -54,25 +54,22 @@ export class AddOrExistingDoctorModalComponent implements OnInit {
     this.status = this.list[0].status;
     // for add-doctor
     this.addDoctorForm = this.fb.group({
-      doctorEmail: [this.list[0].email ? this.list[0].email : '', Validators.compose([Validators.required, Validators.pattern(
-        /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)])],
+      doctorEmail: [this.list[0].email ? this.list[0].email : '', Validators.compose([Validators.required, Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)])],
       doctorFullName: [this.list[0].fullName ? this.list[0].fullName : ''],
       doctorFirstName: [this.list[0].first_name ? this.list[0].first_name : ''],
       doctorLastName: [this.list[0].last_name ? this.list[0].last_name : ''],
       doctorGender: [this.list[0].gender ? this.list[0].gender : ''],
-      doctorMobile: [this.list[0].contact ? this.list[0].contact : '', Validators.compose([Validators.required, Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')])],
+      doctorMobile: [this.list[0].contact ? this.formatMobileNumberAndFax(this.list[0].contact) : '', Validators.compose([Validators.required, this.customValidatorUSnumber])],
       doctorProfileImage: [this.list[0].profile ? this.list[0].profile : ''],
       doctorNPI: [this.list[0].npiNumber ? this.list[0].npiNumber : ''],
-      doctorFax: [this.list[0].faxNumber ? this.list[0].faxNumber : '', Validators.compose([Validators.required, Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')])],
+      doctorFax: [this.list[0].faxNumber ? this.formatMobileNumberAndFax(this.list[0].faxNumber) : '', Validators.compose([Validators.required, this.customValidatorUSFAXnumber])],
       doctorAddress: [this.list[0].address ? this.list[0].address : '', Validators.required],
       doctorPassword: [''],
       facilityID: [''],
       specialityIDs: [null, Validators.required],
       degreeID: [null, Validators.required],
       languageID: ['1'],
-      userCountryCode: [this.countryCodeOptions[0].code, Validators.compose([
-        Validators.required
-      ])],
+      userCountryCode: [this.countryCodeOptions[0].code, Validators.compose([Validators.required])],
     });
     // for edit-doctor
     this.editDoctorForm = this.fb.group({
@@ -81,10 +78,10 @@ export class AddOrExistingDoctorModalComponent implements OnInit {
       doctorFirstName: [this.list[0].first_name ? this.list[0].first_name : ''],
       doctorLastName: [this.list[0].last_name ? this.list[0].last_name : ''],
       doctorGender: [this.list[0].gender ? this.list[0].gender : ''],
-      doctorMobile: [this.list[0].contact ? this.list[0].contact : ''],
+      doctorMobile: [this.list[0].contact ? this.formatMobileNumberAndFax(this.list[0].contact) : ''],
       doctorProfileImage: [this.list[0].profile ? this.list[0].profile : ''],
       doctorNPI: [this.list[0].npiNumber ? this.list[0].npiNumber : ''],
-      doctorFax: [this.list[0].faxNumber ? this.list[0].faxNumber : ''],
+      doctorFax: [this.list[0].faxNumber ? this.formatMobileNumberAndFax(this.list[0].faxNumber) : ''],
       doctorAddress: [this.list[0].address ? this.list[0].address : ''],
       doctorPassword: [''],
       facilityID: [this.service.getFaLocal() ? this.service.getFaLocal().facilityID : this.service.getFaSession().facilityID],
@@ -103,13 +100,56 @@ export class AddOrExistingDoctorModalComponent implements OnInit {
     this.specialityList$ = this.service.getSpecility;
     this.cd.markForCheck();
   }
+  customValidatorUSnumber(control: AbstractControl): ValidationErrors {
+    const error = {
+      name: '',
+      message: ''
+    };
+    const phoneRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+    if (control.value !== '') {
+      if (!phoneRegex.test(control.value)) {
+        control.value.replace(phoneRegex, '($1) $2-$3');
+        error.name = 'invalidPhone';
+        error.message = 'Phone number must be only 10 digit.';
+        return error;
+      }
+      return null;
+    }
+    return null;
+  }
+  customValidatorUSFAXnumber(control: AbstractControl): ValidationErrors {
+    const error = {
+      name: '',
+      message: ''
+    };
+    const phoneRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+    if (control.value !== '') {
+      if (!phoneRegex.test(control.value)) {
+        control.value.replace(phoneRegex, '($1) $2-$3');
+        error.name = 'invalidPhone';
+        error.message = 'Fax number must be only 10 digit.';
+        return error;
+      }
+      return null;
+    }
+    return null;
+  }
+  formatMobileNumberAndFax = (text: string) => {
+    const cleaned = ('' + text).replace(/\D/g, '');
+    const match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
+    if (match) {
+      const intlCode = match[1] ? '+1 ' : '';
+      const n = [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('');
+      return n;
+    }
+    return text;
+  }
   onCloseSignup = () => {
     this.bsModalRef.hide();
   }
   onChangeCode = (code: string) => {
     this.flag = this.countryCodeOptions.filter((data) => data.code === code)[0].flag;
   }
-
   onSubmitAdd = async (post: any) => {
     this.markFormTouched(this.addDoctorForm);
     const invalidinput = this.findInvalidControlsAdd();
@@ -118,7 +158,7 @@ export class AddOrExistingDoctorModalComponent implements OnInit {
       const data = {
         logindoctorID: '0',
         doctorEmail: post.doctorEmail,
-        doctorMobile: post.doctorMobile,
+        doctorMobile: post.doctorMobile.match(/\d/g).join(''),
         languageID: '1',
       };
       await this.duplicate(JSON.stringify(data)).then(async (response: Array<any>) => {
@@ -150,7 +190,7 @@ export class AddOrExistingDoctorModalComponent implements OnInit {
     const json = {
       languageID: '1',
       logindoctorID: this.list[0].doctorID ? this.list[0].doctorID : '',
-      doctorEmailMobile: this.list[0].contact ? this.list[0].contact : this.list[0].email
+      doctorEmailMobile: this.list[0].contact ? this.list[0].contact.match(/\d/g).join('') : this.list[0].email
     };
     this.service.doctorResendOTP(JSON.stringify(json)).subscribe(
       (response) => {
@@ -183,10 +223,10 @@ export class AddOrExistingDoctorModalComponent implements OnInit {
       doctorFirstName: post.doctorFirstName.trim(),
       doctorLastName: post.doctorLastName.trim(),
       doctorGender: this.list[0].gender,
-      doctorMobile: post.doctorMobile,
+      doctorMobile: post.doctorMobile.match(/\d/g).join(''),
       doctorProfileImage: this.name ? this.name : '',
       doctorNPI: post.doctorNPI,
-      doctorFax: post.doctorFax,
+      doctorFax: post.doctorFax.match(/\d/g).join(''),
       doctorAddress: post.doctorAddress,
       specialityIDs: post.specialityIDs,
       degreeID: post.degreeID,
@@ -195,7 +235,7 @@ export class AddOrExistingDoctorModalComponent implements OnInit {
       languageID: '1'
     };
     this.register(JSON.stringify(data)).then((res) => {
-      this.list[0].docaddressFaxNo = post.doctorFax;
+      this.list[0].docaddressFaxNo = post.doctorFax.match(/\d/g).join('');
       this.list[0].logindoctorID = res[0].doctorID;
       this.list[0].languageID = '1';
       this.addAddress(JSON.stringify(this.list[0])).then(() => {

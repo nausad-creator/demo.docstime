@@ -49,15 +49,14 @@
                   <div class="col-sm-6">
                     <div class="form-group">
                       <label for="mobile">Mobile Number<span class="required-field"></span></label>
-                      <input class="form-control" oninput="this.value = this.value.replace(/^\s+/g, '')" maxlength="10"
-                        pattern="[1-9]{1}[0-9]{9}" formControlName="patientMobile" name="patientMobile" id="mobile"
+                      <input class="form-control" mask="(000) 000-0000" maxlength="14" formControlName="patientMobile" name="patientMobile" id="mobile"
                         type="text" placeholder="Enter mobile number" required>
                       <small class="text-danger small"
                         *ngIf=" referCaseForm.controls['patientMobile'].hasError('required') && (referCaseForm.controls['patientMobile'].dirty || referCaseForm.controls['patientMobile'].touched)">Please
                         enter mobile number</small>
+                      <small class="text-danger small" *ngIf="referCaseForm.controls.patientMobile.errors">{{referCaseForm.controls.patientMobile.errors.message}}</small>
                       <small class="text-danger small"
-                        *ngIf="referCaseForm.controls['patientMobile'].hasError('pattern') && (referCaseForm.controls['patientMobile'].dirty || referCaseForm.controls['patientMobile'].touched)">Mobile
-                        number must be only 10 digit</small>
+                            *ngIf="referCaseForm.controls['patientMobile'].hasError('errPhone')">Please enter valid USA number.</small>
                     </div>
                   </div>
                   <div class="col-sm-6">
@@ -235,11 +234,10 @@
                           <label class="custom-control-label cursr"
                             for="doc{{document.documenttypeID}}">{{document.documenttypeName | titlecase}}</label>
                         </div>
-                        <div class="custom-file-upload mt-3">
-                          <input type="file" accept="image/*" multiple [disabled]="!document.checked"
-                            (change)="onSelectFile($event, document.documenttypeID)" class="custom-file-input d-none"
-                            id="customFile{{document.documenttypeID}}">
-                          <label class="custom-file-label2 cursr" for="customFile{{document.documenttypeID}}"><i
+                        <div class="custom-file-upload mt-3" [ngClass]="{'cursr': document.checked}" (click)="fileUpload.click()">
+                          <input type="file" accept="image/*" multiple [disabled]="!document.checked" #fileUpload
+                          (click)="$event.target.value=null" (change)="onSelectFile($event, document.documenttypeID)" class="custom-file-input d-none">
+                          <label class="custom-file-label2" [ngClass]="{'cursr': document.checked}"><i
                               class="ti-cloud-up"></i>
                             <p>Upload</p>
                           </label>

@@ -131,8 +131,8 @@
                     <h *ngIf="item.ImageData.length > 0">{{item.documenttypeName}}</h>
                     <div *ngIf="item.ImageData.length > 0">
                       <a style="cursor: pointer;" *ngFor="let url of item.ImageData"><img
-                          style="width: 171px; height: 163px; margin-bottom: 3px; display: inline; margin: 0px; border: 1px solid #ced4da; cursor:pointer; border-radius: .25rem;" defaultImage="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAUFBQUFBQYGBgYICQgJCAwLCgoLDBINDg0ODRIbERQRERQRGxgdGBYYHRgrIh4eIisyKigqMjw2NjxMSExkZIYBCgoKCgoKCwwMCw8RDxEPFxUTExUXIhkaGRoZIjQhJiEhJiE0LjguKy44LlNBOjpBU2BRTFFgdGhodJOLk8DA///AABEIAAUABQMBEQACEQEDEQH/xABcAAEAAAAAAAAAAAAAAAAAAAAHEAEAAgEFAAAAAAAAAAAAAAACAQMRAAQFB0EBAQEAAAAAAAAAAAAAAAAAAAMEEQAABQUAAAAAAAAAAAAAAAAAAQIDQRITISKR/9oADAMBAAIRAxEAPwAZjt2+oGm3hNumMwmLmIUx7ic6mtPQ/iNSC1plsuj/2Q==" [lazyLoad]="url"
-                          offset="300" [errorImage]="'assets/img/error_not_found.png'" alt="note" title="uploaded file"
+                          style="width: 171px; height: 163px; margin-bottom: 5px; display: inline; border: 1px solid #ced4da; cursor:pointer; border-radius: .25rem;" defaultImage="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAUFBQUFBQYGBgYICQgJCAwLCgoLDBINDg0ODRIbERQRERQRGxgdGBYYHRgrIh4eIisyKigqMjw2NjxMSExkZIYBCgoKCgoKCwwMCw8RDxEPFxUTExUXIhkaGRoZIjQhJiEhJiE0LjguKy44LlNBOjpBU2BRTFFgdGhodJOLk8DA///AABEIAAUABQMBEQACEQEDEQH/xABcAAEAAAAAAAAAAAAAAAAAAAAHEAEAAgEFAAAAAAAAAAAAAAACAQMRAAQFB0EBAQEAAAAAAAAAAAAAAAAAAAMEEQAABQUAAAAAAAAAAAAAAAAAAQIDQRITISKR/9oADAMBAAIRAxEAPwAZjt2+oGm3hNumMwmLmIUx7ic6mtPQ/iNSC1plsuj/2Q==" [lazyLoad]="url"
+                          offset="100" [errorImage]="'assets/img/error_not_found.png'" alt="note" title="uploaded file"
                           (click)="openImage(url)"></a>
                     </div>
                   </div>
@@ -167,7 +167,7 @@
                 <div class="text-primary" style="float: left; margin-top: 10px;"><img src="assets/img/done.svg" alt=""
                     height="15px">Completed</div>
               </div>
-              <a style="cursor: pointer; float: right;" (click)="onClickRereferSchedule(caseViewData)"
+              <a style="cursor: pointer; float: right;" *ngIf="caseViewData.refercaseStatus !== 'Pending'" (click)="onClickRereferSchedule(caseViewData)"
                 [ngClass]="{'btn-outline-primary' : caseViewData.refercaseReRefferred === 'No', 'btn disabled' : caseViewData.refercaseReRefferred === 'Yes' || caseViewData.refercaseStatus === 'Expired'}">Refer Case</a>
             </div>
           </div>

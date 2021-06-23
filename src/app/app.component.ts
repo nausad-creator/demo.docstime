@@ -7,7 +7,7 @@ import { Cookie } from 'ng2-cookies';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NgcCookieConsentService, NgcInitializeEvent, NgcNoCookieLawEvent, NgcStatusChangeEvent } from 'ngx-cookieconsent';
 import { Subscription } from 'rxjs';
-import { filter, map, mergeMap } from 'rxjs/operators';
+import { filter, map, mergeMap, timeout } from 'rxjs/operators';
 import { DocsService } from './docs/docs.service';
 import { FacilityLoginSignupComponent } from './facility-login-signup/facility-login-signup.component';
 import { FacilityService } from './facility/facility.service';
@@ -26,7 +26,7 @@ export class AppComponent implements OnInit, OnDestroy {
   idleState = 'Not started.';
   timedOut = false;
   lastPing?: Date = null;
-
+  private timeOut: Subscription;
   private popupOpenSubscription: Subscription;
   private popupCloseSubscription: Subscription;
   private initializeSubscription: Subscription;
@@ -105,7 +105,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.idle.onIdleEnd.subscribe(() => {
       this.idleState = 'No longer idle.';
     });
-    this.idle.onTimeout.subscribe(() => {
+    this.timeOut = this.idle.onTimeout.subscribe(() => {
       let user: string;
       this.idleState = 'Timed out!';
       this.timedOut = true;
@@ -137,7 +137,16 @@ export class AppComponent implements OnInit, OnDestroy {
         sessionStorage.clear();
       }
       setTimeout(() => {
-        user === 'facility' ? this.openFacility() : this.openDoctor();
+        if (user === 'facility'){
+          this.openFacility();
+          this.unsubscribeTimeout();
+          user = '';
+        }
+        if (user === 'refer'){
+          this.openDoctor();
+          this.unsubscribeTimeout();
+          user = '';
+        }
         this.router.navigate(['/']);
       }, 500);
     });
@@ -154,6 +163,9 @@ export class AppComponent implements OnInit, OnDestroy {
     this.keepalive.onPing.subscribe(() => this.lastPing = new Date());
 
     this.reset();
+  }
+  unsubscribeTimeout = () => {
+    this.timeOut.unsubscribe();
   }
   reset = () => {
     this.idle.watch();

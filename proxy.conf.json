@@ -294,7 +294,7 @@
     "changeOrigin": true
   },
   "/refercase/delete-case/*": {
-    "target": "http://3.221.188.196//backend/web/index.php/v2",
+    "target": "https://demo.docstime.com//backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
@@ -312,6 +312,12 @@
     "changeOrigin": true
   },
   "/refercase/reject-re-refer-case/*": {
+    "target": "https://demo.docstime.com/backend/web/index.php/v2",
+    "secure": false,
+    "loglevel": "debug",
+    "changeOrigin": true
+  },
+  "/settings/validate-us-number/*": {
     "target": "https://demo.docstime.com/backend/web/index.php/v2",
     "secure": false,
     "loglevel": "debug",

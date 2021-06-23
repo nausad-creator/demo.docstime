@@ -61,8 +61,18 @@ export class FacilityReferralReceivedComponent implements OnInit, OnDestroy {
     const initialValue$ = this.getDataOnce() as Observable<ReferralReceived[]>;
     const updates$ = this.forceReload$.pipe(mergeMap(() => this.getDataOnce() as Observable<ReferralReceived[]>));
     this.scheduledAll$ = merge(initialValue$, updates$);
-    this.subscriptionInitial = this.scheduledAll$.subscribe(res => res ? this.all = res : this.all = [], err => console.error(err));
-    this.cd.markForCheck();
+    this.subscriptionInitial = this.scheduledAll$.subscribe(res => {
+      if (res) {
+        this.all = res;
+        this.cd.markForCheck();
+      }
+      if (!res) {
+        this.all = [];
+        this.cd.markForCheck();
+      }
+    }, (err) => {
+      console.error(err);
+    });
   }
   getDataOnce = () => {
     return this.facilityService.referralReceivedAll(JSON.stringify(this.data)).pipe(
@@ -94,13 +104,18 @@ export class FacilityReferralReceivedComponent implements OnInit, OnDestroy {
     this.scheduledAll$ = this.filter(JSON.stringify(this.data)) as Observable<Array<ReferralReceived>>;
     this.subscriptionFilter = this.scheduledAll$.subscribe((res) => {
       if (res) {
+        this.spinner.hide();
         this.all = res;
         this.cd.markForCheck();
       }
       if (!res) {
+        this.spinner.hide();
         this.all = [];
         this.cd.markForCheck();
       }
+    }, (err) => {
+      this.spinner.hide();
+      console.error(err);
     });
   }
   onResetFilter = () => {
@@ -118,13 +133,18 @@ export class FacilityReferralReceivedComponent implements OnInit, OnDestroy {
     this.scheduledAll$ = this.filter(JSON.stringify(this.data)) as Observable<Array<ReferralReceived>>;
     this.subscriptionReset = this.scheduledAll$.subscribe((res) => {
       if (res) {
+        this.spinner.hide();
         this.all = res;
         this.cd.markForCheck();
       }
       if (!res) {
+        this.spinner.hide();
         this.all = [];
         this.cd.markForCheck();
       }
+    }, (err) => {
+      this.spinner.hide();
+      console.error(err);
     });
   }
   onScrollEnd = () => {
@@ -134,25 +154,24 @@ export class FacilityReferralReceivedComponent implements OnInit, OnDestroy {
       this.data.page = this.page.toString();
       this.subscriptionUpdates = this.moreReceivedList(JSON.stringify(this.data))
         .subscribe((res) => {
-          res.map(v => this.all.push(v));
+          this.spinner.hide();
+          this.all.push(...res);
           this.cd.markForCheck();
-        },
-          () => this.spinner.hide(),
-          () => this.spinner.hide()
-        );
+        }, (err) => {
+          this.spinner.hide();
+          console.error(err);
+        });
     }
   }
   moreReceivedList = (data: string) => {
     return this.facilityService.referralReceivedLists(data).pipe(tap((count) => {
       this.recordCount = count[0].recordcount;
-      this.spinner.hide();
     }), map(res => res[0].data),
       catchError(() => of([]))) as Observable<Array<ReferralReceived>>;
   }
   filter = (data: string) => {
     return this.facilityService.referralReceivedLists(data).pipe(tap((count) => {
       this.recordCount = count[0].recordcount;
-      this.spinner.hide();
     }), map(res => res[0].data),
       catchError(() => of([]))) as Observable<Array<ReferralReceived>>;
   }
@@ -162,6 +181,7 @@ export class FacilityReferralReceivedComponent implements OnInit, OnDestroy {
     this.router.navigate(['/facility/facility-referral-received/view-refer']);
   }
   ngOnDestroy(): void {
+    this.facilityService.destroyReceivedAll(); // destroying on-going subscription
     if (this.subscriptionUpdates) {
       this.subscriptionUpdates.unsubscribe();
     }

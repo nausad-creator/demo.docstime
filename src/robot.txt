@@ -1,3 +1,3 @@
 User-agent: *
 
-Sitemap: https://demo.docstime.com/sitemap.xml
+Sitemap: https://www.docstime.com/sitemap.xml

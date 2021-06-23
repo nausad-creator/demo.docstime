@@ -17,7 +17,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import * as $ from 'jquery';
 import { ToastrModule } from 'ngx-toastr';
-import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 import { FacilityLoginSignupComponent } from './facility-login-signup/facility-login-signup.component';
 import { FacilityForgetPasswordComponent } from './facility-forget-password/facility-forget-password.component';
 import { FacilityResetPasswordComponent } from './facility-reset-password/facility-reset-password.component';
@@ -46,6 +46,8 @@ import { UsersModalComponent } from './users-modal/users-modal.component';
 import { ListPracticeComponent } from './list-practice/list-practice.component';
 import { ErrorNotFoundComponent } from './error-not-found/error-not-found.component';
 import { ConfirmationPopUpComponent } from './confirmation-pop-up/confirmation-pop-up.component';
+import { IConfig, NgxMaskModule } from 'ngx-mask';
+export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 const cookieConfig: NgcCookieConsentConfig = {
   cookie: {
     domain: environment.cookieDomain
@@ -106,6 +108,7 @@ const cookieConfig: NgcCookieConsentConfig = {
     NgxSpinnerModule,
     BsDatepickerModule.forRoot(),
     ModalModule.forRoot(),
+    NgxMaskModule.forRoot(),
     NgcCookieConsentModule.forRoot(cookieConfig),
     HttpClientModule,
     ReactiveFormsModule,

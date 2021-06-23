@@ -42,8 +42,7 @@ export class ViewReferComponent implements OnInit {
     this.caseViewData = await this.getViewData() as ReferCase;
     this.from = JSON.parse(this.store.referView).from;
     this.refercaseVisitDate = this.caseViewData.refercaseVisitDate;
-    const time = this.caseViewData.refercaseVisitTime !== null && this.caseViewData.refercaseVisitTime !== 'Undefined' ?
-      this.tConvert(this.caseViewData.refercaseVisitTime) : '';
+    const time = this.caseViewData.refercaseVisitTime !== null && this.caseViewData.refercaseVisitTime !== 'Undefined' ? this.tConvert(this.caseViewData.refercaseVisitTime) : '';
     this.convertedTime = time ? ` - ${time}` : '';
     this.preFixDRstr = this.caseViewData.refDocName ? this.caseViewData.refDocName.substr(0, 3) : '';
     this.preFixDRstrSent = this.caseViewData.doctorFullName ? this.caseViewData.doctorFullName.substr(0, 3) : '';
@@ -162,35 +161,38 @@ export class ViewReferComponent implements OnInit {
     return time[0] + '' + time[1] + '' + time[2] + ' ' + time[5];
   }
 
-  // openInNewWindow = (file: string) => {
-  //   window.open(file);
-  // }
   onClickRereferDashboard = (data: ReferCase) => {
+    data.from = 'dashboard';
     this.store.setRerefer(JSON.stringify(data));
     this.router.navigate(['/facility/facility-dashboard/re-refer-case']);
     this.cd.markForCheck();
   }
   onClickRereferSent = (data: ReferCase) => {
+    data.from = this.from && this.from === 'insideSent' ? 'unknown' : 'sent';
     this.store.setRerefer(JSON.stringify(data));
     this.router.navigate(['/facility/facility-referral-sent/re-refer-case']);
     this.cd.markForCheck();
   }
   onClickRereferReceived = (data: ReferCase) => {
+    data.from = 'received';
     this.store.setRerefer(JSON.stringify(data));
     this.router.navigate(['/facility/facility-referral-received/re-refer-case']);
     this.cd.markForCheck();
   }
   onClickRereferDoctorsList = (data: ReferCase) => {
+    data.from = 'doctor';
     this.store.setRerefer(JSON.stringify(data));
     this.router.navigate(['/facility/facility-doctors-list/re-refer-case']);
     this.cd.markForCheck();
   }
   onClickRereferNotification = (data: ReferCase) => {
+    data.from = 'notification';
     this.store.setRerefer(JSON.stringify(data));
     this.router.navigate(['/facility/facility-notifications/re-refer-case']);
     this.cd.markForCheck();
   }
   onClickRereferAdd = (data: ReferCase) => {
+    data.from = 'add';
     this.store.setRerefer(JSON.stringify(data));
     this.router.navigate(['/facility/facility-add-refer-case/re-refer-case']);
     this.cd.markForCheck();

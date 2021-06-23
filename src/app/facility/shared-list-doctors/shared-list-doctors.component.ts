@@ -1,6 +1,48 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { environment } from 'src/environments/environment';
-
+interface Doctor {
+  cityID: string;
+  degreeID: string;
+  degreeName: string;
+  doctorAbout: string;
+  doctorAddress: string;
+  doctorEmail: string;
+  doctorFax: string;
+  doctorFirstName: string;
+  doctorFullName: string;
+  doctorGender: string;
+  doctorID: string;
+  doctorLastName: string;
+  doctorLatitude: string;
+  doctorLongitude: string;
+  doctorMobile: string;
+  doctorNPI: string;
+  doctorOTP: string;
+  doctorStatus: string;
+  doctorbadgeCount: string;
+  facility: Facility[];
+  facilityID: string;
+  facilityIDs: string;
+  facilityName: string;
+  facilityTzID: string;
+  doctorProfileImage: string;
+  speciality: Speciality[];
+  isPending: boolean;
+}
+interface Facility {
+  doctorID: string;
+  doctorfacilityID: string;
+  facilityID: string;
+  facilityName: string;
+  removeRequest: string;
+}
+interface Speciality {
+  doctorID: string;
+  doctorspecialityCreatedDate: string;
+  doctorspecialityID: string;
+  specialityID: string;
+  specialityName: string;
+}
 @Component({
   selector: 'app-shared-list-doctors',
   templateUrl: './shared-list-doctors.component.html',
@@ -12,8 +54,10 @@ export class SharedListDoctorsComponent implements OnInit {
   @Input() doctorGender: string;
   @Input() doctorProfileImage: string;
   @Input() specialityName: string;
-  @Input() wholeObject: any;
+  @Input() facilityID: string;
+  @Input() wholeObject: Doctor;
   @Output() view: EventEmitter<any> = new EventEmitter();
+  @Output() update: EventEmitter<any> = new EventEmitter();
   url = '';
   preFixDRstr: string;
   baseUrl = `${environment.fileUrl}`;
@@ -27,5 +71,7 @@ export class SharedListDoctorsComponent implements OnInit {
   onClickView = (obj: any) => {
     this.view.emit(obj);
   }
-
+  onDelete = (doctorID: string) => {
+    this.update.emit(doctorID);
+  }
 }

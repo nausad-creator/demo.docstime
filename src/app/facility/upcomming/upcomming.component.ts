@@ -16,7 +16,7 @@ const currentDate = new Date();
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UpcommingComponent implements OnInit, OnDestroy {
-  scheduledUpcomming$: Observable<Array<any>>;
+  scheduledUpcomming$: Observable<ReferralReceived[]>;
   forceReloadUpcomming$ = new Subject<void>();
   scheduledAll = [];
   throttle = 10;
@@ -56,9 +56,8 @@ export class UpcommingComponent implements OnInit, OnDestroy {
     this.upcomming.facilityID = this.service.getFaLocal() ? this.service.getFaLocal().facilityID : this.service.getFaSession().facilityID;
     this.upcomming.startDate = moment(currentDate).format('YYYY-MM-DD');
     // getting data
-    const initialUpcomming$ = this.getDataOnceUpcomming() as Observable<Array<ReferralReceived>>;
-    const updatesUpcomming$ = this.forceReloadUpcomming$
-      .pipe(mergeMap(() => this.getDataOnceUpcomming() as Observable<Array<ReferralReceived>>));
+    const initialUpcomming$ = this.getDataOnceUpcomming() as Observable<ReferralReceived[]>;
+    const updatesUpcomming$ = this.forceReloadUpcomming$.pipe(mergeMap(() => this.getDataOnceUpcomming() as Observable<ReferralReceived[]>));
     this.scheduledUpcomming$ = merge(initialUpcomming$, updatesUpcomming$);
     this.subscriptionReset = this.scheduledUpcomming$.subscribe((res) => {
       if (res) {
@@ -93,7 +92,7 @@ export class UpcommingComponent implements OnInit, OnDestroy {
         this.facilityService.showUpcommingFiler(c[0].recordcount > 0 ? true : false);
       }),
       map(res => res[0].data),
-      take(1), catchError(() => of([]))) as Observable<Array<ReferralReceived>>;
+      take(1), catchError(() => of([]))) as Observable<ReferralReceived[]>;
   }
   forceReloadUpcomming = () => {
     this.pageSchedule = 0;
@@ -111,17 +110,22 @@ export class UpcommingComponent implements OnInit, OnDestroy {
     this.upcomming.insuranceNames = JSON.parse(filter).insuranceNames ? JSON.parse(filter).insuranceNames.trim() : '';
     this.upcomming.startDate = JSON.parse(filter).referCaseDate ? moment(JSON.parse(filter).referCaseDate).format('YYYY-MM-DD') : '';
     this.upcomming.endDate = JSON.parse(filter).referCaseDate ? moment(JSON.parse(filter).referCaseDate).format('YYYY-MM-DD') : '';
-    this.scheduledUpcomming$ = this.filter(JSON.stringify(this.upcomming)) as Observable<Array<ReferralReceived>>;
+    this.scheduledUpcomming$ = this.filter(JSON.stringify(this.upcomming)) as Observable<ReferralReceived[]>;
     this.subscriptionFilter = this.scheduledUpcomming$.subscribe((res) => {
       if (res) {
+        this.spinner.hide();
         this.scheduledAll = res;
         this.cd.markForCheck();
       }
       if (!res) {
+        this.spinner.hide();
         this.scheduledAll = [];
         this.cd.markForCheck();
       }
-    }, err => console.error(err));
+    }, err => {
+      this.spinner.hide();
+      console.error(err);
+    });
   }
   onAppliedSorting = (sorting: string) => {
     this.pageSchedule = 0;
@@ -133,17 +137,22 @@ export class UpcommingComponent implements OnInit, OnDestroy {
     this.upcomming.insuranceNames = '';
     this.upcomming.startDate = JSON.parse(sorting).startDate ? JSON.parse(sorting).startDate : '';
     this.upcomming.endDate = JSON.parse(sorting).endDate ? JSON.parse(sorting).endDate : '';
-    this.scheduledUpcomming$ = this.filter(JSON.stringify(this.upcomming)) as Observable<Array<ReferralReceived>>;
+    this.scheduledUpcomming$ = this.filter(JSON.stringify(this.upcomming)) as Observable<ReferralReceived[]>;
     this.subscriptionFilter = this.scheduledUpcomming$.subscribe((res) => {
       if (res) {
+        this.spinner.hide();
         this.scheduledAll = res;
         this.cd.markForCheck();
       }
       if (!res) {
+        this.spinner.hide();
         this.scheduledAll = [];
         this.cd.markForCheck();
       }
-    }, err => console.error(err));
+    }, err => {
+      this.spinner.hide();
+      console.error(err);
+    });
   }
   onResetFilter = () => {
     this.pageSchedule = 0;
@@ -155,24 +164,28 @@ export class UpcommingComponent implements OnInit, OnDestroy {
     this.upcomming.insuranceNames = '';
     this.upcomming.startDate = moment(currentDate).format('YYYY-MM-DD');
     this.upcomming.endDate = '';
-    this.scheduledUpcomming$ = this.filter(JSON.stringify(this.upcomming)) as Observable<Array<ReferralReceived>>;
+    this.scheduledUpcomming$ = this.filter(JSON.stringify(this.upcomming)) as Observable<ReferralReceived[]>;
     this.subscriptionReset = this.scheduledUpcomming$.subscribe((res) => {
       if (res) {
+        this.spinner.hide();
         this.scheduledAll = res;
         this.cd.markForCheck();
       }
       if (!res) {
+        this.spinner.hide();
         this.scheduledAll = [];
         this.cd.markForCheck();
       }
-    }, err => console.error(err));
+    }, err => {
+      this.spinner.hide();
+      console.error(err);
+    });
   }
   filter = (data: string) => {
     return this.facilityService.referralReceivedLists(data).pipe(tap((count) => {
       this.recordCount = count[0].recordcount;
-      this.spinner.hide();
     }), map(res => res[0].data),
-      catchError(() => of([]))) as Observable<Array<ReferralReceived>>;
+      catchError(() => of([]))) as Observable<ReferralReceived[]>;
   }
   // for more schedule
   onScrollEndScheduled = () => {
@@ -181,20 +194,20 @@ export class UpcommingComponent implements OnInit, OnDestroy {
       this.pageSchedule++;
       this.upcomming.page = this.pageSchedule.toString();
       this.subscriptionUpdates = this.moreScheduledList(JSON.stringify(this.upcomming)).subscribe((res) => {
-        res.map(v => this.scheduledAll.push(v));
+        this.spinner.hide();
+        this.scheduledAll.push(...res);
         this.cd.markForCheck();
-      },
-        () => this.spinner.hide(),
-        () => this.spinner.hide()
-      );
+      }, (err) => {
+        this.spinner.hide();
+        console.error(err);
+      });
     }
   }
   moreScheduledList = (data: string) => {
     return this.facilityService.referralReceivedLists(data).pipe(tap((count) => {
       this.recordCount = count[0].recordcount;
-      this.spinner.hide();
     }), map(res => res[0].data),
-      catchError(() => of([]))) as Observable<Array<ReferralReceived>>;
+      catchError(() => of([]))) as Observable<ReferralReceived[]>;
   }
   showReferralClick = ($event: string) => {
     const data = { data: JSON.parse($event), url: this.router.url };
@@ -202,6 +215,7 @@ export class UpcommingComponent implements OnInit, OnDestroy {
     this.router.navigate(['/facility/my-schedule-view-refer']);
   }
   ngOnDestroy(): void {
+    this.facilityService.destroyUpcoming(); // destroying on-going subscription
     if (this.subscriptionUpdates) {
       this.subscriptionUpdates.unsubscribe();
     }

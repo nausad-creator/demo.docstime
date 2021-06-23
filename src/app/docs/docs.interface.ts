@@ -66,6 +66,7 @@ export interface ReferCase {
     refercaseVisitTime: string;
     specialityID: string;
     specialityName: string;
+    from: string;
 }
 export interface ReferralReceived {
     Speciality: Array<
@@ -343,6 +344,13 @@ export interface Upload {
     status: string;
     message: string;
     pdffileName: string;
+}
+export interface Files {
+    documentFilename: string;
+    documentID: string;
+    documenttypeID: string;
+    documenttypeName: string;
+    refercaseID: string;
 }
 export interface FileData {
     fileName: string;

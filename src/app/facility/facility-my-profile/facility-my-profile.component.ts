@@ -58,48 +58,24 @@ export class FacilityMyProfileComponent implements OnInit {
     // form Data
     this.basicProfile = this.fb.group({
       facilityFullName: [`${this.facData.facilityuserFirstName} ${this.facData.facilityuserLastName}`],
-      facilityName: [this.facData.facilityName ? this.facData.facilityName : '',
-      Validators.compose([Validators.required])],
-      facilityuserEmail: [this.facData.facilityuserEmail ? this.facData.facilityuserEmail : '', Validators.compose([Validators.required,
-      Validators.pattern(
-        /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      ),
-      ])],
+      facilityName: [this.facData.facilityName ? this.facData.facilityName : '', Validators.compose([Validators.required])],
+      facilityuserEmail: [this.facData.facilityuserEmail ? this.facData.facilityuserEmail : '', Validators.compose([Validators.required, Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)])],
       facilityuserDOB: [this.facData.facilityuserDOB ? this.facData.facilityuserDOB : '', Validators.compose([Validators.required])],
       facilityAbout: [this.facData.facilityAbout ? this.facData.facilityAbout : ''],
-      facilityuserGender: [this.facData.facilityuserGender ? this.facData.facilityuserGender : '',
-      Validators.compose([Validators.required])],
+      facilityuserGender: [this.facData.facilityuserGender ? this.facData.facilityuserGender : '', Validators.compose([Validators.required])],
       facilityuserImage: [this.facData.facilityuserImage ? this.facData.facilityuserImage : ''],
       facilityuserFirstName: [this.facData.facilityuserFirstName ? this.facData.facilityuserFirstName : ''],
       facilityuserLastName: [this.facData.facilityuserLastName ? this.facData.facilityuserLastName : ''],
-      facilityuserMobile: [this.facData.facilityuserMobile ? this.facData.facilityuserMobile
-        .split('(').join('-').split(')').join('-').split('-').join(' ').trim().split(' ').join('')
-        : '', Validators.compose([Validators.required,
-        Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')
-        ])],
-      userCountryCode: [this.countryCodeOptions[0].code, Validators.compose([
-        Validators.required
-      ])],
+      facilityuserMobile: [this.facData.facilityuserMobile ? this.facData.facilityuserMobile.split('(').join('-').split(')').join('-').split('-').join(' ').trim().split(' ').join('') : '', Validators.compose([Validators.required, Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')])],
+      userCountryCode: [this.countryCodeOptions[0].code, Validators.compose([Validators.required])],
     });
     this.profProfile = this.fb.group({
-      facilityContactNumber: [this.facData.facilityContactNumber ?
-        this.facData.facilityContactNumber.split('(').join('-').split(')').join('-').split('-').join(' ').trim().split(' ').join('') : '',
-      Validators.compose([Validators.required,
-      Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')
-      ])],
-      userCountryCode: [this.countryCodeOptions[0].code, Validators.compose([
-        Validators.required
-      ])],
-      facilityEmail: [this.facData.facilityEmail ? this.facData.facilityEmail : '', Validators.compose([Validators.required,
-      Validators.pattern(
-        /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      ),
-      ])],
-      facilityAddress: [this.facData.facilityAddress ? this.facData.facilityAddress : '',
-      Validators.compose([Validators.required])],
+      facilityContactNumber: [this.facData.facilityContactNumber ? this.facData.facilityContactNumber.split('(').join('-').split(')').join('-').split('-').join(' ').trim().split(' ').join('') : '', Validators.compose([Validators.required, Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')])],
+      userCountryCode: [this.countryCodeOptions[0].code, Validators.compose([Validators.required])],
+      facilityEmail: [this.facData.facilityEmail ? this.facData.facilityEmail : '', Validators.compose([Validators.required, Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)])],
+      facilityAddress: [this.facData.facilityAddress ? this.facData.facilityAddress : '', Validators.compose([Validators.required])],
       facilityName: [this.facData.facilityName ? this.facData.facilityName : '', Validators.compose([Validators.required])],
-      facilitypeciality: [this.facData.facilitypeciality.length > 0 ?
-        this.convertSpecialityString(this.facData.facilitypeciality) : '']
+      facilitypeciality: [this.facData.facilitypeciality.length > 0 ? this.convertSpecialityString(this.facData.facilitypeciality) : '']
     });
     this.cd.markForCheck();
   }
@@ -108,8 +84,7 @@ export class FacilityMyProfileComponent implements OnInit {
   }
   onUpdateBasicClick = (post: any) => {
     if (post.facilityuserEmail !== this.facData.facilityuserEmail ||
-      post.facilityuserMobile !== this.facData.facilityuserMobile
-        .split('(').join('-').split(')').join('-').split('-').join(' ').trim().split(' ').join('')) {
+      post.facilityuserMobile !== this.facData.facilityuserMobile.split('(').join('-').split(')').join('-').split('-').join(' ').trim().split(' ').join('')) {
       this.onVerifyChange();
     } else {
       this.updateBasic(post);
@@ -120,8 +95,7 @@ export class FacilityMyProfileComponent implements OnInit {
     if (this.basicProfile.valid && this.profProfile.valid && this.findInvalidControlsBasic().length === 0) {
       this.updateFacilityProfile(post).then((response: Array<any>) => {
         if (response.length > 0) {
-          this.service.getFaLocal() ? this.service.setFaLocal(JSON.stringify(response[0]))
-            : this.service.setFaSession(JSON.stringify(response[0]));
+          this.service.getFaLocal() ? this.service.setFaLocal(JSON.stringify(response[0])) : this.service.setFaSession(JSON.stringify(response[0]));
           setTimeout(() => {
             this.spinner.hide();
             this.ngOnInit();
@@ -144,13 +118,15 @@ export class FacilityMyProfileComponent implements OnInit {
     if (this.profProfile.valid && this.findInvalidControlsProf().length === 0) {
       this.updateFacilityInfo(post).then((response: Array<any>) => {
         if (response.length > 0) {
-          this.service.getFaLocal() ? this.service.setFaLocal(JSON.stringify(response[0]))
-            : this.service.setFaSession(JSON.stringify(response[0]));
+          this.service.getFaLocal() ? this.service.setFaLocal(JSON.stringify(response[0])) : this.service.setFaSession(JSON.stringify(response[0]));
           setTimeout(() => {
             this.spinner.hide();
             this.ngOnInit();
             this.service.nextCount(`${response[0].facilityName}`);
-            this.toastr.success('Profile updated successfully');
+            this.toastr.success('Profile updated successfully', '', {
+              positionClass: 'toast-center-center-request',
+              timeOut: 1500
+            });
           }, 500);
         } else {
           this.spinner.hide();
@@ -172,14 +148,11 @@ export class FacilityMyProfileComponent implements OnInit {
         facilityuserID: this.facData.facilityuserID,
         facilityName: post.facilityName ? post.facilityName : this.basicProfile.get('facilityName').value,
         facilityAbout: post.facilityAbout ? post.facilityAbout : this.basicProfile.get('facilityAbout').value,
-        facilityuserDOB: post.facilityuserDOB ? moment(post.facilityuserDOB).format('YYYY-MM-DD') :
-          moment(this.basicProfile.get('facilityuserDOB').value).format('YYYY-MM-DD'),
+        facilityuserDOB: post.facilityuserDOB ? moment(post.facilityuserDOB).format('YYYY-MM-DD') : moment(this.basicProfile.get('facilityuserDOB').value).format('YYYY-MM-DD'),
         facilityuserEmail: post.facilityuserEmail ? post.facilityuserEmail : this.basicProfile.get('facilityuserEmail').value,
         facilityuserMobile: post.facilityuserMobile ? post.facilityuserMobile : this.basicProfile.get('facilityuserMobile').value,
-        facilityuserFirstName: post.facilityuserFirstName ? post.facilityuserFirstName :
-          this.basicProfile.get('facilityuserFirstName').value,
-        facilityuserImage: this.service.getFaLocal() ? this.service.getFaLocal().facilityuserImage
-          : this.service.getFaSession().facilityuserImage,
+        facilityuserFirstName: post.facilityuserFirstName ? post.facilityuserFirstName : this.basicProfile.get('facilityuserFirstName').value,
+        facilityuserImage: this.service.getFaLocal() ? this.service.getFaLocal().facilityuserImage : this.service.getFaSession().facilityuserImage,
         facilityuserLastName: post.facilityuserLastName ? post.facilityuserLastName : this.basicProfile.get('facilityuserLastName').value,
         facilityuserGender: post.facilityuserGender ? post.facilityuserGender : this.basicProfile.get('facilityuserGender').value,
       };
@@ -202,8 +175,7 @@ export class FacilityMyProfileComponent implements OnInit {
         facilityuserID: this.facData.facilityuserID,
         facilityName: post.facilityName ? post.facilityName : this.profProfile.get('facilityName').value,
         facilityEmail: post.facilityEmail ? post.facilityEmail : this.profProfile.get('facilityEmail').value,
-        facilityContactNumber: post.facilityContactNumber ? post.facilityContactNumber :
-          this.profProfile.get('facilityContactNumber').value,
+        facilityContactNumber: post.facilityContactNumber ? post.facilityContactNumber : this.profProfile.get('facilityContactNumber').value,
         facilityAddress: post.facilityAddress ? post.facilityAddress : this.profProfile.get('facilityAddress').value,
       };
       this.facilityService.updateInfo(JSON.stringify(data)).subscribe(
@@ -259,8 +231,7 @@ export class FacilityMyProfileComponent implements OnInit {
       this.spinner.show();
       if ((event.target as HTMLInputElement).files[0].size <= this.maxSize) {
         this.selectedFiles = (event.target as HTMLInputElement).files[0] as File;
-        await this.uploadFiles(this.selectedFiles)
-          .then((fulFilled) => {
+        await this.uploadFiles(this.selectedFiles).then((fulFilled) => {
             const reader = new FileReader();
             reader.readAsDataURL(this.selectedFiles);
             reader.onload = () => {
@@ -268,8 +239,7 @@ export class FacilityMyProfileComponent implements OnInit {
               this.cd.markForCheck();
             };
             this.updateLogo(fulFilled[0].fileName);
-          })
-          .catch((error) => {
+          }).catch((error) => {
             this.spinner.hide();
             console.error(error);
           });
@@ -312,8 +282,7 @@ export class FacilityMyProfileComponent implements OnInit {
     this.facilityService.updateProfilePic(JSON.stringify(data)).subscribe((response) => {
       if (response[0].status === 'true') {
         this.facData = response[0].data[0];
-        this.service.getFaLocal() ? this.service.setFaLocal(JSON.stringify(response[0].data[0]))
-          : this.service.setFaSession(JSON.stringify(response[0].data[0]));
+        this.service.getFaLocal() ? this.service.setFaLocal(JSON.stringify(response[0].data[0])) : this.service.setFaSession(JSON.stringify(response[0].data[0]));
         this.toastr.success('Profile Picture Updated');
         setTimeout(() => { this.service.nextCount(`${response[0].data[0].facilityuserImage}`); });
         this.spinner.hide();
@@ -336,11 +305,9 @@ export class FacilityMyProfileComponent implements OnInit {
       changeFacilityuserEmail: this.basicProfile.get('facilityuserEmail').value,
       changeFacilityuserMobile: this.basicProfile.get('facilityuserMobile').value,
       changeFacilityuserOldEmail: this.facData.facilityuserEmail,
-      changeFacilityuserOldMobile: this.facData.facilityuserMobile
-        .split('(').join('-').split(')').join('-').split('-').join(' ').trim().split(' ').join(''),
+      changeFacilityuserOldMobile: this.facData.facilityuserMobile.split('(').join('-').split(')').join('-').split('-').join(' ').trim().split(' ').join(''),
     };
-    this.verifyChange(JSON.stringify(data))
-      .then((res: boolean) => {
+    this.verifyChange(JSON.stringify(data)).then((res: boolean) => {
         if (res) {
           this.openVerification(data);
         }

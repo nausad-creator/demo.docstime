@@ -65,6 +65,7 @@ export interface ReferCase {
     refercaseVisitTime: string;
     specialityID: string;
     specialityName: string;
+    from: string;
 }
 export interface ReferralReceived {
     Speciality: Array<

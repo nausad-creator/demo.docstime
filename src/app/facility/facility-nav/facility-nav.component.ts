@@ -14,7 +14,7 @@ const currentDate = new Date();
   styleUrls: ['./facility-nav.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FacilityNavComponent implements OnInit, DoCheck, OnDestroy  {
+export class FacilityNavComponent implements OnInit, DoCheck, OnDestroy {
   scheduledAll$: Observable<Array<any>>;
   forceReloadFacility$ = new Subject<void>();
   count = 0;
@@ -49,10 +49,10 @@ export class FacilityNavComponent implements OnInit, DoCheck, OnDestroy  {
     const updates$ = this.forceReloadFacility$.pipe(mergeMap(() => this.getDataOnce()));
     this.scheduledAll$ = merge(initialValue$, updates$);
     this.subscription = this.scheduledAll$.subscribe((res: Array<any>) => {
-      if (res[0].status !== 'false'){
-      res[0].data.length > 0 ? this.count = +res[0].data[0].facilityBadgeCount : this.count = 0;
-      res[0].count.length > 0 ? this.pendingCount = +res[0].count[0].pendingCount : this.pendingCount = 0;
-      this.cd.markForCheck();
+      if (res[0].status !== 'false') {
+        res[0].data.length > 0 ? this.count = +res[0].data[0].facilityBadgeCount : this.count = 0;
+        res[0].count.length > 0 ? this.pendingCount = +res[0].count[0].pendingCount : this.pendingCount = 0;
+        this.cd.markForCheck();
       }
     }, err => console.error(err));
     // this is for behavior subject
@@ -116,13 +116,12 @@ export class FacilityNavComponent implements OnInit, DoCheck, OnDestroy  {
   isBlank = (str: string | any) => {
     return (!str || /^\s*$/.test(str));
   }
-
   logOut = () => {
     this.service.getFaLocal() ? this.service.removeFaLocal() : this.service.removeFaSession();
     this.facilityService.unSubscribe();
     this.facilityService.unSubs();
     this.service.unSubscribe();
-    if (window.sessionStorage){
+    if (window.sessionStorage) {
       sessionStorage.clear();
     }
     setTimeout(() => {

@@ -38,7 +38,7 @@
           <label class="" [ngClass]="{'customLabel': component === 'sent' || component === 'received'}"
             *ngIf="component">{{component === 'sent' ? 'Refer to doctor Name' : 'Refer by doctor Name'}}</label>
           <input class="form-control" name="date" formControlName="doctorName" id="doctorName" type="doctorName"
-            placeholder="Refer by doctor Name">
+          [placeholder]="component === 'sent' ? 'Refer to doctor Name' : 'Refer by doctor Name'">
         </div>
         <div class="form-group col-md-12 col-sm-12"
           [ngClass]="{'customgroup': component === 'sent' || component === 'received'}">

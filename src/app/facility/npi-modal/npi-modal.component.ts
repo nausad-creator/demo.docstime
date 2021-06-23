@@ -1,6 +1,5 @@
 import { Component, EventEmitter, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
-import { Router } from '@angular/router';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { HomeService } from 'src/app/home.service';
@@ -20,9 +19,7 @@ export class NpiModalComponent implements OnInit {
     private modalService: BsModalService,
     private spinner: NgxSpinnerService,
     private fb: FormBuilder,
-    private bsModalRef: BsModalRef,
-    private router: Router
-  ) {
+    private bsModalRef: BsModalRef  ) {
     // for NPI
     this.npiForm = this.fb.group({
       npi: [null, Validators.compose([Validators.required, Validators.pattern('^[0-9]{10}$')])],
@@ -43,12 +40,12 @@ export class NpiModalComponent implements OnInit {
         last_name: `${post.results[0].basic.last_name}`,
         email: '',
         contact: post.results[0].addresses[0].telephone_number ? post.results[0].addresses[0].telephone_number.join('') : '',
-        address: `${post.results[0].addresses[0].address_1}, ${post.results[0].addresses[0].city}, ${post.results[0].addresses[0].state}, ${post.results[0].addresses[0].country_code === 'US' ? 'USA' : post.results[0].addresses[0].country_code}, ${post.results[0].addresses[0].postal_code.substring(0, 5)}`,
+        address: `${post.results[0].addresses[0].address_1}, ${post.results[0].addresses[0].city}, ${post.results[0].addresses[0].postal_code.substring(0, 5)}`,
         gender: `${post.results[0].basic.gender === 'M' ? 'Male' : 'Female'}`,
         npiNumber: `${post.results[0].number}`,
         faxNumber: `${post.results[0].addresses[0].fax_number ? post.results[0].addresses[0].fax_number.join('') : ''}`,
         profile: '',
-        docaddressAddress: `${post.results[0].addresses[0].address_1}, ${post.results[0].addresses[0].city}, ${post.results[0].addresses[0].state}, ${post.results[0].addresses[0].country_code === 'US' ? 'USA' : post.results[0].addresses[0].country_code}, ${post.results[0].addresses[0].postal_code.substring(0, 5)}`,
+        docaddressAddress: `${post.results[0].addresses[0].address_1}, ${post.results[0].addresses[0].city}, ${post.results[0].addresses[0].postal_code.substring(0, 5)}`,
         docaddressFaxNo: `${post.results[0].addresses[0].fax_number ? post.results[0].addresses[0].fax_number.join('') : ''}`,
         countryName: `${post.results[0].addresses[0].country_name}`,
         stateName: `${post.results[0].addresses[0].state}`,

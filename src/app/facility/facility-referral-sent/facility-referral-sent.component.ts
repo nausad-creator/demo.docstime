@@ -56,9 +56,19 @@ export class FacilityReferralSentComponent implements OnInit, OnDestroy {
     // initialization
     this.data.facilityID = this.service.getFaLocal() ? this.service.getFaLocal().facilityID : this.service.getFaSession().facilityID;
     // getting data
-    this.referralSent$ = await this.getDataOnce() as Observable<Array<ReferralSent>>;
-    this.referralSent$.subscribe(res => res ? this.all = res : this.all = [], err => console.error(err));
-    this.cd.markForCheck();
+    this.referralSent$ = await this.getDataOnce() as Observable<ReferralSent[]>;
+    this.subscriptionInitial = this.referralSent$.subscribe(res => {
+      if (res) {
+        this.all = res;
+        this.cd.markForCheck();
+      }
+      if (!res) {
+        this.all = [];
+        this.cd.markForCheck();
+      }
+    }, (err) => {
+      console.error(err);
+    });
   }
   getDataOnce = () => {
     return this.facilityService.referralSent(JSON.stringify(this.data)).pipe(
@@ -66,7 +76,7 @@ export class FacilityReferralSentComponent implements OnInit, OnDestroy {
         this.recordCount = c[0].recordcount;
         this.isEmpty = c[0].recordcount > 0 ? true : false;
       }), map(res => res[0].data),
-      take(1), catchError(() => of([]))) as Observable<Array<ReferralSent>>;
+      take(1), catchError(() => of([]))) as Observable<ReferralSent[]>;
   }
   onAppliedFilter = (filter: string) => {
     this.spinner.show();
@@ -80,16 +90,21 @@ export class FacilityReferralSentComponent implements OnInit, OnDestroy {
     this.data.startDate = JSON.parse(filter).referCaseDate ? moment(JSON.parse(filter).referCaseDate).format('YYYY-MM-DD') : '';
     this.data.endDate = JSON.parse(filter).referCaseDate ? moment(JSON.parse(filter).referCaseDate).format('YYYY-MM-DD') : '';
     this.data.refercaseStatus = JSON.parse(filter).referStatus ? JSON.parse(filter).referStatus.trim() : '';
-    this.referralSent$ = this.filter(JSON.stringify(this.data)) as Observable<Array<ReferralSent>>;
+    this.referralSent$ = this.filter(JSON.stringify(this.data)) as Observable<ReferralSent[]>;
     this.subscriptionFilter = this.referralSent$.subscribe((res) => {
       if (res) {
+        this.spinner.hide();
         this.all = res;
         this.cd.markForCheck();
       }
       if (!res) {
+        this.spinner.hide();
         this.all = [];
         this.cd.markForCheck();
       }
+    }, (err) => {
+      this.spinner.hide();
+      console.error(err);
     });
   }
   onResetFilter = () => {
@@ -104,24 +119,28 @@ export class FacilityReferralSentComponent implements OnInit, OnDestroy {
     this.data.startDate = moment(currentDate).format('YYYY-MM-DD');
     this.data.endDate = '';
     this.data.refercaseStatus = '';
-    this.referralSent$ = this.filter(JSON.stringify(this.data)) as Observable<Array<ReferralSent>>;
+    this.referralSent$ = this.filter(JSON.stringify(this.data)) as Observable<ReferralSent[]>;
     this.subscriptionReset = this.referralSent$.subscribe((res) => {
       if (res) {
+        this.spinner.hide();
         this.all = res;
         this.cd.markForCheck();
       }
       if (!res) {
+        this.spinner.hide();
         this.all = [];
         this.cd.markForCheck();
       }
+    }, (err) => {
+      this.spinner.hide();
+      console.error(err);
     });
   }
   filter = (data: string) => {
     return this.facilityService.referralSentLists(data).pipe(tap((count) => {
       this.recordCount = count[0].recordcount;
-      this.spinner.hide();
     }), map(res => res[0].data),
-      catchError(() => of([]))) as Observable<Array<ReferralSent>>;
+      catchError(() => of([]))) as Observable<ReferralSent[]>;
   }
   onScrollEnd = () => {
     if (this.recordCount !== this.all.length) {
@@ -130,20 +149,20 @@ export class FacilityReferralSentComponent implements OnInit, OnDestroy {
       this.data.page = this.page.toString();
       this.subscriptionUpdates = this.moreSentList(JSON.stringify(this.data))
         .subscribe((res) => {
-          res.map(v => this.all.push(v));
+          this.spinner.hide();
+          this.all.push(...res);
           this.cd.markForCheck();
-        },
-          () => this.spinner.hide(),
-          () => this.spinner.hide()
-        );
+        }, (err) => {
+          this.spinner.hide();
+          console.error(err);
+        });
     }
   }
   moreSentList = (data: string) => {
     return this.facilityService.referralSentLists(data).pipe(tap((count) => {
       this.recordCount = count[0].recordcount;
-      this.spinner.hide();
     }), map(res => res[0].data),
-      catchError(() => of([]))) as Observable<Array<ReferralSent>>;
+      catchError(() => of([]))) as Observable<ReferralSent[]>;
   }
   showReferralClick = ($event: string) => {
     const data = { data: JSON.parse($event), from: 'sent' };
@@ -151,6 +170,7 @@ export class FacilityReferralSentComponent implements OnInit, OnDestroy {
     this.router.navigate(['/facility/facility-referral-sent/view-refer']);
   }
   ngOnDestroy(): void {
+    this.facilityService.destroySentList(); // destroying on-going subscription
     if (this.subscriptionUpdates) {
       this.subscriptionUpdates.unsubscribe();
     }

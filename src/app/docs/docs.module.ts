@@ -21,7 +21,7 @@ import { ShareReferralReceivedComponent } from './share-referral-received/share-
 import { ShareReferralSentComponent } from './share-referral-sent/share-referral-sent.component';
 import { PreviousAppointmentsComponent } from './previous-appointments/previous-appointments.component';
 import { SharedTodayAppointmentsComponent } from './shared-today-appointments/shared-today-appointments.component';
-import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 import { SharedOndatetimeScheduledComponent } from './shared-ondatetime-scheduled/shared-ondatetime-scheduled.component';
 import { ConvertToPdfPipe } from './convert-to-pdf.pipe';
 import { DocsService } from './docs.service';
@@ -71,6 +71,8 @@ import { EditReferGuard } from './edit-refer.guard';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { RejectReReferComponent } from './reject-received-modal/reject-re-refer/reject-re-refer.component';
 import { RejectReferGuard } from './reject-rerefer.guard';
+import { IConfig, NgxMaskModule } from 'ngx-mask';
+export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 @NgModule({
   declarations:
     [
@@ -127,6 +129,7 @@ import { RejectReferGuard } from './reject-rerefer.guard';
     CarouselModule,
     BsDatepickerModule.forRoot(),
     TooltipModule.forRoot(),
+    NgxMaskModule.forRoot(),
     ReactiveFormsModule,
     FormsModule,
     NgxSpinnerModule,

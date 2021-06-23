@@ -66,7 +66,7 @@ export class ShareDatetimepickerComponent implements OnInit, DoCheck {
       refercaseUrgent: '',
       reasonIDs: '',
       refercaseVisitTime: '',
-      refercaseStatus: 'Accepted',
+      refercaseStatus: '',
       startDate: moment(date).format('YYYY-MM-DD'),
       endDate: moment(date).format('YYYY-MM-DD'),
       languageID: '1',

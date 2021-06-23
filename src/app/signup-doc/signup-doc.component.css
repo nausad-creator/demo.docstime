@@ -69,3 +69,6 @@
     border-radius: .3rem;
     outline: 0;
 }
+.hide{
+  display: none;
+}

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FacilityDashboardComponent } from './facility-dashboard/facility-dashboard.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { CarouselModule } from 'ngx-owl-carousel-o';
 import { FacilityService } from './facility.service';
@@ -78,7 +78,8 @@ import { VerificationComponent } from './facility-my-profile/verification/verifi
 import { RejectReReferComponent } from './reject-received-modal/reject-re-refer/reject-re-refer.component';
 import { RejectReferGuard } from './reject-rerefer.guard';
 import { TruncatePipe } from './truncate.pipe';
-
+import { IConfig, NgxMaskModule } from 'ngx-mask';
+export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 @NgModule({
   declarations: [
     FacilityDashboardComponent,
@@ -142,6 +143,7 @@ import { TruncatePipe } from './truncate.pipe';
     FacilityRoutingModule,
     CarouselModule,
     BsDatepickerModule.forRoot(),
+    NgxMaskModule.forRoot(),
     ReactiveFormsModule,
     FormsModule,
     NgxSpinnerModule,

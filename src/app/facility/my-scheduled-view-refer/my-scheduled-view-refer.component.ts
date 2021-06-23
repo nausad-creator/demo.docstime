@@ -36,8 +36,7 @@ export class MyScheduledViewReferComponent implements OnInit {
     this.caseViewData = await this.getViewData() as ReferCase;
     this.url = JSON.parse(this.store.referView).url;
     this.refercaseVisitDate = this.caseViewData.refercaseVisitDate;
-    const time = this.caseViewData.refercaseVisitTime !== null && this.caseViewData.refercaseVisitTime !== 'Undefined' ?
-      this.tConvert(this.caseViewData.refercaseVisitTime) : '';
+    const time = this.caseViewData.refercaseVisitTime !== null && this.caseViewData.refercaseVisitTime !== 'Undefined' ? this.tConvert(this.caseViewData.refercaseVisitTime) : '';
     this.convertedTime = time ? ` - ${time}` : '';
     this.preFixDRstr = this.caseViewData.refDocName ? this.caseViewData.refDocName.substr(0, 3) : '';
     this.preFixDRstrSent = this.caseViewData.doctorFullName ? this.caseViewData.doctorFullName.substr(0, 3) : '';

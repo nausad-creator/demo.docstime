@@ -17,7 +17,7 @@ import { environment } from 'src/environments/environment';
 					<div class="timelineContent" *ngIf="list[0].timeline.length > 0">
 						<div class="item-timeline" *ngFor="let status of list[0].timeline">
 							<div class="d-flex">
-								<div class="imgtimeline"><img defaultImage="{{baseUrl}}/{{status.doctorProfileImage}}"
+								<div class="imgtimeline"><img class="userIcon" defaultImage="{{baseUrl}}/{{status.doctorProfileImage}}"
                 lazyLoad="{{baseUrl}}/{{status.doctorProfileImage}}"
                 [errorImage]="'assets/img/user-icon.png'" alt="user"></div>
 								<div class="timecontent">
@@ -43,6 +43,11 @@ import { environment } from 'src/environments/environment';
       /* border: 1px solid rgba(0, 0, 0, .2); */
       border-radius: .3rem;
       outline: 0;
+  }
+  .userIcon{
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
   }`
   ]
 })

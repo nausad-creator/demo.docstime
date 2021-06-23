@@ -23,12 +23,8 @@ export class SharedOndatetimeScheduledComponent implements OnInit {
   constructor(private router: Router, private cd: ChangeDetectorRef, private store: DocStore) { }
 
   ngOnInit(): void {
-    this.fullName = this.patientFirstName && this.patientLastName ?
-      `${this.patientFirstName} ${this.patientLastName}`
-      : this.patientFirstName && !this.patientLastName ?
-        this.patientFirstName : !this.patientFirstName && this.patientLastName ? this.patientLastName : '';
-    this.convertedTime = this.refercaseVisitTime !== null && this.refercaseVisitTime !== undefined && this.refercaseVisitTime ?
-      this.tConvert(this.refercaseVisitTime) : '';
+    this.fullName = this.patientFirstName && this.patientLastName ? `${this.patientFirstName} ${this.patientLastName}` : this.patientFirstName && !this.patientLastName ? this.patientFirstName : !this.patientFirstName && this.patientLastName ? this.patientLastName : '';
+    this.convertedTime = this.refercaseVisitTime !== null && this.refercaseVisitTime !== undefined && this.refercaseVisitTime ? this.tConvert(this.refercaseVisitTime) : '';
     this.cd.markForCheck();
   }
   tConvert = (time: any) => {

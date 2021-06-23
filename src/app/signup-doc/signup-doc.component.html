@@ -1,4 +1,4 @@
-<div class="modal-contents modal">
+<div class="modal-contents modal" [ngClass]="{'hide': vOpen}">
   <!-- Modal Header -->
   <div class="modal-header">
     <h4 class="modal-title">Account Information</h4>
@@ -30,92 +30,52 @@
         </div>
       </div>
       <div class="form-group">
-        <label for="signonname" class="text-uppercase text-primary">Your Name<span
-            class="required-field"></span></label>
-        <input type="text" readonly formControlName="doctorFullName" id="signonname" class="form-control"
-          name="signonname" value="" required />
+        <label for="signonname" class="text-uppercase text-primary">Your Name<span class="required-field"></span></label>
+        <input type="text" readonly formControlName="doctorFullName" id="signonname" class="form-control" name="signonname" value="" />
       </div>
       <div class="form-group">
         <label for="email" class="text-uppercase text-primary">Email Address<span class="required-field"></span></label>
-        <input type="email" formControlName="doctorEmail" placeholder="Enter Email" id="email" class="form-control"
-          name="email" />
-        <small class="text-danger small"
-          *ngIf="signUPForm.controls['doctorEmail'].hasError('pattern') && (signUPForm.controls['doctorEmail'].dirty || signUPForm.controls['doctorEmail'].touched )">Please
-          enter valid Email ID</small>
-        <small class="text-danger small"
-          *ngIf="signUPForm.controls['doctorEmail'].hasError('required') && (signUPForm.controls['doctorEmail'].dirty || signUPForm.controls['doctorEmail'].touched)">Please
-          enter Email ID</small>
-        <small class="text-danger" *ngIf="signUPForm.controls['doctorEmail'].hasError('emailAlreadyExist')">Email
-          already
-          exist.</small>
+        <input type="email" formControlName="doctorEmail" placeholder="Enter Email" id="email" class="form-control" name="email" />
+        <small class="text-danger small" *ngIf="signUPForm.controls['doctorEmail'].hasError('pattern')">Please enter valid Email ID</small>
+        <small class="text-danger small" *ngIf="signUPForm.controls['doctorEmail'].hasError('required')">Please enter Email ID</small>
+        <small class="text-danger" *ngIf="signUPForm.controls['doctorEmail'].hasError('emailAlreadyExist')">Email already exist.</small>
       </div>
       <div class="form-group">
-        <!-- mobile-withcountry position-relative -->
-        <!-- <select name="userCountryCode" formControlName="userCountryCode" (change)="onChangeCode($event.target.value)"
-          class="code select-css cursr" required>
-          <option class="option" *ngFor="let option of countryCodeOptions" [value]="option.code">
-            {{option.code}}</option>
-        </select> -->
         <label for="mobile" class="text-uppercase text-primary">Phone Number<span class="required-field"></span></label>
-        <input type="text" id="mobile" maxlength="10" placeholder="Enter Phone number" formControlName="doctorMobile"
-          class="form-control" name="mobile" required />
-        <small class="text-danger small"
-          *ngIf=" signUPForm.controls['doctorMobile'].hasError('required') && (signUPForm.controls['doctorMobile'].dirty || signUPForm.controls['doctorMobile'].touched)">Please
-          enter phone number.</small>
-        <small class="text-danger small"
-          *ngIf="signUPForm.controls['doctorMobile'].hasError('pattern') && (signUPForm.controls['doctorMobile'].dirty || signUPForm.controls['doctorMobile'].touched)">Phone
-          number must be only 10 digit.</small>
-        <small class="text-danger" *ngIf="signUPForm.controls['doctorMobile'].hasError('mobileExist')">Phone
-          already
-          exist.</small>
+        <input type="text" mask="(000) 000-0000" id="mobile" maxlength="14" placeholder="Enter Phone number" formControlName="doctorMobile" class="form-control" name="mobile" />
+        <small class="text-danger small" *ngIf=" signUPForm.controls['doctorMobile'].hasError('required')">Please enter phone number.</small>
+        <small class="text-danger small" *ngIf="signUPForm.controls.doctorMobile.errors">{{signUPForm.controls.doctorMobile.errors.message}}</small>
+        <small class="text-danger" *ngIf="signUPForm.controls['doctorMobile'].hasError('mobileExist')">Phone already exist.</small>
       </div>
       <div class="form-group">
         <label for="Fax" class="text-uppercase text-primary">Fax Number<span class="required-field"></span></label>
-        <input type="text" maxlength="10" formControlName="doctorFax" id="Fax" class="form-control" name="Fax"
-          placeholder="Enter Fax number" value="" required />
-        <small class="text-danger small"
-          *ngIf=" signUPForm.controls['doctorFax'].hasError('required') && (signUPForm.controls['doctorFax'].dirty || signUPForm.controls['doctorFax'].touched)">Please
-          enter fax.</small>
-        <small class="text-danger small"
-          *ngIf="signUPForm.controls['doctorFax'].hasError('pattern') && (signUPForm.controls['doctorFax'].dirty || signUPForm.controls['doctorFax'].touched)">Fax
-          Number must be only 10 digit.</small>
+        <input type="text" mask="(000) 000-0000" maxlength="14" formControlName="doctorFax" id="Fax" class="form-control" name="Fax" placeholder="Enter Fax number" value="" />
+        <small class="text-danger small" *ngIf="signUPForm.controls['doctorFax'].hasError('required')">Please enter fax.</small>
+        <small class="text-danger small" *ngIf="signUPForm.controls.doctorFax.errors">{{signUPForm.controls.doctorFax.errors.message}}</small>
       </div>
       <div class="form-group">
         <label for="Gender" class="text-uppercase text-primary">Gender<span class="required-field"></span></label>
-        <input type="text" readonly formControlName="doctorGender" id="Gender" class="form-control"
-          placeholder="Enter Gender" name="Gender" />
+        <input type="text" readonly formControlName="doctorGender" id="Gender" class="form-control" placeholder="Enter Gender" name="Gender" />
       </div>
       <div class="form-group">
         <label for="Address" class="text-uppercase text-primary">Address<span class="required-field"></span></label>
-        <textarea type="text" formControlName="doctorAddress" id="Address" class="form-control"
-          placeholder="Enter Address" name="Address" required></textarea>
-        <small class="text-danger small"
-          *ngIf=" signUPForm.controls['doctorAddress'].hasError('required') && (signUPForm.controls['doctorAddress'].dirty || signUPForm.controls['doctorAddress'].touched)">Please
-          enter Address.</small>
+        <textarea type="text" formControlName="doctorAddress" id="Address" class="form-control" placeholder="Enter Address" name="Address" required></textarea>
+        <small class="text-danger small" *ngIf="signUPForm.controls['doctorAddress'].hasError('required')">Please enter Address.</small>
       </div>
       <!-- <div class="col-md-12">									 -->
       <div class="form-group">
         <div class="custom-control custom-checkbox">
-          <input type="checkbox" formControlName="termsAndPrivacy" class="custom-control-input" id="Consult1"
-            name="Consult1" checked="checked" required>
-          <label class="custom-control-label" for="Consult1">I have read and accept DocsTime's <a
-              style="cursor: pointer;" (click)="onNavigateTerms(); closeModal(501)">Terms & conditions</a> and <a
-              style="cursor: pointer;" (click)="onNavigatePolicy(); closeModal(501)">Privacy Policy</a> </label>
+          <input type="checkbox" formControlName="termsAndPrivacy" class="custom-control-input" id="Consult1" name="Consult1">
+          <label class="custom-control-label" for="Consult1">I have read and accept DocsTime's <a style="cursor: pointer;" (click)="openModal(childModal); vOpen=true;">Terms & conditions</a> and <a style="cursor: pointer;" (click)="openModal(thirdModal); vOpen=true;">Privacy Policy</a> </label>
         </div>
-        <small class="text-danger small"
-          *ngIf=" signUPForm.controls['termsAndPrivacy'].hasError('required') && (signUPForm.controls['termsAndPrivacy'].dirty || signUPForm.controls['termsAndPrivacy'].touched)">Please
-          select this checkbox.</small>
+        <small class="text-danger small" *ngIf="signUPForm.controls['termsAndPrivacy'].hasError('required')">Please select this checkbox.</small>
       </div>
       <div class="form-group">
         <div class="custom-control custom-checkbox">
-          <input type="checkbox" formControlName="hippa" class="custom-control-input" id="Consult2" name="Consult2"
-            checked="checked" required>
-          <label class="custom-control-label" for="Consult2"> I have read and accept DocsTime's <a
-              style="cursor: pointer;" (click)="onNavigatePolicy(); closeModal(501)"> HIPAA Authorization </a> </label>
+          <input type="checkbox" formControlName="hippa" class="custom-control-input" id="Consult2" name="Consult2">
+          <label class="custom-control-label" for="Consult2">I have read and accept DocsTime's <a style="cursor: pointer;" (click)="openModal(thirdModal); vOpen=true;"> HIPAA Authorization </a> </label>
         </div>
-        <small class="text-danger small"
-          *ngIf=" signUPForm.controls['hippa'].hasError('required') && (signUPForm.controls['hippa'].dirty || signUPForm.controls['hippa'].touched)">Please
-          select this checkbox.</small>
+        <small class="text-danger small" *ngIf="signUPForm.controls['hippa'].hasError('required')">Please select this checkbox.</small>
       </div>
       <!-- </div> -->
       <div class="p-3">
@@ -123,5 +83,75 @@
       </div>
     </form>
   </div>
-
 </div>
+
+<ng-template #childModal>
+      <div class="modal-contents modal">
+        <div class="modal-header">
+          <h4 id="dialog-nested-name2" class="modal-title pull-left">Terms And Conditions</h4>
+          <button type="button" class="close pull-right" aria-label="Close" (click)="modalRefTermAndPrivacy.hide(); vOpen=false;">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="container">
+            <div class="row">
+              <div class="col-xl-12 col-md-12 align-self-center">
+                <div class="section_title" *ngIf="innerHTMLterms$ | async as cmsContents">
+                  <div [innerHTML]="cmsContents[0].cmspageContents | safeHtml">
+                  </div>
+                </div>
+                <div class="container" *ngIf="(innerHTMLterms$ | async) === null">
+                  <div class="row" style="margin-top: 40px; height: 500px;">
+                    <div class="col">
+                      <p class="text-center">Loading...</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="container" *ngIf="(innerHTMLterms$ | async) === undefined">
+                  <div class="row" style="margin-top: 40px;">
+                    <div class="col">
+                      <p class="text-center">No Content Found.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+</ng-template>
+ 
+<ng-template #thirdModal>
+      <div class="modal-contents modal">
+        <div class="modal-header">
+          <h4 id="dialog-nested-name3" class="modal-title pull-left">Privacy Policy</h4>
+          <button type="button" class="close pull-right" aria-label="Close" (click)="modalRefTermAndPrivacy.hide(); vOpen=false;">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="container">
+            <div class="row">
+              <div class="col-xl-12 col-md-12 align-self-center" *ngIf="innerHTMLprivacy$ | async as cmsContents">
+                <div [innerHTML]="cmsContents[0].cmspageContents | safeHtml"></div>
+              </div>
+              <div class="container" *ngIf="(innerHTMLprivacy$ | async) === null">
+                <div class="row" style="margin-top: 40px; height: 500px;">
+                  <div class="col">
+                    <p class="text-center">Loading...</p>
+                  </div>
+                </div>
+              </div>
+              <div class="container" *ngIf="(innerHTMLprivacy$ | async) === undefined">
+                <div class="row" style="margin-top: 40px;">
+                  <div class="col">
+                    <p class="text-center">No Content Found.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+</ng-template>

@@ -31,12 +31,10 @@ export class DoctorOtpVerificationComponent implements OnInit {
       otp: [null, Validators.compose([Validators.required, Validators.pattern('^[0-9]*$')])]
     });
   }
-
   ngOnInit(): void {
     this.status = `${this.list[0].status}`;
     this.message = `Please enter verification code which we have sent to your registered ${this.list[0].message}`;
   }
-
   openResetPasswordModal = (res: any) => {
     const initialState = {
       list: [{
@@ -53,7 +51,7 @@ export class DoctorOtpVerificationComponent implements OnInit {
     const json = {
       languageID: '1',
       logindoctorID: this.list[0].res.doctorID ? this.list[0].res.doctorID : '',
-      doctorEmailMobile: this.list[0].res.doctorMobile ? this.list[0].res.doctorMobile : this.list[0].res.doctorEmail
+      doctorEmailMobile: this.list[0].res.doctorMobile ? this.list[0].res.doctorMobile.match(/\d/g).join('') : this.list[0].res.doctorEmail
     };
     this.service.doctorResendOTP(JSON.stringify(json)).subscribe(
       (response) => {
@@ -91,7 +89,7 @@ export class DoctorOtpVerificationComponent implements OnInit {
         languageID: '1',
         logindoctorID: this.list[0].res.doctorID ? this.list[0].res.doctorID : '',
         doctorOTP: post.otp.toString(),
-        doctorEmailMobile: this.list[0].res.doctorMobile ? this.list[0].res.doctorMobile : this.list[0].res.doctorEmail,
+        doctorEmailMobile: this.list[0].res.doctorMobile ? this.list[0].res.doctorMobile.match(/\d/g).join('') : this.list[0].res.doctorEmail,
         facilityID: this.list[0].res.facilityID ? this.list[0].res.facilityID : ''
       };
       this.submitOTP(JSON.stringify(json)).then((res) => {
@@ -132,5 +130,4 @@ export class DoctorOtpVerificationComponent implements OnInit {
       }
     });
   }
-
 }

@@ -10,7 +10,6 @@ import { Location } from '@angular/common';
 import { DocStore } from '../doc-store.service';
 import { ReferCase } from '../docs.interface';
 import { DeleteConfirmationComponent } from './delete-confirmation/delete-confirmation.component';
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-doctor-view-refer',
@@ -44,8 +43,7 @@ export class DoctorViewReferComponent implements OnInit {
     this.caseViewData = await this.getViewData() as ReferCase;
     this.from = JSON.parse(this.store.referView).from;
     this.refercaseVisitDate = this.caseViewData.refercaseVisitDate;
-    const time = this.caseViewData.refercaseVisitTime !== null && this.caseViewData.refercaseVisitTime !== 'Undefined' ?
-      this.tConvert(this.caseViewData.refercaseVisitTime) : '';
+    const time = this.caseViewData.refercaseVisitTime !== null && this.caseViewData.refercaseVisitTime !== 'Undefined' ? this.tConvert(this.caseViewData.refercaseVisitTime) : '';
     this.preFixDRstr = this.caseViewData.refDocName ? this.caseViewData.refDocName.substr(0, 3) : '';
     this.preFixDRstrSent = this.caseViewData.doctorFullName ? this.caseViewData.doctorFullName.substr(0, 3) : '';
     this.convertedTime = time ? ` - ${time}` : '';
@@ -164,26 +162,28 @@ export class DoctorViewReferComponent implements OnInit {
     time[0] < 10 ? (time[0] = '0' + time[0]) : (time[0] = time[0]);
     return time[0] + '' + time[1] + '' + time[2] + ' ' + time[5];
   }
-  // openInNewWindow = (file: string) => {
-  //   window.open(file);
-  // }
   onClickRereferDashboard = (data: ReferCase) => {
+    data.from = 'dashboard';
     this.store.setRerefer(JSON.stringify(data));
     this.router.navigate(['/doctor/dashboard/re-refer-case']);
   }
   onClickRereferSent = (data: ReferCase) => {
+    data.from = this.from && this.from === 'insideSent' ? 'unknown' : 'sent';
     this.store.setRerefer(JSON.stringify(data));
     this.router.navigate(['/doctor/referrals-sent/re-refer-case']);
   }
   onClickRereferReceived = (data: ReferCase) => {
+    data.from = 'received';
     this.store.setRerefer(JSON.stringify(data));
     this.router.navigate(['/doctor/referrals-received/re-refer-case']);
   }
   onClickRereferNotification = (data: ReferCase) => {
+    data.from = 'notification';
     this.store.setRerefer(JSON.stringify(data));
     this.router.navigate(['/doctor/notifications/re-refer-case']);
   }
   onClickRereferAdd = (data: ReferCase) => {
+    data.from = 'add';
     this.store.setRerefer(JSON.stringify(data));
     this.router.navigate(['/doctor/add-refer-case/re-refer-case']);
   }
@@ -201,7 +201,6 @@ export class DoctorViewReferComponent implements OnInit {
       animated: false,
       ignoreBackdropClick: true,
       keyboard: false,
-      // class: 'modal-dialog-centered'
     });
     this.bsModalRef.content.event.subscribe((res: string) => {
       const data = JSON.parse(res);

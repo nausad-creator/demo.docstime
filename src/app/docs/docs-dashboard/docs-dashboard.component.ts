@@ -1,8 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { OwlOptions } from 'ngx-owl-carousel-o';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { merge, Observable, of, Subject } from 'rxjs';
 import { catchError, map, mergeMap, take, tap } from 'rxjs/operators';
 import { HomeService } from 'src/app/home.service';
@@ -16,7 +15,7 @@ import { DocsService } from '../docs.service';
   styleUrls: ['./docs-dashboard.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DocsDashboardComponent implements OnInit {
+export class DocsDashboardComponent implements OnInit, OnDestroy {
   fullDate = new Date();
   page = 0;
   show = 5;
@@ -45,8 +44,8 @@ export class DocsDashboardComponent implements OnInit {
       }
     }
   };
-  today$: Observable<Array<Dashboard>>;
-  other$: Observable<Array<Dashboard>>;
+  today$: Observable<Dashboard[]>;
+  other$: Observable<Dashboard[]>;
   forceReload$ = new Subject<void>();
   forceReloadToday$ = new Subject<void>();
   data = {
@@ -54,6 +53,7 @@ export class DocsDashboardComponent implements OnInit {
     logindoctorID: '',
     patientName: '',
     referbydoctorName: '',
+    refercaseStatus: '',
     insuranceNames: '',
     patientGender: '',
     refercaseUrgent: '',
@@ -67,20 +67,22 @@ export class DocsDashboardComponent implements OnInit {
     public service: HomeService,
     private cd: ChangeDetectorRef,
     private router: Router,
-    private store: DocStore,
-    private spinner: NgxSpinnerService
-  ) { }
+    private store: DocStore  ) { }
+  ngOnDestroy(): void {
+    this.docService.destroyOther(); // destroying on-going subscription
+    this.docService.destroyToday(); // destroying on-going subscription
+  }
   ngOnInit(): void {
     // initialization
     this.data.logindoctorID = this.service.getDocLocal() ? this.service.getDocLocal().doctorID : this.service.getDocSession().doctorID;
     // today
-    const initialValueToday$ = this.getDataOnceToday() as Observable<Array<Dashboard>>;
-    const updatesToday$ = this.forceReloadToday$.pipe(mergeMap(() => this.getDataOnceToday() as Observable<Array<Dashboard>>));
+    const initialValueToday$ = this.getDataOnceToday() as Observable<Dashboard[]>;
+    const updatesToday$ = this.forceReloadToday$.pipe(mergeMap(() => this.getDataOnceToday() as Observable<Dashboard[]>));
     this.today$ = merge(initialValueToday$, updatesToday$);
     this.cd.markForCheck();
     // others
-    const initialValue$ = this.getDataOnce() as Observable<Array<Dashboard>>;
-    const updates$ = this.forceReload$.pipe(mergeMap(() => this.getDataOnce() as Observable<Array<Dashboard>>));
+    const initialValue$ = this.getDataOnce() as Observable<Dashboard[]>;
+    const updates$ = this.forceReload$.pipe(mergeMap(() => this.getDataOnce() as Observable<Dashboard[]>));
     this.other$ = merge(initialValue$, updates$);
     this.cd.markForCheck();
     // notification
@@ -91,13 +93,13 @@ export class DocsDashboardComponent implements OnInit {
     return this.docService.today(JSON.stringify(this.data))
       .pipe(tap((res) => res[0].today.length > 0 ? this.isToday = true : this.isToday = false),
         map(res => res[0].today), take(1),
-        catchError(() => of([]))) as Observable<Array<Dashboard>>;
+        catchError(() => of([]))) as Observable<Dashboard[]>;
   }
   getDataOnce = () => {
     return this.docService.other(JSON.stringify(this.data))
       .pipe(tap((res) => res[0].other.length > 0 ? this.isOther = true : this.isOther = false),
         map(res => res[0].other), take(1),
-        catchError(() => of([]))) as Observable<Array<Dashboard>>;
+        catchError(() => of([]))) as Observable<Dashboard[]>;
   }
   onScrollEnd = () => {
     this.show += 10;
@@ -123,7 +125,6 @@ export class DocsDashboardComponent implements OnInit {
     this.router.navigate(['/doctor/dashboard/view-refer']);
   }
   onAppliedFilter = (filter: string) => {
-    this.spinner.show();
     this.page = 0;
     this.data.patientName = JSON.parse(filter).patientName ? JSON.parse(filter).patientName.trim() : '';
     this.data.patientGender = JSON.parse(filter).patientGender ? JSON.parse(filter).patientGender.trim() : '';
@@ -132,12 +133,11 @@ export class DocsDashboardComponent implements OnInit {
     this.data.insuranceNames = JSON.parse(filter).insuranceNames ? JSON.parse(filter).insuranceNames.trim() : '';
     this.data.startDate = JSON.parse(filter).referCaseDate ? moment(JSON.parse(filter).referCaseDate).format('YYYY-MM-DD') : '';
     this.data.endDate = JSON.parse(filter).referCaseDate ? moment(JSON.parse(filter).referCaseDate).format('YYYY-MM-DD') : '';
-    this.today$ = this.filterToday(JSON.stringify(this.data)) as Observable<Array<Dashboard>>;
-    this.other$ = this.filterOther(JSON.stringify(this.data)) as Observable<Array<Dashboard>>;
+    this.today$ = this.filterToday(JSON.stringify(this.data)) as Observable<Dashboard[]>;
+    this.other$ = this.filterOther(JSON.stringify(this.data)) as Observable<Dashboard[]>;
     this.cd.markForCheck();
   }
   onResetFilter = () => {
-    this.spinner.show();
     this.page = 0;
     this.data.patientName = '';
     this.data.patientGender = '';
@@ -146,20 +146,18 @@ export class DocsDashboardComponent implements OnInit {
     this.data.insuranceNames = '';
     this.data.startDate = '';
     this.data.endDate = '';
-    this.today$ = this.filterToday(JSON.stringify(this.data)) as Observable<Array<Dashboard>>;
-    this.other$ = this.filterOther(JSON.stringify(this.data)) as Observable<Array<Dashboard>>;
+    this.today$ = this.filterToday(JSON.stringify(this.data)) as Observable<Dashboard[]>;
+    this.other$ = this.filterOther(JSON.stringify(this.data)) as Observable<Dashboard[]>;
     this.cd.markForCheck();
   }
   filterToday = (data: string) => {
     return this.docService.docDashboardToday(data).pipe(tap(() => {
-      this.spinner.hide();
     }), map(res => res[0].today),
-      catchError(() => of([]))) as Observable<Array<Dashboard>>;
+      catchError(() => of([]))) as Observable<Dashboard[]>;
   }
   filterOther = (data: string) => {
     return this.docService.docDashboardOther(data).pipe(tap(() => {
-      this.spinner.hide();
     }), map(res => res[0].other),
-      catchError(() => of([]))) as Observable<Array<Dashboard>>;
+      catchError(() => of([]))) as Observable<Dashboard[]>;
   }
 }

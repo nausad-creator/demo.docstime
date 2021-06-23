@@ -13,11 +13,12 @@
             *ngIf="doctorList$ | async as doctorsList">
             <div class="details-list" *ngFor="let doctor of doctorsList | slice:0:show">
               <div infinite-scroll [infiniteScrollDistance]="scrollDistance" [infiniteScrollThrottle]="throttle"
-                [scrollWindow]="true" (scrolledUp)="onScrollUp()" (scrolled)="onScrollEnd()">
+                [scrollWindow]="true" (scrolled)="onScrollEnd()">
                 <app-shared-list-doctors [doctorFullName]="doctor.doctorFullName" [doctorGender]="doctor.doctorGender"
                   [doctorProfileImage]="doctor.doctorProfileImage"
+                  [facilityID]="facilityID"
                   [specialityName]="doctor.speciality.length > 0 ? doctor.speciality[0].specialityName : []"
-                  [wholeObject]="doctor" (view)="openDoctorViewModal($event)">
+                  [wholeObject]="doctor" (view)="openDoctorViewModal($event)" (update)="deleteDoctor($event); spinner.show()">
                 </app-shared-list-doctors>
               </div>
             </div>

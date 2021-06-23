@@ -1,10 +1,10 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-import { Subject, Observable, concat, of } from 'rxjs';
+import { Subject, Observable, concat, of, Subscription } from 'rxjs';
 import { distinctUntilChanged, tap, switchMap, catchError, map } from 'rxjs/operators';
 import { HomeService } from 'src/app/home.service';
 import { FacilityService } from '../facility.service';
@@ -25,7 +25,7 @@ interface Doctor {
   templateUrl: './add-refer-form.component.html',
   styleUrls: ['./add-refer-form.component.css']
 })
-export class AddReferFormComponent implements OnInit {
+export class AddReferFormComponent implements OnInit, OnDestroy {
   genders = ['Male', 'Female'];
   peopleLoading = false;
   loadingDoctors = false;
@@ -50,6 +50,16 @@ export class AddReferFormComponent implements OnInit {
   reasonsList$: Observable<Array<any>>;
   @ViewChild('dateOfBirth', { static: true }) dateOfBirth: ElementRef;
   @ViewChild('visitDate', { static: true }) visitDate: ElementRef;
+  subs1: Subscription;
+  subs2: Subscription;
+  subs3: Subscription;
+  subs4: Subscription;
+  subs5: Subscription;
+  subs6: Subscription;
+  subs7: Subscription;
+  subs8: Subscription;
+  subs9: Subscription;
+  subs10: Subscription;
   constructor(
     private facilityService: FacilityService,
     private service: HomeService,
@@ -62,19 +72,12 @@ export class AddReferFormComponent implements OnInit {
     private modalService: BsModalService,
   ) {
     this.referCaseForm = this.fb.group({
-      patientEmail: ['', Validators.compose([
-        Validators.pattern(
-          /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-        ),
-        Validators.required
-      ])],
+      patientEmail: ['', Validators.compose([Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/), Validators.required])],
       doctorFullName: [null, Validators.compose([Validators.required])],
       patientFirstName: ['', Validators.compose([Validators.maxLength(60), Validators.minLength(3), Validators.required])],
       patientDOB: ['', Validators.compose([Validators.required])],
       patientCountryCode: ['+1'],
-      patientMobile: [null, Validators.compose([
-        Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')
-      ])],
+      patientMobile: ['', Validators.compose([Validators.required, this.customValidatorUSnumber])],
       patientGender: [null, Validators.compose([Validators.required])],
       facilityID: [''],
       specialityID: [null, Validators.compose([Validators.required])],
@@ -119,7 +122,38 @@ export class AddReferFormComponent implements OnInit {
               minutes >= 45 ? 0 : 15, seconds
       );
   }
-
+  ngOnDestroy(): void {
+    if (this.subs1) {
+      this.subs1.unsubscribe();
+    }
+    if (this.subs2) {
+      this.subs2.unsubscribe();
+    }
+    if (this.subs3) {
+      this.subs3.unsubscribe();
+    }
+    if (this.subs4) {
+      this.subs4.unsubscribe();
+    }
+    if (this.subs5) {
+      this.subs5.unsubscribe();
+    }
+    if (this.subs6) {
+      this.subs6.unsubscribe();
+    }
+    if (this.subs7) {
+      this.subs7.unsubscribe();
+    }
+    if (this.subs8) {
+      this.subs8.unsubscribe();
+    }
+    if (this.subs9) {
+      this.subs9.unsubscribe();
+    }
+    if (this.subs10) {
+      this.subs10.unsubscribe();
+    }
+  }
   ngOnInit(): void {
     this.reasonsList$ = this.service.getReasons;
     this.insuranceList$ = this.service.getInsuranceLists;
@@ -128,8 +162,7 @@ export class AddReferFormComponent implements OnInit {
     this.getDoctorLists();
     this.getDoctorListsNPI();
     setTimeout(() => { this.doctorInput$.next(''); });
-    this.docuTypeList$.subscribe(
-      (response) => {
+    this.subs1 = this.docuTypeList$.subscribe((response) => {
         if (response[0].status === 'true') {
           this.documentTypeList = response[0].data;
           this.documentTypeList.forEach((doc) => doc.file = []);
@@ -137,14 +170,10 @@ export class AddReferFormComponent implements OnInit {
           this.documentTypeList.sort((a, b) => a.documenttypeID - b.documenttypeID);
         } else { console.error(response[0].message); }
       }, errror => console.error(errror));
-    this.referCaseForm.get('refercaseVisitTime').valueChanges.pipe().subscribe(() => { this.check(); });
-    this.referCaseForm.get('refercaseVisitDate').valueChanges.pipe().subscribe(() => { this.timeAndDate(); });
-    this.referCaseForm.get('refercaseHospitalAdmission').valueChanges.pipe()
-      .subscribe((val) => val ? this.modalService.show(AlertModalComponent,
-        { id: 93, animated: false, ignoreBackdropClick: true, keyboard: false, class: 'modal-sm modal-dialog-centered' }
-      ) : '');
-    this.referCaseForm.get('specialityID').valueChanges.pipe()
-      .subscribe((val) => {
+    this.subs2 = this.referCaseForm.get('refercaseVisitTime').valueChanges.pipe().subscribe(() => { this.check(); });
+    this.subs3 = this.referCaseForm.get('refercaseVisitDate').valueChanges.pipe().subscribe(() => { this.timeAndDate(); });
+    this.subs4 = this.referCaseForm.get('refercaseHospitalAdmission').valueChanges.pipe().subscribe((val) => val ? this.modalService.show(AlertModalComponent, { id: 93, animated: false, ignoreBackdropClick: true, keyboard: false, class: 'modal-sm modal-dialog-centered' }) : '');
+    this.subs5 = this.referCaseForm.get('specialityID').valueChanges.pipe().subscribe((val) => {
         if (val.length > 1) {
           this.isNPI = false;
         }
@@ -153,7 +182,45 @@ export class AddReferFormComponent implements OnInit {
           this.isNPI = true;
         }
       });
+    this.subs9 = this.referCaseForm.get('patientMobile').valueChanges.pipe().subscribe(() => { if (this.referCaseForm.get('patientMobile').value && !this.referCaseForm.get('patientMobile').errors) {this.mobile(); }});
     this.cd.markForCheck();
+  }
+  mobile = () => {
+    const data = {
+      mobile: this.referCaseForm.get('patientMobile').value.match(/\d/g).join(''),
+      languageID: '1'
+    };
+    this.subs8 = this.facilityService.validateNumber(JSON.stringify(data)).subscribe((r: { status: string; }) => {
+      try {
+        if (r.status === 'true') {
+          // valid number
+          this.referCaseForm.get('patientMobile').setErrors(null, {emitEvent: false});
+          this.cd.markForCheck();
+        }
+      } catch (err) {
+        this.referCaseForm.get('patientMobile').setErrors({ errPhone: true }, {emitEvent: false});
+        this.cd.markForCheck();
+      }
+    }, () => {
+      this.referCaseForm.get('patientMobile').setErrors({ errPhone: true }, {emitEvent: false});
+      this.cd.markForCheck();
+    });
+  }
+  customValidatorUSnumber(control: AbstractControl): ValidationErrors {
+    const error = {
+      name: '',
+      message: ''
+    };
+    const phoneRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+    if (control.value !== '') {
+      if (!phoneRegex.test(control.value)) {
+        error.name = 'invalidPhone';
+        error.message = 'Mobile number must be only 10 digit.';
+        return error;
+      }
+      return null;
+    }
+    return null;
   }
   check = () => {
     if (this.referCaseForm.get('refercaseVisitDate').value === '') {
@@ -366,7 +433,7 @@ export class AddReferFormComponent implements OnInit {
       this.referCaseForm.get('refercaseVisitDate').setErrors(null);
       this.spinner.show();
       for (const doc of this.documents) {
-        doc.documentFilename = await this.uploadFiles(doc).then((res: Array<Upload>) => res[0].fileName).catch(error => error);
+        doc.documentFilename = await this.uploadFiles(doc).then((res: Upload[]) => res[0].fileName).catch(error => error);
       }
       const data = {
         languageID: '1',
@@ -374,15 +441,13 @@ export class AddReferFormComponent implements OnInit {
         patientFirstName: post.patientFirstName.trim(),
         patientDOB: moment(post.patientDOB, 'YYYY-MM-DD').format('YYYY-MM-DD'),
         patientCountryCode: post.patientCountryCode,
-        patientMobile: post.patientMobile,
+        patientMobile: post.patientMobile.match(/\d/g).join(''),
         patientGender: post.patientGender,
         facilityID: this.service.getFaLocal() ? this.service.getFaLocal().facilityID : this.service.getFaSession().facilityID,
-        specialityID: this.referCaseForm.get('specialityID').value.length > 0 ?
-          this.specialIDconvert(this.referCaseForm.get('specialityID').value) : '',
+        specialityID: this.referCaseForm.get('specialityID').value.length > 0 ? this.specialIDconvert(this.referCaseForm.get('specialityID').value) : '',
         reasonID: post.reasonIDs.length > 0 ? this.reasonsConvertString(post.reasonIDs).trim() : '',
         reasonIDs: '0',
-        insuranceNames: post.insuranceNames && this.isObject(post.insuranceNames) ? post.insuranceNames.label.trim() :
-          post.insuranceNames && !this.isObject(post.insuranceNames) ? post.insuranceNames.trim() : '',
+        insuranceNames: post.insuranceNames && this.isObject(post.insuranceNames) ? post.insuranceNames.label.trim() : post.insuranceNames && !this.isObject(post.insuranceNames) ? post.insuranceNames.trim() : '',
         reasonNames: post.reasonIDs.length > 0 ? this.reasonsConvertNameString(post.reasonIDs).trim() : '',
         refercaseVisitDate: post.refercaseVisitDate ? moment(post.refercaseVisitDate, 'YYYY-MM-DD').format('YYYY-MM-DD') : '',
         refercaseVisitTime: post.refercaseVisitTime ? moment(post.refercaseVisitTime, 'h:mm:ss A').format('HH:mm:ss') : '',
@@ -400,7 +465,7 @@ export class AddReferFormComponent implements OnInit {
     }
   }
   refer = (data: string) => {
-    this.facilityService.addRefer(data).subscribe((response) => {
+    this.subs6 = this.facilityService.addRefer(data).subscribe((response) => {
       if (response[0].status === 'true') {
         this.documentTypeList.forEach(doc => doc.file = []);
         this.documentTypeList.forEach((doc) => doc.checked = false);
@@ -410,7 +475,7 @@ export class AddReferFormComponent implements OnInit {
           this.spinner.hide();
           this.toastr.success('Your Refer Created successfully.');
           this.router.navigate([`${'/facility/facility-referral-sent'}`]);
-        }, 500);
+        }, 100);
       } else {
         this.spinner.hide();
         this.toastr.error(response[0].message);
@@ -511,7 +576,7 @@ export class AddReferFormComponent implements OnInit {
         filePath: 'doctor',
         logindoctorID: this.service.getFaLocal() ? this.service.getFaLocal().facilityID : this.service.getFaSession().facilityID
       };
-      this.facilityService.uploadFile(data).subscribe((response) => {
+      this.subs7 = this.facilityService.uploadFile(data).subscribe((response) => {
         if (response[0].status === 'true') {
           resolve(response);
         } else {
