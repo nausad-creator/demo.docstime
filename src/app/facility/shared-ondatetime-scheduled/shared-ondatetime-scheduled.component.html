@@ -1,7 +1,8 @@
 <a style="cursor: pointer;" (click)="onNavigateViewDasboard(wholeObj)" *ngIf="from === 'Dashboard'">
   <div class="time-list">
-      <img src="assets/img/warning-icon.svg" alt="" height="15px" *ngIf="refercaseStatus === 'Pending'">
-      <img src="assets/img/check-icon.svg" alt="" height="15px" *ngIf="refercaseStatus === 'Accepted'">
+    <img src="assets/img/warning-icon.svg" alt="Pending" height="15px" *ngIf="refercaseStatus === 'Pending'">
+    <img src="assets/img/check-icon.svg" alt="Accepted" height="15px" *ngIf="refercaseStatus === 'Accepted'">
+    <img src="assets/img/close-icon.svg" alt="Rejected" height="13px" *ngIf="refercaseStatus === 'Rejected'">
       <span class="mb-0" *ngIf="convertedTime">{{convertedTime}}</span>
       <div class="selected-label" [ngClass]="{'yellow-light': refercaseStatus === 'Pending', 'blue-light': refercaseStatus === 'Accepted'}">
         <div class="row align-items-center">
@@ -18,8 +19,9 @@
 </a>
 <a style="cursor: pointer;" (click)="onNavigateViewMySchedule(wholeObj)" *ngIf="from === 'My-schedule'">
   <div class="time-list">
-      <img src="assets/img/warning-icon.svg" alt="" height="15px" *ngIf="refercaseStatus === 'Pending'">
-      <img src="assets/img/check-icon.svg" alt="" height="15px" *ngIf="refercaseStatus === 'Accepted'">
+    <img src="assets/img/warning-icon.svg" alt="Pending" height="15px" *ngIf="refercaseStatus === 'Pending'">
+    <img src="assets/img/check-icon.svg" alt="Accepted" height="15px" *ngIf="refercaseStatus === 'Accepted'">
+    <img src="assets/img/close-icon.svg" alt="Rejected" height="13px" *ngIf="refercaseStatus === 'Rejected'">
       <span class="mb-0" *ngIf="convertedTime">{{convertedTime}}</span>
       <div class="selected-label" [ngClass]="{'yellow-light': refercaseStatus === 'Pending', 'blue-light': refercaseStatus === 'Accepted'}">
         <div class="row align-items-center">
@@ -36,8 +38,9 @@
 </a>
 <a style="cursor: pointer;" (click)="onNavigateViewSent(wholeObj)" *ngIf="from === 'Sent'">
   <div class="time-list">
-      <img src="assets/img/warning-icon.svg" alt="" height="15px" *ngIf="refercaseStatus === 'Pending'">
-      <img src="assets/img/check-icon.svg" alt="" height="15px" *ngIf="refercaseStatus === 'Accepted'">
+    <img src="assets/img/warning-icon.svg" alt="Pending" height="15px" *ngIf="refercaseStatus === 'Pending'">
+    <img src="assets/img/check-icon.svg" alt="Accepted" height="15px" *ngIf="refercaseStatus === 'Accepted'">
+    <img src="assets/img/close-icon.svg" alt="Rejected" height="13px" *ngIf="refercaseStatus === 'Rejected'">
       <span class="mb-0" *ngIf="convertedTime">{{convertedTime}}</span>
       <div class="selected-label" [ngClass]="{'yellow-light': refercaseStatus === 'Pending', 'blue-light': refercaseStatus === 'Accepted'}">
         <div class="row align-items-center">
@@ -54,8 +57,9 @@
 </a>
 <a style="cursor: pointer;" (click)="onNavigateViewReceived(wholeObj)" *ngIf="from === 'Received'">
   <div class="time-list">
-      <img src="assets/img/warning-icon.svg" alt="" height="15px" *ngIf="refercaseStatus === 'Pending'">
-      <img src="assets/img/check-icon.svg" alt="" height="15px" *ngIf="refercaseStatus === 'Accepted'">
+    <img src="assets/img/warning-icon.svg" alt="Pending" height="15px" *ngIf="refercaseStatus === 'Pending'">
+    <img src="assets/img/check-icon.svg" alt="Accepted" height="15px" *ngIf="refercaseStatus === 'Accepted'">
+    <img src="assets/img/close-icon.svg" alt="Rejected" height="13px" *ngIf="refercaseStatus === 'Rejected'">
       <span class="mb-0" *ngIf="convertedTime">{{convertedTime}}</span>
       <div class="selected-label" [ngClass]="{'yellow-light': refercaseStatus === 'Pending', 'blue-light': refercaseStatus === 'Accepted'}">
         <div class="row align-items-center">
@@ -72,8 +76,9 @@
 </a>
 <a style="cursor: pointer;" (click)="onClickInsideView(wholeObj)" *ngIf="!from">
   <div class="time-list">
-      <img src="assets/img/warning-icon.svg" alt="" height="15px" *ngIf="refercaseStatus === 'Pending'">
-      <img src="assets/img/check-icon.svg" alt="" height="15px" *ngIf="refercaseStatus === 'Accepted'">
+    <img src="assets/img/warning-icon.svg" alt="Pending" height="15px" *ngIf="refercaseStatus === 'Pending'">
+    <img src="assets/img/check-icon.svg" alt="Accepted" height="15px" *ngIf="refercaseStatus === 'Accepted'">
+    <img src="assets/img/close-icon.svg" alt="Rejected" height="13px" *ngIf="refercaseStatus === 'Rejected'">
       <span class="mb-0" *ngIf="convertedTime">{{convertedTime}}</span>
       <div class="selected-label" [ngClass]="{'yellow-light': refercaseStatus === 'Pending', 'blue-light': refercaseStatus === 'Accepted'}">
         <div class="row align-items-center">
@@ -90,8 +95,9 @@
 </a>
 <a style="cursor: pointer;" (click)="onClickInsideAddCace(wholeObj)" *ngIf="from === 'addCase'">
   <div class="time-list">
-      <img src="assets/img/warning-icon.svg" alt="" height="15px" *ngIf="refercaseStatus === 'Pending'">
-      <img src="assets/img/check-icon.svg" alt="" height="15px" *ngIf="refercaseStatus === 'Accepted'">
+    <img src="assets/img/warning-icon.svg" alt="Pending" height="15px" *ngIf="refercaseStatus === 'Pending'">
+    <img src="assets/img/check-icon.svg" alt="Accepted" height="15px" *ngIf="refercaseStatus === 'Accepted'">
+    <img src="assets/img/close-icon.svg" alt="Rejected" height="13px" *ngIf="refercaseStatus === 'Rejected'">
       <span class="mb-0" *ngIf="convertedTime">{{convertedTime}}</span>
       <div class="selected-label" [ngClass]="{'yellow-light': refercaseStatus === 'Pending', 'blue-light': refercaseStatus === 'Accepted'}">
         <div class="row align-items-center">
@@ -108,8 +114,9 @@
 </a>
 <a style="cursor: pointer;" (click)="onClickInsidereReferCace(wholeObj)" *ngIf="from === 'reReferCase'">
   <div class="time-list">
-      <img src="assets/img/warning-icon.svg" alt="" height="15px" *ngIf="refercaseStatus === 'Pending'">
-      <img src="assets/img/check-icon.svg" alt="" height="15px" *ngIf="refercaseStatus === 'Accepted'">
+    <img src="assets/img/warning-icon.svg" alt="Pending" height="15px" *ngIf="refercaseStatus === 'Pending'">
+    <img src="assets/img/check-icon.svg" alt="Accepted" height="15px" *ngIf="refercaseStatus === 'Accepted'">
+    <img src="assets/img/close-icon.svg" alt="Rejected" height="13px" *ngIf="refercaseStatus === 'Rejected'">
       <span class="mb-0" *ngIf="convertedTime">{{convertedTime}}</span>
       <div class="selected-label" [ngClass]="{'yellow-light': refercaseStatus === 'Pending', 'blue-light': refercaseStatus === 'Accepted'}">
         <div class="row align-items-center">
@@ -126,8 +133,9 @@
 </a>
 <a style="cursor: pointer;" (click)="onClickInsideSchedulReferCace(wholeObj)" *ngIf="from === 'scheduleReRefer'">
   <div class="time-list">
-      <img src="assets/img/warning-icon.svg" alt="" height="15px" *ngIf="refercaseStatus === 'Pending'">
-      <img src="assets/img/check-icon.svg" alt="" height="15px" *ngIf="refercaseStatus === 'Accepted'">
+    <img src="assets/img/warning-icon.svg" alt="Pending" height="15px" *ngIf="refercaseStatus === 'Pending'">
+    <img src="assets/img/check-icon.svg" alt="Accepted" height="15px" *ngIf="refercaseStatus === 'Accepted'">
+    <img src="assets/img/close-icon.svg" alt="Rejected" height="13px" *ngIf="refercaseStatus === 'Rejected'">
       <span class="mb-0" *ngIf="convertedTime">{{convertedTime}}</span>
       <div class="selected-label" [ngClass]="{'yellow-light': refercaseStatus === 'Pending', 'blue-light': refercaseStatus === 'Accepted'}">
         <div class="row align-items-center">
@@ -144,8 +152,9 @@
 </a>
 <a style="cursor: pointer;" (click)="onClickInsideDoctorsViewCace(wholeObj)" *ngIf="from === 'doctorsList'">
   <div class="time-list">
-      <img src="assets/img/warning-icon.svg" alt="" height="15px" *ngIf="refercaseStatus === 'Pending'">
-      <img src="assets/img/check-icon.svg" alt="" height="15px" *ngIf="refercaseStatus === 'Accepted'">
+      <img src="assets/img/warning-icon.svg" alt="Pending" height="15px" *ngIf="refercaseStatus === 'Pending'">
+      <img src="assets/img/check-icon.svg" alt="Accepted" height="15px" *ngIf="refercaseStatus === 'Accepted'">
+      <img src="assets/img/close-icon.svg" alt="Rejected" height="13px" *ngIf="refercaseStatus === 'Rejected'">
       <span class="mb-0" *ngIf="convertedTime">{{convertedTime}}</span>
       <div class="selected-label" [ngClass]="{'yellow-light': refercaseStatus === 'Pending', 'blue-light': refercaseStatus === 'Accepted'}">
         <div class="row align-items-center">
