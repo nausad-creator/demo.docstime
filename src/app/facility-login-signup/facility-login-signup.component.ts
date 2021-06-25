@@ -82,6 +82,7 @@ export class FacilityLoginSignupComponent implements OnInit, DoCheck {
     this.logIn = this.fb.group({
       facilityuserEmail: ['', Validators.compose([Validators.pattern(/^(\d{10}|\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3}))$/)])],
       facilityuserPassword: [''],
+      languageID: ['1'],
       terms: [false],
     });
     // join-us form
@@ -144,12 +145,12 @@ export class FacilityLoginSignupComponent implements OnInit, DoCheck {
             this.service.setFaSession(JSON.stringify(success[0]));
             this.service.removeFaLocal();
           }
+          this.error = '';
+          this.spinner.hide();
           setTimeout(() => {
             this.logIn.reset();
-            this.error = '';
-            this.spinner.hide();
             this.triggerEvent('Confirmed');
-          });
+          }, 100);
         }).catch((error: string) => {
           this.spinner.hide();
           this.error = error;
@@ -167,7 +168,7 @@ export class FacilityLoginSignupComponent implements OnInit, DoCheck {
         if (response[0].status === 'true') {
           resolve(response[0].data);
         } else {
-          reject(response[0].message);
+          reject('Invalid username and password.');
         }
       }, () => {
         reject('some error occured.');

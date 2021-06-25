@@ -274,12 +274,12 @@ export class LoginSignupModalComponent implements OnInit, DoCheck {
             this.service.setDocSession(JSON.stringify(success[0]));
             this.service.removeLocal();
           }
+          this.error = '';
+          this.spinner.hide();
           setTimeout(() => {
             this.logIn.reset();
-            this.error = '';
-            this.spinner.hide();
             this.triggerEvent('Confirmed');
-          });
+          }, 100);
         }).catch((error: string) => {
           this.spinner.hide();
           this.error = error;
@@ -297,7 +297,7 @@ export class LoginSignupModalComponent implements OnInit, DoCheck {
         if (response[0].status === 'true') {
           resolve(response[0].data);
         } else {
-          reject(response[0].message);
+          reject('Invalid username and password');
         }
       }, () => {
         reject('some error occured.');
