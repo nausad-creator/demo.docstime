@@ -1,21 +1,65 @@
 import { Component, DoCheck, EventEmitter, KeyValueDiffers, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormArray, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-import { FacilityLogin } from '../docs';
 import { FacilityForgetPasswordComponent } from '../facility-forget-password/facility-forget-password.component';
 import { FacilityService } from '../facility/facility.service';
 import { HomeService } from '../home.service';
-
+interface Doctor {
+  cityID: string;
+  degreeID: string;
+  degreeName: string;
+  doctorAbout: string;
+  doctorAddress: string;
+  doctorAdminPush: string;
+  doctorAlternateEmail: string;
+  doctorAppointmentPush: string;
+  doctorApproved: string;
+  doctorCreatedDate: string;
+  doctorDOB: string;
+  doctorDeviceID: string;
+  doctorDeviceType: string;
+  doctorEmail: string;
+  doctorFax: string;
+  doctorFirstName: string;
+  doctorFullName: string;
+  doctorGender: string;
+  doctorID: string;
+  doctorLastName: string;
+  doctorLatitude: string;
+  doctorLongitude: string;
+  doctorMobile: string;
+  doctorNPI: string;
+  doctorOTP: string;
+  doctorOTPVerified: string;
+  doctorPassword: string;
+  doctorPostalcode: string;
+  doctorProfileImage: string;
+  doctorRatingAvg: string;
+  doctorRatingCount: string;
+  doctorRatingPush: string;
+  doctorReferredCasePush: string;
+  doctorReviewCount: string;
+  doctorStatus: string;
+  doctorbadgeCount: string;
+  facilityID: string;
+  facilityIDs: string;
+  facilityName: string;
+  facilityTzID: string;
+  hospitalID: string;
+  refmessage: string;
+  specialityIDs: string;
+  stateID: string;
+  tzID: string;
+}
 @Component({
   selector: 'app-facility-login-signup',
   templateUrl: './facility-login-signup.component.html',
   styleUrls: ['./facility-login-signup.component.css']
 })
 export class FacilityLoginSignupComponent implements OnInit, DoCheck {
-  list: any[] = [];
   logIn: FormGroup;
   joinUs: FormGroup;
   modalRef: BsModalRef;
@@ -23,7 +67,7 @@ export class FacilityLoginSignupComponent implements OnInit, DoCheck {
   hide = true;
   login = true;
   differ: any;
-  event: EventEmitter<any> = new EventEmitter();
+  event: EventEmitter<{ data: string, res: number }> = new EventEmitter();
   constructor(
     private service: HomeService,
     private modalService: BsModalService,
@@ -36,24 +80,21 @@ export class FacilityLoginSignupComponent implements OnInit, DoCheck {
     private router: Router
   ) {
     this.logIn = this.fb.group({
-      facilityuserEmail: [null, Validators.compose([Validators.required, Validators.pattern(/^(\d{10}|\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3}))$/)])],
-      facilityuserPassword: [null, Validators.required],
-      terms: [true],
+      facilityuserEmail: ['', Validators.compose([Validators.pattern(/^(\d{10}|\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3}))$/)])],
+      facilityuserPassword: [''],
+      terms: [false],
     });
     // join-us form
     this.joinUs = this.fb.group({
-      facilityName: [null, Validators.compose([Validators.required, Validators.maxLength(40), Validators.pattern('^[a-zA-Z \-\']+')])],
-      facilityEmail: [null, Validators.compose([Validators.required, Validators.
-      pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)])],
-      facilityPhone: [null, Validators.compose([Validators.required, Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')])],
-      facilityZip: [null, Validators.compose([Validators.required, Validators.pattern('^((\\+91-?)|0)?[0-9]{5}$')])],
-      faxNumber: [null, Validators.compose([Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')])],
-      termsAndPrivacy: [true, Validators.compose([
-        Validators.required
-      ])],
-      hippa: [true, Validators.compose([
-        Validators.required
-      ])],
+      requestFacilityName: ['', Validators.compose([Validators.maxLength(40), Validators.pattern('^[a-zA-Z \-\']+')])],
+      requestFacilityEmail: ['', Validators.compose([Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)])],
+      requestFacilityMobile: ['', Validators.compose([Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')])],
+      requestFacilityZip: ['', Validators.compose([Validators.pattern('^((\\+91-?)|0)?[0-9]{5}$')])],
+      requestFacilityFax: ['', Validators.compose([Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')])],
+      facilityuserID: ['0'],
+      languageID: ['1'],
+      termsAndPrivacy: [true],
+      hippa: [true],
     });
     // differ
     this.differ = this.diff.find({}).create();
@@ -77,27 +118,25 @@ export class FacilityLoginSignupComponent implements OnInit, DoCheck {
     }
   }
   reset = () => {
-    this.logIn.reset();
-    this.logIn.get('terms').patchValue(true);
     this.error = '';
-    this.joinUs.reset();
+    this.clearControlLogin();
+    this.clearControlJoin();
     this.joinUs.get('termsAndPrivacy').patchValue(true);
     this.joinUs.get('hippa').patchValue(true);
   }
-  onClickLogin = (post: any) => {
-    this.markFormTouched(this.logIn);
-    if (this.logIn.valid && this.findInvalidControlsLogin().length === 0) {
-      this.error = '';
-      this.spinner.show();
-      const data: FacilityLogin = {
-        facilityuserPassword: post.facilityuserPassword,
-        facilityuserEmail: post.facilityuserEmail,
-        languageID: post.languageID,
-      };
-      this.facilityLogin(JSON.stringify(data)).then((success: Array<any>) => {
-        this.facilityService.unSubscribe();
-        this.bsModalRef.hide();
-        setTimeout(() => {
+  onClickLogin = (post: {
+    facilityuserEmail: string;
+    facilityuserPassword: string;
+    terms: boolean;
+  }) => {
+    if (!this.checkControlPost(post)) {
+      this.markFormTouched(this.logIn);
+      if (this.logIn.valid && this.findInvalidControlsLogin().length === 0) {
+        this.error = '';
+        this.spinner.show();
+        this.facilityLogin(JSON.stringify(post)).then((success: Doctor[]) => {
+          this.facilityService.unSubscribe();
+          this.bsModalRef.hide();
           if (post.terms === true) {
             this.service.setFaLocal(JSON.stringify(success[0]));
             this.service.removeFaSession();
@@ -105,37 +144,79 @@ export class FacilityLoginSignupComponent implements OnInit, DoCheck {
             this.service.setFaSession(JSON.stringify(success[0]));
             this.service.removeFaLocal();
           }
-          this.logIn.reset();
-          this.error = '';
+          setTimeout(() => {
+            this.logIn.reset();
+            this.error = '';
+            this.spinner.hide();
+            this.triggerEvent('Confirmed');
+          });
+        }).catch((error: string) => {
           this.spinner.hide();
-          this.triggerEvent('Confirmed');
-        }, 600);
-      }).catch((error: Array<any>) => {
-        if (error.length > 0) {
+          this.error = error;
           this.triggerEvent('Error');
-          this.spinner.hide();
-          this.error = 'Please enter valid email or password.';
-        } else {
-          this.triggerEvent('Error');
-          this.spinner.hide();
-          this.error = 'some error occured in backend.';
-        }
-      });
-    } else { this.logIn.controls.terms.setValue(false); }
+        });
+      } else { this.logIn.controls.terms.setValue(false); }
+    }
+    if (this.checkControlPost(post)) {
+      this.markFormTouched(this.logIn);
+    }
   }
   facilityLogin = (post: string) => {
     return new Promise((resolve, reject) => {
-      this.service.facilitySignIn(post).subscribe(
-        (response) => {
-          if (response[0].status === 'true') {
-            resolve(response[0].data);
-          } else {
-            reject(response);
-          }
-        }, () => {
-          reject(['error']);
+      this.service.facilitySignIn(post).subscribe((response) => {
+        if (response[0].status === 'true') {
+          resolve(response[0].data);
+        } else {
+          reject(response[0].message);
         }
+      }, () => {
+        reject('some error occured.');
+      }
       );
+    });
+  }
+  checkControlPost = (post: {
+    facilityuserEmail: string;
+    facilityuserPassword: string;
+    terms: boolean;
+  }) => {
+    let invalid = false;
+    Object.keys(post).forEach((key: string) => {
+      if (key === 'facilityuserEmail' && !this.logIn.get(`${key}`).value) {
+        this.logIn.get(`${key}`).setValidators([Validators.required, Validators.pattern(/^(\d{10}|\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3}))$/)]);
+        this.logIn.get(`${key}`).updateValueAndValidity({ onlySelf: true });
+        return invalid = true;
+      }
+      if (key === 'facilityuserPassword' && !this.logIn.get(`${key}`).value) {
+        this.logIn.get(`${key}`).setValidators([Validators.required]);
+        this.logIn.get(`${key}`).updateValueAndValidity({ onlySelf: true });
+        return invalid = true;
+      }
+    });
+    return invalid;
+  }
+  clearControlLogin = () => {
+    Object.keys(this.logIn.value).forEach((key: string) => {
+      if (key === 'facilityuserEmail') {
+        this.logIn.get(`${key}`).patchValue('');
+        if (this.logIn.get(`${key}`).validator) {
+          const validator = this.logIn.get(`${key}`).validator({} as AbstractControl);
+          if (validator && validator.required) {
+            this.logIn.get(`${key}`).clearValidators();
+            this.logIn.get(`${key}`).updateValueAndValidity({ onlySelf: true });
+          }
+        }
+      }
+      if (key === 'facilityuserPassword') {
+        this.logIn.get(`${key}`).patchValue('');
+        if (this.logIn.get(`${key}`).validator) {
+          const validator = this.logIn.get(`${key}`).validator({} as AbstractControl);
+          if (validator && validator.required) {
+            this.logIn.get(`${key}`).clearValidators();
+            this.logIn.get(`${key}`).updateValueAndValidity({ onlySelf: true });
+          }
+        }
+      }
     });
   }
   markFormTouched = (group: FormGroup | FormArray) => {
@@ -155,39 +236,143 @@ export class FacilityLoginSignupComponent implements OnInit, DoCheck {
   openForgetModal = () => {
     this.bsModalRef = this.modalService.show(FacilityForgetPasswordComponent, { id: 101 });
   }
-  onJoinUS = (post: any) => {
-    this.markFormTouched(this.joinUs);
-    if (this.joinUs.valid && this.findInvalidControlsJoinUS().length === 0) {
-      const data = {
-        facilityuserID: `${'0'}`,
-        requestFacilityName: `${post.facilityName}`,
-        requestFacilityEmail: `${post.facilityEmail}`,
-        requestFacilityMobile: `${post.facilityPhone}`,
-        requestFacilityFax: `${post.faxNumber}`,
-        requestFacilityZip: `${post.facilityZip}`,
-        languageID: `${'1'}`,
-      };
-      this.join(JSON.stringify(data)).then(() => {
-        setTimeout(() => {
-          this.spinner.hide();
-          this.toastr.success('<h5>Thank you for contacting DocsTime.</h5>We will get back to you within 24 hrs.'
-            , '', {
+  onJoinUS = (post: {
+    requestFacilityName: string;
+    requestFacilityEmail: string;
+    requestFacilityMobile: string;
+    requestFacilityZip: string;
+    requestFacilityFax: string;
+    termsAndPrivacy: boolean;
+    hippa: boolean;
+  }) => {
+    if (!this.checkControlPostJoin(post)) {
+      this.markFormTouched(this.joinUs);
+      if (this.joinUs.valid && this.findInvalidControlsJoinUS().length === 0) {
+        this.join(JSON.stringify(post)).then(() => {
+          setTimeout(() => {
+            this.spinner.hide();
+            this.toastr.success('<h5>Thank you for contacting DocsTime.</h5>We will get back to you within 24 hrs.'
+              , '', {
               positionClass: 'toast-center-center-join-us',
               timeOut: 5000,
-              enableHtml : true,
-             });
-          setTimeout(() => {
-            this.joinUs.reset();
-            this.bsModalRef.hide();
+              enableHtml: true,
+            });
+            setTimeout(() => {
+              this.joinUs.reset();
+              this.bsModalRef.hide();
+            }, 500);
           }, 500);
-        }, 500);
-      }).catch(() => {
-        setTimeout(() => {
-          this.spinner.hide();
-          this.toastr.error('Some error occured, please try again later', 'Error');
-        }, 500);
-      });
+        }).catch(() => {
+          setTimeout(() => {
+            this.spinner.hide();
+            this.toastr.error('Some error occured, please try again later', 'Error');
+          }, 500);
+        });
+      }
     }
+    if (this.checkControlPostJoin(post)) {
+      this.markFormTouched(this.joinUs);
+    }
+  }
+  checkControlPostJoin = (post: {
+    requestFacilityName: string;
+    requestFacilityEmail: string;
+    requestFacilityMobile: string;
+    requestFacilityZip: string;
+    requestFacilityFax: string;
+    termsAndPrivacy: boolean;
+    hippa: boolean;
+  }) => {
+    let invalid = false;
+    Object.keys(post).forEach((key: string) => {
+      if (key === 'requestFacilityName' && !this.joinUs.get(`${key}`).value) {
+        this.joinUs.get(`${key}`).setValidators([Validators.required, Validators.maxLength(40), Validators.pattern('^[a-zA-Z \-\']+')]);
+        this.joinUs.get(`${key}`).updateValueAndValidity({ onlySelf: true });
+        return invalid = true;
+      }
+      if (key === 'requestFacilityEmail' && !this.joinUs.get(`${key}`).value) {
+        this.joinUs.get(`${key}`).setValidators([Validators.required, Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)]);
+        this.joinUs.get(`${key}`).updateValueAndValidity({ onlySelf: true });
+        return invalid = true;
+      }
+      if (key === 'requestFacilityMobile' && !this.joinUs.get(`${key}`).value) {
+        this.joinUs.get(`${key}`).setValidators([Validators.required, Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')]);
+        this.joinUs.get(`${key}`).updateValueAndValidity({ onlySelf: true });
+        return invalid = true;
+      }
+      if (key === 'requestFacilityZip' && !this.joinUs.get(`${key}`).value) {
+        this.joinUs.get(`${key}`).setValidators([Validators.required, Validators.pattern('^((\\+91-?)|0)?[0-9]{5}$')]);
+        this.joinUs.get(`${key}`).updateValueAndValidity({ onlySelf: true });
+        return invalid = true;
+      }
+      if (key === 'termsAndPrivacy' && !this.joinUs.get(`${key}`).value) {
+        this.joinUs.get(`termsAndPrivacy`).patchValue('');
+        this.joinUs.get(`${key}`).setValidators([Validators.required]);
+        this.joinUs.get(`${key}`).updateValueAndValidity({ onlySelf: true });
+        return invalid = true;
+      }
+      if (key === 'hippa' && !this.joinUs.get(`${key}`).value) {
+        this.joinUs.get(`hippa`).patchValue('');
+        this.joinUs.get(`${key}`).setValidators([Validators.required]);
+        this.joinUs.get(`${key}`).updateValueAndValidity({ onlySelf: true });
+        return invalid = true;
+      }
+    });
+    return invalid;
+  }
+  clearControlJoin = () => {
+    Object.keys(this.joinUs.value).forEach((key: string) => {
+      if (key === 'requestFacilityName') {
+        this.joinUs.get(`${key}`).patchValue('');
+        if (this.joinUs.get(`${key}`).validator) {
+          const validator = this.joinUs.get(`${key}`).validator({} as AbstractControl);
+          if (validator && validator.required) {
+            this.joinUs.get(`${key}`).clearValidators();
+            this.joinUs.get(`${key}`).updateValueAndValidity({ onlySelf: true });
+          }
+        }
+      }
+      if (key === 'requestFacilityEmail') {
+        this.joinUs.get(`${key}`).patchValue('');
+        if (this.joinUs.get(`${key}`).validator) {
+          const validator = this.joinUs.get(`${key}`).validator({} as AbstractControl);
+          if (validator && validator.required) {
+            this.joinUs.get(`${key}`).clearValidators();
+            this.joinUs.get(`${key}`).updateValueAndValidity({ onlySelf: true });
+          }
+        }
+      }
+      if (key === 'requestFacilityMobile') {
+        this.joinUs.get(`${key}`).patchValue('');
+        if (this.joinUs.get(`${key}`).validator) {
+          const validator = this.joinUs.get(`${key}`).validator({} as AbstractControl);
+          if (validator && validator.required) {
+            this.joinUs.get(`${key}`).clearValidators();
+            this.joinUs.get(`${key}`).updateValueAndValidity({ onlySelf: true });
+          }
+        }
+      }
+      if (key === 'requestFacilityZip') {
+        this.joinUs.get(`${key}`).patchValue('');
+        if (this.joinUs.get(`${key}`).validator) {
+          const validator = this.joinUs.get(`${key}`).validator({} as AbstractControl);
+          if (validator && validator.required) {
+            this.joinUs.get(`${key}`).clearValidators();
+            this.joinUs.get(`${key}`).updateValueAndValidity({ onlySelf: true });
+          }
+        }
+      }
+      if (key === 'requestFacilityFax') {
+        this.joinUs.get(`${key}`).patchValue('');
+        if (this.joinUs.get(`${key}`).validator) {
+          const validator = this.joinUs.get(`${key}`).validator({} as AbstractControl);
+          if (validator && validator.required) {
+            this.joinUs.get(`${key}`).clearValidators();
+            this.joinUs.get(`${key}`).updateValueAndValidity({ onlySelf: true });
+          }
+        }
+      }
+    });
   }
   join = (post: string) => {
     this.spinner.show();

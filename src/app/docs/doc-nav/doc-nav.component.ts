@@ -125,7 +125,7 @@ export class DocNavComponent implements OnInit, DoCheck, OnDestroy {
       sessionStorage.clear();
     }
     setTimeout(() => {
-      this.router.navigate(['/home']);
+      this.router.navigate(['/']);
     }, 500);
   }
   onClickBadge = () => {

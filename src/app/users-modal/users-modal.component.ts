@@ -62,7 +62,6 @@ import { LoginSignupModalComponent } from '../login-signup-modal/login-signup-mo
   pointer-events: auto;
   background-color: #fff;
   background-clip: padding-box;
-  /* border: 1px solid rgba(0, 0, 0, .2); */
   border-radius: .3rem;
   outline: 0;
 }`
@@ -84,10 +83,7 @@ export class UsersModalComponent implements OnInit {
   }
   openFacility = () => {
     this.onCloseAsk();
-    const initialState = {
-      list: [{ facility: true }]
-    };
-    this.bsModalRef = this.modalService.show(FacilityLoginSignupComponent, { id: 99, initialState });
+    this.bsModalRef = this.modalService.show(FacilityLoginSignupComponent, { id: 99 });
     this.bsModalRef.content.event.subscribe((res: { data: string; }) => {
       if (res.data === 'Confirmed') {
         setTimeout(() => {
@@ -100,10 +96,7 @@ export class UsersModalComponent implements OnInit {
   }
   openDoctor = () => {
     this.onCloseAsk();
-    const initialState = {
-      list: [{ doctor: true }]
-    };
-    this.bsModalRef = this.modalService.show(LoginSignupModalComponent, { id: 223, initialState });
+    this.bsModalRef = this.modalService.show(LoginSignupModalComponent, { id: 223 });
     this.bsModalRef.content.event.subscribe((res: { data: string; }) => {
       if (res.data === 'Confirmed') {
         setTimeout(() => {

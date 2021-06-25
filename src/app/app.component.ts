@@ -173,10 +173,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.timedOut = false;
   }
   openFacility = () => {
-    const initialState = {
-      list: [{ facility: true }]
-    };
-    this.bsModalRef = this.modalService.show(FacilityLoginSignupComponent, { id: 99, initialState });
+    this.bsModalRef = this.modalService.show(FacilityLoginSignupComponent, { id: 99 });
     this.bsModalRef.content.event.subscribe((res: { data: string; }) => {
       if (res.data === 'Confirmed') {
         setTimeout(() => {
@@ -188,10 +185,7 @@ export class AppComponent implements OnInit, OnDestroy {
     });
   }
   openDoctor = () => {
-    const initialState = {
-      list: [{ doctor: true }]
-    };
-    this.bsModalRef = this.modalService.show(LoginSignupModalComponent, { id: 223, initialState });
+    this.bsModalRef = this.modalService.show(LoginSignupModalComponent, { id: 223 });
     this.bsModalRef.content.event.subscribe((res: { data: string; }) => {
       if (res.data === 'Confirmed') {
         setTimeout(() => {

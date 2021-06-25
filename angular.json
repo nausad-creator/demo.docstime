@@ -22,13 +22,11 @@
               "ng2-cookies",
               "ngx-google-places-autocomplete"
             ],
-            "aot": true,
             "assets": [
               "src/favicon.png",
               "src/assets",
               "src/sitemap.xml",
               "src/robot.txt",
-              "src/.htaccess",
               "src/manifest.webmanifest"
             ],
             "styles": [
@@ -59,7 +57,13 @@
               "src/assets/js/moment.min.js",
               "src/assets/js/jquery.datetimepicker.full.js",
               "src/assets/js/fullcalendar.min.js"
-            ]
+            ],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -76,7 +80,6 @@
               },
               "outputHashing": "all",
               "sourceMap": false,
-              "aot": true,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
@@ -84,7 +87,7 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "2mb",
+                  "maximumWarning": "3mb",
                   "maximumError": "5mb"
                 },
                 {
@@ -96,7 +99,8 @@
               "serviceWorker": true,
               "ngswConfigPath": "ngsw-config.json"
             }
-          }
+          },
+          "defaultConfiguration": ""
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",

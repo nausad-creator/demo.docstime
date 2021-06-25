@@ -124,20 +124,23 @@ const cookieConfig: NgcCookieConsentConfig = {
       apiKey: 'AIzaSyAV0j-imLFwoEcRaCTHDVl0o9Tj6Mj7fZM'
     }),
     ToastrModule
-    .forRoot(
-    {
-      positionClass: 'toast-center-center',
-      timeOut: 3000,
-      preventDuplicates: true,
-      maxOpened: 1,
-      easeTime: 0,
-    }
-    ),
+      .forRoot(
+        {
+          positionClass: 'toast-center-center',
+          timeOut: 3000,
+          preventDuplicates: true,
+          maxOpened: 1,
+          easeTime: 0,
+        }
+      ),
     NgIdleKeepaliveModule.forRoot(),
     GooglePlaceModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+      registrationStrategy: 'registerImmediately'
+    })
   ],
   providers: [HomeService, LocationService],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

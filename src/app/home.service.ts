@@ -4,9 +4,108 @@ import { catchError, map, retry, shareReplay, takeUntil } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../environments/environment';
 import { Doctors } from './facility/docs.interface';
-
 const CACHE_SIZE = 1;
-
+interface Signin {
+  data: Doctor[];
+  message: string;
+  status: string;
+}
+interface NPI {
+  data: {
+    results: Record[];
+  };
+  flag: string;
+  message: string;
+  status: string;
+}
+interface Record {
+  addresses: {
+    address_1: string;
+    address_2: string;
+    address_purpose: string;
+    address_type: string;
+    city: string;
+    country_code: string;
+    country_name: string;
+    fax_number: string;
+    postal_code: string;
+    state: string;
+    telephone_number: string;
+  }[];
+  basic: {
+    credential: string;
+    enumeration_date: string;
+    first_name: string;
+    gender: string;
+    last_name: string;
+    last_updated: string;
+    middle_name: string;
+    name: string;
+    name_prefix: string;
+    sole_proprietor: string;
+    status: string;
+  };
+  created_epoch: number;
+  enumeration_type: string;
+  identifiers: [];
+  last_updated_epoch: number;
+  number: number;
+  other_names: [];
+  taxonomies: {
+    code: string;
+    desc: string;
+    license: string;
+    primary: boolean;
+    state: string;
+  }[];
+}
+interface Doctor {
+  cityID: string;
+  degreeID: string;
+  degreeName: string;
+  doctorAbout: string;
+  doctorAddress: string;
+  doctorAdminPush: string;
+  doctorAlternateEmail: string;
+  doctorAppointmentPush: string;
+  doctorApproved: string;
+  doctorCreatedDate: string;
+  doctorDOB: string;
+  doctorDeviceID: string;
+  doctorDeviceType: string;
+  doctorEmail: string;
+  doctorFax: string;
+  doctorFirstName: string;
+  doctorFullName: string;
+  doctorGender: string;
+  doctorID: string;
+  doctorLastName: string;
+  doctorLatitude: string;
+  doctorLongitude: string;
+  doctorMobile: string;
+  doctorNPI: string;
+  doctorOTP: string;
+  doctorOTPVerified: string;
+  doctorPassword: string;
+  doctorPostalcode: string;
+  doctorProfileImage: string;
+  doctorRatingAvg: string;
+  doctorRatingCount: string;
+  doctorRatingPush: string;
+  doctorReferredCasePush: string;
+  doctorReviewCount: string;
+  doctorStatus: string;
+  doctorbadgeCount: string;
+  facilityID: string;
+  facilityIDs: string;
+  facilityName: string;
+  facilityTzID: string;
+  hospitalID: string;
+  refmessage: string;
+  specialityIDs: string;
+  stateID: string;
+  tzID: string;
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -142,7 +241,7 @@ export class HomeService {
     sessionStorage.setItem('fac', data);
   }
 
-  signIn(item: string): Observable<any> {
+  signIn(item: string): Observable<Signin[]> {
     const form = new FormData();
     const json = `[{
     "languageID": "${JSON.parse(item).languageID}",
@@ -154,10 +253,10 @@ export class HomeService {
     }]`;
     form.append('json', json);
     return this.http
-      .post<any>(environment.apiBaseUrl + this.login, form, this.httpOptions)
+      .post<Signin[]>(environment.apiBaseUrl + this.login, form, this.httpOptions)
       .pipe(shareReplay(), retry(2), catchError(this.handleError));
   }
-  getNPIinfo(item: string): Observable<any> {
+  getNPIinfo(item: string): Observable<NPI[]> {
     const form = new FormData();
     const json = `[{
       "loginuserID":"${JSON.parse(item).loginuserID}",
@@ -169,7 +268,7 @@ export class HomeService {
       }]`;
     form.append('json', json);
     return this.http
-      .post<any>(environment.apiBaseUrl + this.doctorNPIinfoUrl, form, this.httpOptions)
+      .post<NPI[]>(environment.apiBaseUrl + this.doctorNPIinfoUrl, form, this.httpOptions)
       .pipe(shareReplay(), retry(2), catchError(this.handleError));
   }
   doctorRegistration(item: string): Observable<any> {
@@ -298,7 +397,7 @@ export class HomeService {
       .post<any>(environment.apiBaseUrl + this.doctorAddAddressUrl, form, this.httpOptions)
       .pipe(shareReplay(), retry(2), catchError(this.handleError));
   }
-  facilitySignIn(item: string): Observable<any> {
+  facilitySignIn(item: string): Observable<Signin[]> {
     const form = new FormData();
     const json = `[{
       "facilityuserPassword": "${JSON.parse(item).facilityuserPassword}",
@@ -310,7 +409,7 @@ export class HomeService {
     }]`;
     form.append('json', json);
     return this.http
-      .post<any>(environment.apiBaseUrl + this.facilityLogin, form, this.httpOptions)
+      .post<Signin[]>(environment.apiBaseUrl + this.facilityLogin, form, this.httpOptions)
       .pipe(shareReplay(), retry(2), catchError(this.handleError));
   }
   facilityForPassword(item: string): Observable<any> {
@@ -370,14 +469,14 @@ export class HomeService {
       .post<any>(environment.apiBaseUrl + this.facilityResendUrl, form, this.httpOptions)
       .pipe(shareReplay(), retry(2), catchError(this.handleError));
   }
-  facilityJoin(item: string): Observable<any> {
+  facilityJoin(item: string): Observable<{status: string; message: string}[]> {
     const form = new FormData();
     const json = `[{
       "facilityuserID": "${JSON.parse(item).facilityuserID}",
 	    "requestFacilityName": "${JSON.parse(item).requestFacilityName}",
 	    "requestFacilityEmail": "${JSON.parse(item).requestFacilityEmail}",
 	    "requestFacilityMobile": "${JSON.parse(item).requestFacilityMobile}",
-	    "requestFacilityFax": "${JSON.parse(item).requestFacilityFax}",
+	    "requestFacilityFax": "${JSON.parse(item).requestFacilityFax ? JSON.parse(item).requestFacilityFax : null}",
 	    "requestFacilityZip": "${JSON.parse(item).requestFacilityZip}",
 	    "languageID": "${JSON.parse(item).languageID}",
 	    "apiType": "Android",
@@ -385,7 +484,7 @@ export class HomeService {
     }]`;
     form.append('json', json);
     return this.http
-      .post<any>(environment.apiBaseUrl + this.facilityJoinUrl, form, this.httpOptions)
+      .post<{status: string; message: string}[]>(environment.apiBaseUrl + this.facilityJoinUrl, form, this.httpOptions)
       .pipe(shareReplay(), retry(2), catchError(this.handleError));
   }
   get cmsAbout(): any {

@@ -97,11 +97,7 @@ export class FacilityNavComponent implements OnInit, DoCheck, OnDestroy {
   checkStatus = () => {
     const currentUser = this.service.getFaLocal() ? this.service.getFaLocal() : this.service.getFaSession();
     if (!this.isEmpty(currentUser || !this.isBlank(currentUser))) {
-      this.facData.facilityuserFullName = currentUser.facilityuserFirstName && currentUser.facilityuserLastName ?
-        `${currentUser.facilityuserFirstName} ${currentUser.facilityuserLastName}` :
-        currentUser.facilityuserFirstName && !currentUser.facilityuserLastName ? `${currentUser.facilityuserFirstName}` :
-          !currentUser.facilityuserFirstName && currentUser.facilityuserLastName ? `${currentUser.facilityuserLastName}` :
-            'Unknown';
+      this.facData.facilityuserFullName = currentUser.facilityuserFirstName && currentUser.facilityuserLastName ? `${currentUser.facilityuserFirstName} ${currentUser.facilityuserLastName}` : currentUser.facilityuserFirstName && !currentUser.facilityuserLastName ? `${currentUser.facilityuserFirstName}` : !currentUser.facilityuserFirstName && currentUser.facilityuserLastName ? `${currentUser.facilityuserLastName}` : 'Unknown';
       this.facData.facilityuserProfileImage = currentUser.facilityuserImage;
       this.url = `${this.baseUrl}/facilityuser/${this.facData.facilityuserProfileImage}`;
     } else {
@@ -125,7 +121,7 @@ export class FacilityNavComponent implements OnInit, DoCheck, OnDestroy {
       sessionStorage.clear();
     }
     setTimeout(() => {
-      this.router.navigate(['/home']);
+      this.router.navigate(['/']);
     }, 500);
   }
   onClickBadge = () => {

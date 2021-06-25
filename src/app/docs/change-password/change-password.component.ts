@@ -99,7 +99,7 @@ export class ChangePasswordComponent implements OnInit {
     }
     this.spinner.hide();
     setTimeout(() => {
-      this.router.navigate(['/home']);
+      this.router.navigate(['/']);
     }, 1000);
   }
   markFormTouched(group: FormGroup | FormArray): any {
