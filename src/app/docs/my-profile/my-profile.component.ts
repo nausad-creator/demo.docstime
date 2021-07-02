@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
@@ -50,7 +50,39 @@ export class MyProfileComponent implements OnInit {
     private cd: ChangeDetectorRef,
     private modalService: BsModalService
   ) { }
-
+  customValidatorUSnumber(control: AbstractControl): ValidationErrors {
+    const error = {
+      name: '',
+      message: ''
+    };
+    const phoneRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+    if (control.value !== '') {
+      if (!phoneRegex.test(control.value)) {
+        error.name = 'invalidPhone';
+        error.message = 'Mobile number must be only 10 digit.';
+        return error;
+      }
+      return null;
+    }
+    return null;
+  }
+  customValidatorUSFAXnumber(control: AbstractControl): ValidationErrors {
+    const error = {
+      name: '',
+      message: ''
+    };
+    const phoneRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+    if (control.value !== '') {
+      if (!phoneRegex.test(control.value)) {
+        control.value.replace(phoneRegex, '($1) $2-$3');
+        error.name = 'invalidPhone';
+        error.message = 'Fax number must be only 10 digit.';
+        return error;
+      }
+      return null;
+    }
+    return null;
+  }
   ngOnInit(): void {
     this.docData = this.service.getDocLocal() ? this.service.getDocLocal() : this.service.getDocSession();
     this.url = `${this.baseUrl}/doctor/${this.docData.doctorProfileImage}`;
@@ -59,15 +91,15 @@ export class MyProfileComponent implements OnInit {
     this.basicProfile = this.fb.group({
       doctorFullName: [this.docData.doctorFullName ? this.docData.doctorFullName : '', Validators.compose([Validators.required])],
       doctorEmail: [this.docData.doctorEmail ? this.docData.doctorEmail : '', Validators.compose([Validators.required, Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)])],
-      doctorDOB: [this.docData.doctorDOB ? this.docData.doctorDOB : '', Validators.compose([])],
-      doctorFax: [this.docData.doctorFax ? this.docData.doctorFax.split('(').join('-').split(')').join('-').split('-').join(' ').trim().split(' ').join('') : '', Validators.compose([Validators.required, Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')])],
+      doctorDOB: [this.docData.doctorDOB ? this.docData.doctorDOB : ''],
+      doctorFax: [this.docData.doctorFax ? this.docData.doctorFax : '', Validators.compose([Validators.required, this.customValidatorUSFAXnumber])],
       doctorGender: [this.docData.doctorGender ? this.docData.doctorGender : '', Validators.compose([Validators.required])],
       doctorAbout: [this.docData.doctorAbout ? this.docData.doctorAbout : ''],
       doctorAddress: [this.docData.doctorAddress ? this.docData.doctorAddress : ''],
       doctorProfileImage: [this.docData.doctorProfileImage ? this.docData.doctorProfileImage : ''],
       doctorFirstName: [this.docData.doctorFirstName ? this.docData.doctorFirstName : ''],
       doctorLastName: [this.docData.doctorLastName ? this.docData.doctorLastName : ''],
-      doctorMobile: [this.docData.doctorMobile ? this.docData.doctorMobile.split('(').join('-').split(')').join('-').split('-').join(' ').trim().split(' ').join('') : '', Validators.compose([Validators.required, Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')])],
+      doctorMobile: [this.docData.doctorMobile ? this.docData.doctorMobile : '', Validators.compose([Validators.required, this.customValidatorUSnumber])],
       userCountryCode: [this.countryCodeOptions[0].code, Validators.compose([Validators.required])],
     });
     this.profProfile = this.fb.group({
@@ -90,10 +122,15 @@ export class MyProfileComponent implements OnInit {
   }
 
   onUpdateBasicClick = (post: any) => {
-    if (post.doctorEmail !== this.docData.doctorEmail || post.doctorMobile !== this.docData.doctorMobile.split('(').join('-').split(')').join('-').split('-').join(' ').trim().split(' ').join('')) {
-      this.onVerifyChange();
-    } else {
-      this.updateBasic(post);
+    this.markFormTouched(this.basicProfile && this.profProfile);
+    const invalidinputBaic = this.findInvalidControlsBasic();
+    const invalidinputPro = this.findInvalidControlsProf();
+    if (this.basicProfile.valid && this.profProfile.valid && invalidinputBaic.length === 0 && invalidinputPro.length === 0) {
+      if (post.doctorEmail !== this.docData.doctorEmail || post.doctorMobile.match(/\d/g).join('') !== this.docData.doctorMobile.match(/\d/g).join('')) {
+        this.onVerifyChange();
+      } else {
+        this.updateBasic(post);
+      }
     }
   }
   updateBasic = (post: any) => {
@@ -107,10 +144,10 @@ export class MyProfileComponent implements OnInit {
           this.cd.markForCheck();
           this.service.nextCount(response[0].doctorFullName);
           this.toastr.success('Profile updated successfully', '', {
-            positionClass: 'toast-center-center-request',
+            positionClass: 'toast-center-center',
             timeOut: 1500
           });
-        }, 500);
+        });
       } else {
         this.spinner.hide();
         this.toastr.error('some error occured, please try again later');
@@ -157,12 +194,12 @@ export class MyProfileComponent implements OnInit {
           doctorDOB: this.basicProfile.get('doctorDOB').value ? moment(this.basicProfile.get('doctorDOB').value).format('YYYY-MM-DD') : '',
           doctorFullName: post.doctorFullName ? post.doctorFullName : this.basicProfile.get('doctorFullName').value,
           doctorEmail: post.doctorEmail ? post.doctorEmail : this.basicProfile.get('doctorEmail').value,
-          doctorMobile: post.doctorMobile ? post.doctorMobile : this.basicProfile.get('doctorMobile').value,
+          doctorMobile: post.doctorMobile ? post.doctorMobile.match(/\d/g).join('') : this.basicProfile.get('doctorMobile').value.match(/\d/g).join(''),
           doctorFirstName: post.doctorFirstName ? post.doctorFirstName : this.basicProfile.get('doctorFirstName').value,
           doctorLastName: post.doctorLastName ? post.doctorLastName : this.basicProfile.get('doctorLastName').value,
-          specialityIDs: post.specialityIDs.length > 0 ? post.specialityIDs.join(',') : this.profProfile.get('specialityIDs').value,
+          specialityIDs: post.specialityIDs ? post.specialityIDs.join(',') : this.profProfile.get('specialityIDs').value,
           doctorGender: post.doctorGender ? post.doctorGender : this.basicProfile.get('doctorGender').value,
-          doctorFax: post.doctorFax ? post.doctorFax : this.basicProfile.get('doctorFax').value,
+          doctorFax: post.doctorFax ? post.doctorFax.match(/\d/g).join('') : this.basicProfile.get('doctorFax').value.match(/\d/g).join(''),
           doctorProfileImage: post.doctorProfileImage ? post.doctorProfileImage : this.basicProfile.get('doctorProfileImage').value,
           degreeID: post.degreeID ? post.degreeID : this.profProfile.get('degreeID').value,
           doctorAbout: post.doctorAbout ? post.doctorAbout : this.basicProfile.get('doctorAbout').value,
@@ -294,9 +331,9 @@ export class MyProfileComponent implements OnInit {
     const data: ChangeEmailMobile = {
       logindoctorID: this.docData.doctorID,
       changeDoctorEmail: this.basicProfile.get('doctorEmail').value,
-      changeDoctorMobile: this.basicProfile.get('doctorMobile').value,
+      changeDoctorMobile: this.basicProfile.get('doctorMobile').value.match(/\d/g).join(''),
       changeDoctorOldEmail: this.docData.doctorEmail,
-      changeDoctorOldMobile: this.docData.doctorMobile.split('(').join('-').split(')').join('-').split('-').join(' ').trim().split(' ').join(''),
+      changeDoctorOldMobile: this.docData.doctorMobile.match(/\d/g).join(''),
     };
     this.verifyChange(JSON.stringify(data)).then((res: boolean) => {
         if (res) {

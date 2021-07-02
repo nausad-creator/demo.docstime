@@ -168,7 +168,7 @@ export class DocsReReferMyScheduleComponent implements OnInit, OnDestroy {
           this.documentTypeList.forEach((doc) => doc.file = []);
           this.documentTypeList.forEach((doc) => doc.checked = false);
           this.documentTypeList.sort((a, b) => a.documenttypeID - b.documenttypeID);
-          if (JSON.parse(this.store.reRefer).documents.length > 0){
+          if (JSON.parse(this.store.reRefer).documents.length > 0 && JSON.parse(this.store.reRefer).from === 'sent'){
             JSON.parse(this.store.reRefer).documents.forEach((d: Files) => {
               this.documentTypeList.forEach(docs => {
                 if (docs.documenttypeID === d.documenttypeID) {

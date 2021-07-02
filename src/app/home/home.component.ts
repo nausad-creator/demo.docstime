@@ -39,8 +39,7 @@ export class HomeComponent implements OnInit {
   ) {
     this.joinUs = this.fb.group({
       joinName: [null, Validators.compose([Validators.required, Validators.maxLength(40), Validators.pattern('^[a-zA-Z \-\']+')])],
-      joinEmail: [null, Validators.compose([Validators.required, Validators.
-        pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)])],
+      joinEmail: [null, Validators.compose([Validators.required, Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)])],
       joinMobile: [null, Validators.compose([Validators.required, Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')])],
       joinCity: ['', Validators.compose([Validators.required])],
       joinState: ['', Validators.compose([Validators.required])],
@@ -73,8 +72,7 @@ export class HomeComponent implements OnInit {
         joinMessage: post.joinMessage ? post.joinMessage : '',
         joinSpeciality: post.joinSpeciality ? post.joinSpeciality : '',
         joinType: post.joinType ? post.joinType.trim() : '',
-        joinLocation: post.joinAddress && post.joinZip && post.joinCity && post.joinState ?
-          `${post.joinAddress.trim()}, ${post.joinZip.trim()}, ${post.joinCity.trim()}, ${post.joinState.trim()}` : '',
+        joinLocation: post.joinAddress && post.joinZip && post.joinCity && post.joinState ? `${post.joinAddress.trim()}, ${post.joinZip.trim()}, ${post.joinCity.trim()}, ${post.joinState.trim()}` : '',
       };
       this.joinUS(JSON.stringify(data)).then(() => {
         setTimeout(() => {
@@ -140,15 +138,9 @@ export class HomeComponent implements OnInit {
       }, err => console.error(err));
   }
   chechUser = () => {
-    this.doctor = this.service.getDocLocal() ?
-      this.service.getDocLocal() :
-      this.service.getDocSession() ?
-        this.service.getDocSession() : '';
+    this.doctor = this.service.getDocLocal() ? this.service.getDocLocal() : this.service.getDocSession() ? this.service.getDocSession() : '';
     this.cd.markForCheck();
-    this.facility = this.service.getFaLocal() ?
-      this.service.getFaLocal() :
-      this.service.getFaSession() ?
-        this.service.getFaSession() : '';
+    this.facility = this.service.getFaLocal() ? this.service.getFaLocal() : this.service.getFaSession() ? this.service.getFaSession() : '';
     this.cd.markForCheck();
   }
   jquery = () => {

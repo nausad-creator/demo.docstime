@@ -82,7 +82,7 @@ export class AddOrExistingDoctorModalComponent implements OnInit {
       doctorProfileImage: [this.list[0].profile ? this.list[0].profile : ''],
       doctorNPI: [this.list[0].npiNumber ? this.list[0].npiNumber : ''],
       doctorFax: [this.list[0].faxNumber ? this.formatMobileNumberAndFax(this.list[0].faxNumber) : ''],
-      doctorAddress: [this.list[0].address ? this.list[0].address : ''],
+      doctorAddress: [this.list[0].address ? this.list[0].address.replace(/\s+/g, ' ').trim() : ''],
       doctorPassword: [''],
       facilityID: [this.service.getFaLocal() ? this.service.getFaLocal().facilityID : this.service.getFaSession().facilityID],
       specialityIDs: [this.list[0].specialityIDs ? this.list[0].specialityIDs : ''],

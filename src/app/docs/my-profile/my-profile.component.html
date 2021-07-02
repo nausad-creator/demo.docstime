@@ -60,20 +60,17 @@
                                   {{option.code}}</option>
                               </select> -->
                           <label>Mobile Number<span class="required-field"></span></label>
-                          <input type="text" oninput="this.value = this.value.replace(/^\s+/g, '')" id="MobileNumber" maxlength="10"
-                            pattern="[1-9]{1}[0-9]{9}" formControlName="doctorMobile" name="doctorMobile"
+                          <input type="text" id="MobileNumber" mask="(000) 000-0000" maxlength="14" formControlName="doctorMobile" name="doctorMobile"
                             placeholder="Enter mobile number" class="form-control">
                           <small class="text-danger small"
-                            *ngIf=" basicProfile.controls['doctorMobile'].hasError('required') && (basicProfile.controls['doctorMobile'].dirty || basicProfile.controls['doctorMobile'].touched)">Please
+                            *ngIf="basicProfile.controls['doctorMobile'].hasError('required') && (basicProfile.controls['doctorMobile'].dirty || basicProfile.controls['doctorMobile'].touched)">Please
                             enter mobile number</small>
-                          <small class="text-danger small"
-                            *ngIf="basicProfile.controls['doctorMobile'].hasError('pattern') && (basicProfile.controls['doctorMobile'].dirty || basicProfile.controls['doctorMobile'].touched)">Mobile
-                            Number must be only 10 digit</small>
+                          <small class="text-danger small" *ngIf="basicProfile.controls.doctorMobile.errors">{{basicProfile.controls.doctorMobile.errors.message}}</small>
                         </div>
                         <div class="form-group col-md-4">
                           <label class="active">Gender<span class="required-field"></span></label>
                           <input type="text" id="doctorGender" formControlName="doctorGender"
-                            placeholder="Enter fax-number" name="doctorGender" class="form-control" readonly>
+                            placeholder="Enter gender" name="doctorGender" class="form-control" readonly>
                           <small class="text-danger small"
                             *ngIf="basicProfile.controls['doctorGender'].hasError('required') && (basicProfile.controls['doctorGender'].dirty || basicProfile.controls['doctorGender'].touched)">Please
                             Enter Gender.</small>
@@ -81,15 +78,12 @@
                         <div class="form-group col-md-4">
                           <label>Fax Number<span class="required-field"></span></label>
                           <!-- <a class="forgotpin" (click)="openVerificationFax()" *ngIf="faxChanged">Verify</a> -->
-                          <input type="text" maxlength="10" id="MobileNumber"
-                            oninput="this.value = this.value.replace(/^\s+/g, '')" formControlName="doctorFax"
+                          <input type="text" mask="(000) 000-0000" maxlength="14" id="FaxNumber" formControlName="doctorFax"
                             placeholder="Enter fax-number" name="doctorFax" class="form-control">
                           <small class="text-danger small"
-                            *ngIf=" basicProfile.controls['doctorFax'].hasError('required') && (basicProfile.controls['doctorFax'].dirty || basicProfile.controls['doctorFax'].touched)">Please
+                            *ngIf="basicProfile.controls['doctorFax'].hasError('required') && (basicProfile.controls['doctorFax'].dirty || basicProfile.controls['doctorFax'].touched)">Please
                             enter fax.</small>
-                          <small class="text-danger small"
-                            *ngIf="basicProfile.controls['doctorFax'].hasError('pattern') && (basicProfile.controls['doctorFax'].dirty || basicProfile.controls['doctorFax'].touched)">Fax
-                            Number must be only 10 digit.</small>
+                          <small class="text-danger small" *ngIf="basicProfile.controls.doctorFax.errors">{{basicProfile.controls.doctorFax.errors.message}}</small>
                         </div>
                         <!-- <div class="form-group col-md-4">
                           <label>Date of Birth</label>

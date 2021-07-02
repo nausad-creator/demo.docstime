@@ -47,12 +47,12 @@
                           </div>
                           <div class="collapse multi-collapse" id="multiCollapseExample1">
                             <div class="toggledbody pt-3">
-                              <div class="listinfor text-white" (click)="phone(caseViewData.referdocMobile)" *ngIf="caseViewData.referdocMobile"> <i
-                                  class="ti-mobile text-white"></i> &nbsp; {{caseViewData.referdocMobile}} </div>
-                              <div class="listinfor text-white" (click)="mail(caseViewData.refDoctorEmail)" *ngIf="caseViewData.refDoctorEmail"> <i
-                                  class="ti-email text-white"></i> &nbsp; {{caseViewData.refDoctorEmail}} </div>
-                              <div class="listinfor text-white" *ngIf="caseViewData.referdocFax"> <i
-                                  class="fa fa-fax text-white" aria-hidden="true"></i> &nbsp; {{caseViewData.referdocFax}}
+                              <div class="listinfor text-white" (click)="phone(caseViewData.reffacilityMobileNumber)" *ngIf="caseViewData.reffacilityMobileNumber"> <i
+                                  class="ti-mobile text-white"></i> &nbsp; {{caseViewData.reffacilityMobileNumber}} </div>
+                              <div class="listinfor text-white" (click)="mail(caseViewData.reffacilityEmail)" *ngIf="caseViewData.reffacilityEmail"> <i
+                                  class="ti-email text-white"></i> &nbsp; {{caseViewData.reffacilityEmail}} </div>
+                              <div class="listinfor text-white" *ngIf="caseViewData.reffacilityFaxNumber"> <i
+                                  class="fa fa-fax text-white" aria-hidden="true"></i> &nbsp; {{caseViewData.reffacilityFaxNumber}}
                               </div>
                             </div>
                           </div>
@@ -72,14 +72,12 @@
                     <div class="listinfor col-sm-6" *ngIf="caseViewData.doctorFullName || caseViewData.specialityName">
                       <h5 class="mb-0">Referred to</h5>
                       <div class="selected-users d-flex mb-3" *ngIf="caseViewData.doctorFullName">
-                        <a style="cursor: pointer;" class="usersdeta-items" [ngClass]="
+                        <a class="usersdeta-items" [ngClass]="
                         {
                           'lengMax': caseViewData.doctorFullName.length > 25,
                           'lengSmall': caseViewData.doctorFullName.length <= 25
                         }" style="height:auto;">
-                          <div class="lefttext collepse_click collapsed" data-toggle="collapse"
-                            href="#multiCollapseExample2" role="button" aria-expanded="false"
-                            aria-controls="multiCollapseExample1">
+                          <div class="lefttext">
                             <h4 class="mb-0"
                               *ngIf="caseViewData.doctorFullName !== null && caseViewData.doctorFullName !== undefined">
                               {{preFixDRstrSent === 'DR.' ? ((caseViewData.doctorFullName  | truncate ) | titlecase) : (('Dr. ' + caseViewData.doctorFullName  | truncate ) | titlecase)}}
@@ -87,22 +85,11 @@
                             <p class="mb-0" *ngIf="caseViewData.specialityName">
                               {{caseViewData.specialityName | titlecase}}</p>
                           </div>
-                          <div class="collapse multi-collapse" id="multiCollapseExample2">
-                            <div class="toggledbody pt-3">
-                              <div class="listinfor text-white" (click)="phone(caseViewData.doctorMobile)" *ngIf="caseViewData.doctorMobile"> <i
-                                  class="ti-mobile text-white"></i> &nbsp; {{caseViewData.doctorMobile}} </div>
-                              <div class="listinfor text-white" (click)="mail(caseViewData.doctorEmail)" *ngIf="caseViewData.doctorEmail"> <i
-                                  class="ti-email text-white"></i> &nbsp; {{caseViewData.doctorEmail}} </div>
-                              <div class="listinfor text-white" *ngIf="caseViewData.doctorFax"> <i
-                                  class="fa fa-fax text-white" aria-hidden="true"></i> &nbsp; {{caseViewData.doctorFax}}
-                              </div>
-                            </div>
-                          </div>
                         </a>
                       </div>
                       <div class="selected-users d-flex mb-3"
                         *ngIf="!caseViewData.doctorFullName && caseViewData.specialityName">
-                        <a style="cursor: pointer;" class="primary-items" style="min-width:250px;">
+                        <a class="primary-items" style="min-width:250px;">
                           <div class="lefttext">
                             <p class="mb-0">
                               {{caseViewData.specialityName | titlecase}}</p>
@@ -114,8 +101,8 @@
                   <div class="row">
                     <div class="listinfor col-sm-6">
                       <h4>Reason for consultation</h4>
-                      <p class="text-dark" *ngIf="caseViewData.reasonName || caseViewData.reasonNames">
-                        {{caseViewData.reasonName ? caseViewData.reasonName : caseViewData.reasonNames ? caseViewData.reasonNames : + ''}}
+                      <p class="text-dark">
+                        {{caseViewData.reasonName ? caseViewData.reasonName : caseViewData.reasonNames ? caseViewData.reasonNames : 'N/A'}}
                       </p>
                     </div>
                     <div class="listinfor col-sm-6" *ngIf="refercaseVisitDate">

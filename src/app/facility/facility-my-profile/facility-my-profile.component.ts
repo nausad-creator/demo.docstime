@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormArray, AbstractControl, ValidationErrors } from '@angular/forms';
 import * as moment from 'moment';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -50,7 +50,39 @@ export class FacilityMyProfileComponent implements OnInit {
     private cd: ChangeDetectorRef,
     private modalService: BsModalService
   ) { }
-
+  customValidatorUSnumber(control: AbstractControl): ValidationErrors {
+    const error = {
+      name: '',
+      message: ''
+    };
+    const phoneRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+    if (control.value !== '') {
+      if (!phoneRegex.test(control.value)) {
+        error.name = 'invalidPhone';
+        error.message = 'Mobile number must be only 10 digit.';
+        return error;
+      }
+      return null;
+    }
+    return null;
+  }
+  customValidatorUSFAXnumber(control: AbstractControl): ValidationErrors {
+    const error = {
+      name: '',
+      message: ''
+    };
+    const phoneRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+    if (control.value !== '') {
+      if (!phoneRegex.test(control.value)) {
+        control.value.replace(phoneRegex, '($1) $2-$3');
+        error.name = 'invalidPhone';
+        error.message = 'Fax number must be only 10 digit.';
+        return error;
+      }
+      return null;
+    }
+    return null;
+  }
   ngOnInit(): void {
     this.facData = this.service.getFaLocal() ? this.service.getFaLocal() : this.service.getFaSession();
     this.url = `${this.baseUrl}/facilityuser/${this.facData.facilityuserImage}`;
@@ -66,11 +98,12 @@ export class FacilityMyProfileComponent implements OnInit {
       facilityuserImage: [this.facData.facilityuserImage ? this.facData.facilityuserImage : ''],
       facilityuserFirstName: [this.facData.facilityuserFirstName ? this.facData.facilityuserFirstName : ''],
       facilityuserLastName: [this.facData.facilityuserLastName ? this.facData.facilityuserLastName : ''],
-      facilityuserMobile: [this.facData.facilityuserMobile ? this.facData.facilityuserMobile.split('(').join('-').split(')').join('-').split('-').join(' ').trim().split(' ').join('') : '', Validators.compose([Validators.required, Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')])],
+      facilityuserMobile: [this.facData.facilityuserMobile ? this.facData.facilityuserMobile : '', Validators.compose([Validators.required, this.customValidatorUSnumber])],
+      facilityFax: [this.facData.facilityFax ? this.facData.facilityFax : '', Validators.compose([Validators.required, this.customValidatorUSFAXnumber])],
       userCountryCode: [this.countryCodeOptions[0].code, Validators.compose([Validators.required])],
     });
     this.profProfile = this.fb.group({
-      facilityContactNumber: [this.facData.facilityContactNumber ? this.facData.facilityContactNumber.split('(').join('-').split(')').join('-').split('-').join(' ').trim().split(' ').join('') : '', Validators.compose([Validators.required, Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')])],
+      facilityContactNumber: [this.facData.facilityContactNumber ? this.facData.facilityContactNumber : '', Validators.compose([Validators.required, this.customValidatorUSnumber])],
       userCountryCode: [this.countryCodeOptions[0].code, Validators.compose([Validators.required])],
       facilityEmail: [this.facData.facilityEmail ? this.facData.facilityEmail : '', Validators.compose([Validators.required, Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)])],
       facilityAddress: [this.facData.facilityAddress ? this.facData.facilityAddress : '', Validators.compose([Validators.required])],
@@ -83,11 +116,13 @@ export class FacilityMyProfileComponent implements OnInit {
     this.flag = this.countryCodeOptions.filter((data) => data.code === code)[0].flag;
   }
   onUpdateBasicClick = (post: any) => {
-    if (post.facilityuserEmail !== this.facData.facilityuserEmail ||
-      post.facilityuserMobile !== this.facData.facilityuserMobile.split('(').join('-').split(')').join('-').split('-').join(' ').trim().split(' ').join('')) {
-      this.onVerifyChange();
-    } else {
-      this.updateBasic(post);
+    this.markFormTouched(this.basicProfile);
+    if (this.basicProfile.valid && this.profProfile.valid && this.findInvalidControlsBasic().length === 0) {
+      if (post.facilityuserEmail !== this.facData.facilityuserEmail || post.facilityuserMobile.match(/\d/g).join('') !== this.facData.facilityuserMobile.match(/\d/g).join('')) {
+        this.onVerifyChange();
+      } else {
+        this.updateBasic(post);
+      }
     }
   }
   updateBasic = (post: any) => {
@@ -124,10 +159,10 @@ export class FacilityMyProfileComponent implements OnInit {
             this.ngOnInit();
             this.service.nextCount(`${response[0].facilityName}`);
             this.toastr.success('Profile updated successfully', '', {
-              positionClass: 'toast-center-center-request',
+              positionClass: 'toast-center-center',
               timeOut: 1500
             });
-          }, 500);
+          });
         } else {
           this.spinner.hide();
           this.toastr.error('some error occured, please try again later');
@@ -139,7 +174,6 @@ export class FacilityMyProfileComponent implements OnInit {
       });
     }
   }
-
   updateFacilityProfile = (post: any) => {
     this.spinner.show();
     return new Promise((resolve, reject) => {
@@ -150,7 +184,8 @@ export class FacilityMyProfileComponent implements OnInit {
         facilityAbout: post.facilityAbout ? post.facilityAbout : this.basicProfile.get('facilityAbout').value,
         facilityuserDOB: post.facilityuserDOB ? moment(post.facilityuserDOB).format('YYYY-MM-DD') : moment(this.basicProfile.get('facilityuserDOB').value).format('YYYY-MM-DD'),
         facilityuserEmail: post.facilityuserEmail ? post.facilityuserEmail : this.basicProfile.get('facilityuserEmail').value,
-        facilityuserMobile: post.facilityuserMobile ? post.facilityuserMobile : this.basicProfile.get('facilityuserMobile').value,
+        facilityuserMobile: post.facilityuserMobile ? post.facilityuserMobile.match(/\d/g).join('') : this.basicProfile.get('facilityuserMobile').value.match(/\d/g).join(''),
+        facilityuserFax: post.facilityFax ? post.facilityFax.match(/\d/g).join('') : this.basicProfile.get('facilityFax').value.match(/\d/g).join(''),
         facilityuserFirstName: post.facilityuserFirstName ? post.facilityuserFirstName : this.basicProfile.get('facilityuserFirstName').value,
         facilityuserImage: this.service.getFaLocal() ? this.service.getFaLocal().facilityuserImage : this.service.getFaSession().facilityuserImage,
         facilityuserLastName: post.facilityuserLastName ? post.facilityuserLastName : this.basicProfile.get('facilityuserLastName').value,
@@ -175,7 +210,7 @@ export class FacilityMyProfileComponent implements OnInit {
         facilityuserID: this.facData.facilityuserID,
         facilityName: post.facilityName ? post.facilityName : this.profProfile.get('facilityName').value,
         facilityEmail: post.facilityEmail ? post.facilityEmail : this.profProfile.get('facilityEmail').value,
-        facilityContactNumber: post.facilityContactNumber ? post.facilityContactNumber : this.profProfile.get('facilityContactNumber').value,
+        facilityContactNumber: post.facilityContactNumber ? post.facilityContactNumber.match(/\d/g).join('') : this.profProfile.get('facilityContactNumber').value.match(/\d/g).join(''),
         facilityAddress: post.facilityAddress ? post.facilityAddress : this.profProfile.get('facilityAddress').value,
       };
       this.facilityService.updateInfo(JSON.stringify(data)).subscribe(
@@ -249,7 +284,6 @@ export class FacilityMyProfileComponent implements OnInit {
       }
     }
   }
-
   uploadFiles = (file: File) => {
     return new Promise((resolve, reject) => {
       const data = {
@@ -272,7 +306,6 @@ export class FacilityMyProfileComponent implements OnInit {
       });
     });
   }
-
   updateLogo = (facilityuserImage: string) => {
     const data = {
       languageID: '1',
@@ -303,9 +336,9 @@ export class FacilityMyProfileComponent implements OnInit {
     const data: ChangeEmailMobile = {
       facilityuserID: this.facData.facilityuserID,
       changeFacilityuserEmail: this.basicProfile.get('facilityuserEmail').value,
-      changeFacilityuserMobile: this.basicProfile.get('facilityuserMobile').value,
+      changeFacilityuserMobile: this.basicProfile.get('facilityuserMobile').value.match(/\d/g).join(''),
       changeFacilityuserOldEmail: this.facData.facilityuserEmail,
-      changeFacilityuserOldMobile: this.facData.facilityuserMobile.split('(').join('-').split(')').join('-').split('-').join(' ').trim().split(' ').join(''),
+      changeFacilityuserOldMobile: this.facData.facilityuserMobile.match(/\d/g).join(''),
     };
     this.verifyChange(JSON.stringify(data)).then((res: boolean) => {
         if (res) {

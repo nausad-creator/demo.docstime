@@ -33,12 +33,12 @@
                     </div>
                     <div class="col-lg-9 col-md-12 align-self-center">
                       <div class="row">
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-4">
                           <label>Name<span class="required-field"></span></label>
                           <input type="text" id="defaultName" formControlName="facilityFullName" name="facilityFullName"
                             class="form-control" placeholder="Enter Name" value="" readonly>
                         </div>
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-4">
                           <label>Facility Name<span class="required-field"></span></label>
                           <input type="text" id="facilityName" formControlName="facilityName" name="facilityName"
                             class="form-control" placeholder="Facility Name" required>
@@ -65,15 +65,23 @@
                                   {{option.code}}</option>
                               </select> -->
                           <label>Mobile Number<span class="required-field"></span></label>
-                          <input type="text" id="MobileNumber" maxlength="10" pattern="[1-9]{1}[0-9]{9}"
+                          <input type="text" id="MobileNumber" mask="(000) 000-0000" maxlength="14"
                             formControlName="facilityuserMobile" name="facilityuserMobile"
                             placeholder="Enter mobile number" class="form-control" value="">
                           <small class="text-danger small"
-                            *ngIf=" basicProfile.controls['facilityuserMobile'].hasError('required') && (basicProfile.controls['facilityuserMobile'].dirty || basicProfile.controls['facilityuserMobile'].touched)">Please
+                            *ngIf="basicProfile.controls['facilityuserMobile'].hasError('required') && (basicProfile.controls['facilityuserMobile'].dirty || basicProfile.controls['facilityuserMobile'].touched)">Please
                             enter mobile number</small>
+                          <small class="text-danger small" *ngIf="basicProfile.controls.facilityuserMobile.errors">{{basicProfile.controls.facilityuserMobile.errors.message}}</small>
+                        </div>
+                        <div class="form-group col-md-4">
+                          <label>Fax Number<span class="required-field"></span></label>
+                          <input type="text" id="facilityFax" mask="(000) 000-0000" maxlength="14"
+                            formControlName="facilityFax" name="facilityFax"
+                            placeholder="Enter fax-number" class="form-control">
                           <small class="text-danger small"
-                            *ngIf="basicProfile.controls['facilityuserMobile'].hasError('pattern') && (basicProfile.controls['facilityuserMobile'].dirty || basicProfile.controls['facilityuserMobile'].touched)">Mobile
-                            Number must be only 10 digit</small>
+                            *ngIf="basicProfile.controls['facilityFax'].hasError('required') && (basicProfile.controls['facilityFax'].dirty || basicProfile.controls['facilityFax'].touched)">Please
+                            enter fax.</small>
+                          <small class="text-danger small" *ngIf="basicProfile.controls.facilityFax.errors">{{basicProfile.controls.facilityFax.errors.message}}</small>
                         </div>
                         <div class="form-group col-md-4">
                           <label class="active">Gender<span class="required-field"></span></label>
@@ -138,15 +146,12 @@
                                   {{option.code}}</option>
                               </select> -->
                           <label>Mobile Number<span class="required-field"></span></label>
-                          <input type="text" id="secondaryID" formControlName="facilityContactNumber"
-                            name="facilityContactNumber" placeholder="Enter Mobile number" class="form-control"
-                            value="">
+                          <input type="text" id="secondaryID" mask="(000) 000-0000" maxlength="14" formControlName="facilityContactNumber"
+                            name="facilityContactNumber" placeholder="Enter Mobile number" class="form-control">
                           <small class="text-danger small"
-                            *ngIf=" profProfile.controls['facilityContactNumber'].hasError('required') && (profProfile.controls['facilityContactNumber'].dirty || profProfile.controls['facilityContactNumber'].touched)">Please
+                            *ngIf="profProfile.controls['facilityContactNumber'].hasError('required') && (profProfile.controls['facilityContactNumber'].dirty || profProfile.controls['facilityContactNumber'].touched)">Please
                             enter mobile number</small>
-                          <small class="text-danger small"
-                            *ngIf="profProfile.controls['facilityContactNumber'].hasError('pattern') && (profProfile.controls['facilityContactNumber'].dirty || profProfile.controls['facilityContactNumber'].touched)">Mobile
-                            Number must be only 10 digit</small>
+                          <small class="text-danger small" *ngIf="profProfile.controls.facilityContactNumber.errors">{{profProfile.controls.facilityContactNumber.errors.message}}</small>
                         </div>
                         <div class="form-group col-lg-4 col-md-6">
                           <label>Speciality<span class="required-field"></span></label>

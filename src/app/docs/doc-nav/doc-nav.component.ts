@@ -16,7 +16,7 @@ const currentDate = new Date();
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DocNavComponent implements OnInit, DoCheck, OnDestroy {
-  scheduledAll$: Observable<Array<ReceivedCount>>;
+  scheduledAll$: Observable<ReceivedCount[]>;
   forceReload$ = new Subject<void>();
   count = 0;
   pendingCount = 0;
@@ -47,10 +47,10 @@ export class DocNavComponent implements OnInit, DoCheck, OnDestroy {
   }
 
   ngOnInit(): void {
-    const initialValue$ = this.getDataOnce() as Observable<Array<ReceivedCount>>;
-    const updates$ = this.forceReload$.pipe(mergeMap(() => this.getDataOnce() as Observable<Array<ReceivedCount>>));
+    const initialValue$ = this.getDataOnce() as Observable<ReceivedCount[]>;
+    const updates$ = this.forceReload$.pipe(mergeMap(() => this.getDataOnce() as Observable<ReceivedCount[]>));
     this.scheduledAll$ = merge(initialValue$, updates$);
-    this.subscription = this.scheduledAll$.subscribe((res: Array<ReceivedCount>) => {
+    this.subscription = this.scheduledAll$.subscribe((res: ReceivedCount[]) => {
       if (res[0].status !== 'false') {
         res[0].data.length > 0 ? this.count = +res[0].data[0].doctorbadgeCount : this.count = 0;
         res[0].count.length > 0 ? this.pendingCount = res[0].count[0].pendingCount : this.pendingCount = 0;

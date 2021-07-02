@@ -42,14 +42,14 @@ export class DocsService {
   private reloadNotify$ = new Subject<void>();
   private referralReceivedCount$ = new Subject<void>();
 
-  private todayAppontments$: Observable<Array<DashboardResponse>>;
-  private otherAppointments$: Observable<Array<DashboardResponse>>;
-  private referralReceivedUpcomming$: Observable<Array<ReceivedResponse>>;
-  private referralReceivedPrivious$: Observable<Array<ReceivedResponse>>;
-  private referralReceivedListsAll$: Observable<Array<ReceivedResponse>>;
-  private referralSentLists$: Observable<Array<SentResponse>>;
-  private notifyList$: Observable<Array<NotifyResponse>>;
-  private referralReceivedListsCount$: Observable<Array<ReceivedCount>>;
+  private todayAppontments$: Observable<DashboardResponse[]>;
+  private otherAppointments$: Observable<DashboardResponse[]>;
+  private referralReceivedUpcomming$: Observable<ReceivedResponse[]>;
+  private referralReceivedPrivious$: Observable<ReceivedResponse[]>;
+  private referralReceivedListsAll$: Observable<ReceivedResponse[]>;
+  private referralSentLists$: Observable<SentResponse[]>;
+  private notifyList$: Observable<NotifyResponse[]>;
+  private referralReceivedListsCount$: Observable<ReceivedCount[]>;
   // urls
   private changePasswordUrl = '/doctor/change-password';
   private updateProfileUrl = '/doctor/doctor-update-profile';
@@ -126,7 +126,7 @@ export class DocsService {
       .post<Array<ChangeResponse>>(environment.apiBaseUrl + this.changeEmailMobileUrl, form, this.httpOptions)
       .pipe(shareReplay(), retry(2), catchError(this.handleError));
   }
-  changeVerification = (data: string): Observable<Array<ChangeVerificationResponse>> => {
+  changeVerification = (data: string): Observable<ChangeVerificationResponse[]> => {
     const form = new FormData();
     const json = `[{
       "languageID":"${JSON.parse(data).languageID}",
@@ -137,10 +137,10 @@ export class DocsService {
     }]`;
     form.append('json', json);
     return this.http
-      .post<Array<ChangeVerificationResponse>>(environment.apiBaseUrl + this.changeOTPverificationUlr, form, this.httpOptions)
+      .post<ChangeVerificationResponse[]>(environment.apiBaseUrl + this.changeOTPverificationUlr, form, this.httpOptions)
       .pipe(shareReplay(), retry(2), catchError(this.handleError));
   }
-  deleteCase = (data: string): Observable<Array<DeleteResponse>> => {
+  deleteCase = (data: string): Observable<DeleteResponse[]> => {
     const form = new FormData();
     const json = `[{
       "apiType":"Android",
@@ -150,10 +150,10 @@ export class DocsService {
     }]`;
     form.append('json', json);
     return this.http
-      .post<Array<DeleteResponse>>(environment.apiBaseUrl + this.deleteCaseUrl, form, this.httpOptions)
+      .post<DeleteResponse[]>(environment.apiBaseUrl + this.deleteCaseUrl, form, this.httpOptions)
       .pipe(shareReplay(), retry(2), catchError(this.handleError));
   }
-  searchDoctors = (searchWord: string): Observable<Array<Doctors>> => {
+  searchDoctors = (searchWord: string): Observable<Doctors[]> => {
     const form = new FormData();
     const json = `[{
       "referCaseSearch":"${true}",
@@ -164,7 +164,7 @@ export class DocsService {
       }]`;
     form.append('json', json);
     return this.http
-      .post<Array<Doctors>>(environment.apiBaseUrl + this.doctorListUrl, form, this.httpOptions)
+      .post<Doctors[]>(environment.apiBaseUrl + this.doctorListUrl, form, this.httpOptions)
       .pipe(retry(2), catchError(this.handleError));
   }
   docChangePassword(data: string): Observable<any> {
@@ -258,7 +258,7 @@ export class DocsService {
       .post<{ status: string }>(environment.apiBaseUrl + `${this.validateNumberUrl}`, form, this.httpOptions)
       .pipe(map(r => r[0]), shareReplay(), retry(2), catchError(this.handleError));
   }
-  addRefer(data: string): Observable<Array<AddEditReReferResponse>> {
+  addRefer(data: string): Observable<AddEditReReferResponse[]> {
     const form = new FormData();
     const json = `[{
       "apiType": "Android",
@@ -287,10 +287,10 @@ export class DocsService {
     }]`;
     form.append('json', json);
     return this.http
-      .post<Array<AddEditReReferResponse>>(environment.apiBaseUrl + `${this.createReferUrl}`, form, this.httpOptions)
+      .post<AddEditReReferResponse[]>(environment.apiBaseUrl + `${this.createReferUrl}`, form, this.httpOptions)
       .pipe(shareReplay(), retry(2), catchError(this.handleError));
   }
-  addreRefer(data: string): Observable<Array<AddEditReReferResponse>> {
+  addreRefer(data: string): Observable<AddEditReReferResponse[]> {
     const form = new FormData();
     const json = `[{
       "apiType": "Android",
@@ -315,10 +315,10 @@ export class DocsService {
     }]`;
     form.append('json', json);
     return this.http
-      .post<Array<AddEditReReferResponse>>(environment.apiBaseUrl + `${this.createreReferUrl}`, form, this.httpOptions)
+      .post<AddEditReReferResponse[]>(environment.apiBaseUrl + `${this.createreReferUrl}`, form, this.httpOptions)
       .pipe(shareReplay(), retry(2), catchError(this.handleError));
   }
-  editRefer(data: string): Observable<Array<AddEditReReferResponse>> {
+  editRefer(data: string): Observable<AddEditReReferResponse[]> {
     const form = new FormData();
     const json = `[{
       "apiType": "Android",
@@ -350,7 +350,7 @@ export class DocsService {
     }]`;
     form.append('json', json);
     return this.http
-      .post<Array<AddEditReReferResponse>>(environment.apiBaseUrl + `${this.editReferUrl}`, form, this.httpOptions)
+      .post<AddEditReReferResponse[]>(environment.apiBaseUrl + `${this.editReferUrl}`, form, this.httpOptions)
       .pipe(shareReplay(), retry(2), catchError(this.handleError));
   }
   destroyToday = () => {
@@ -361,7 +361,7 @@ export class DocsService {
     this.reloadToday$.next();
     this.todayAppontments$ = null;
   }
-  today = (data: string): Observable<Array<DashboardResponse>> => {
+  today = (data: string): Observable<DashboardResponse[]> => {
     if (!this.todayAppontments$) {
       const timer$ = timer(0, REFRESH_INTERVAL);
       this.todayAppontments$ = timer$.pipe(
@@ -380,7 +380,7 @@ export class DocsService {
     this.reloadOthers$.next();
     this.otherAppointments$ = null;
   }
-  other = (data: string): Observable<Array<DashboardResponse>> => {
+  other = (data: string): Observable<DashboardResponse[]> => {
     if (!this.otherAppointments$) {
       const timer$ = timer(0, REFRESH_INTERVAL);
       this.otherAppointments$ = timer$.pipe(
@@ -391,7 +391,7 @@ export class DocsService {
     }
     return this.otherAppointments$;
   }
-  docDashboardToday(data: string): Observable<Array<DashboardResponse>> {
+  docDashboardToday(data: string): Observable<DashboardResponse[]> {
     const form = new FormData();
     const json = `[{
       "languageID": "${JSON.parse(data).languageID}",
@@ -411,10 +411,10 @@ export class DocsService {
     }]`;
     form.append('json', json);
     return this.http
-      .post<Array<DashboardResponse>>(environment.apiBaseUrl + `${this.homeUrl}`, form, this.httpOptions)
+      .post<DashboardResponse[]>(environment.apiBaseUrl + `${this.homeUrl}`, form, this.httpOptions)
       .pipe(retry(2), catchError(this.handleError));
   }
-  docDashboardOther(data: string): Observable<Array<DashboardResponse>> {
+  docDashboardOther(data: string): Observable<DashboardResponse[]> {
     const form = new FormData();
     const json = `[{
       "languageID": "${JSON.parse(data).languageID}",
@@ -434,7 +434,7 @@ export class DocsService {
     }]`;
     form.append('json', json);
     return this.http
-      .post<Array<DashboardResponse>>(environment.apiBaseUrl + `${this.homeUrl}`, form, this.httpOptions)
+      .post<DashboardResponse[]>(environment.apiBaseUrl + `${this.homeUrl}`, form, this.httpOptions)
       .pipe(retry(2), catchError(this.handleError));
   }
   destroyUpcomming = () => {
@@ -445,7 +445,7 @@ export class DocsService {
     this.reloadUpcomming$.next();
     this.referralReceivedUpcomming$ = null;
   }
-  referralReceivedUpcomming = (data: string): Observable<Array<ReceivedResponse>> => {
+  referralReceivedUpcomming = (data: string): Observable<ReceivedResponse[]> => {
     if (!this.referralReceivedUpcomming$) {
       const timer$ = timer(0, REFRESH_INTERVAL);
       this.referralReceivedUpcomming$ = timer$.pipe(
@@ -464,7 +464,7 @@ export class DocsService {
     this.reloadPrivious$.next();
     this.referralReceivedPrivious$ = null;
   }
-  referralReceivedPrivious = (data: string): Observable<Array<ReceivedResponse>> => {
+  referralReceivedPrivious = (data: string): Observable<ReceivedResponse[]> => {
     if (!this.referralReceivedPrivious$) {
       const timer$ = timer(0, REFRESH_INTERVAL);
       this.referralReceivedPrivious$ = timer$.pipe(
@@ -483,7 +483,7 @@ export class DocsService {
     this.reloadReceivedAll$.next();
     this.referralReceivedListsAll$ = null;
   }
-  referralReceivedAll = (data: string): Observable<Array<ReceivedResponse>> => {
+  referralReceivedAll = (data: string): Observable<ReceivedResponse[]> => {
     if (!this.referralReceivedListsAll$) {
       const timer$ = timer(0, REFRESH_INTERVAL);
       this.referralReceivedListsAll$ = timer$.pipe(
@@ -494,7 +494,7 @@ export class DocsService {
     }
     return this.referralReceivedListsAll$;
   }
-  referralReceivedLists(data: string): Observable<Array<ReceivedResponse>> {
+  referralReceivedLists(data: string): Observable<ReceivedResponse[]> {
     const form = new FormData();
     const json = `[{
       "apiType":"web",
@@ -517,14 +517,14 @@ export class DocsService {
       }]`;
     form.append('json', json);
     return this.http
-      .post<Array<ReceivedResponse>>(environment.apiBaseUrl + `${this.referralReceivedUrl}`, form, this.httpOptions)
+      .post<ReceivedResponse[]>(environment.apiBaseUrl + `${this.referralReceivedUrl}`, form, this.httpOptions)
       .pipe(retry(2), catchError(this.handleError));
   }
   forceReloadCount = () => {
     this.referralReceivedCount$.next();
     this.referralReceivedListsCount$ = null;
   }
-  referralReceivedCount = (data: string): Observable<Array<ReceivedCount>> => {
+  referralReceivedCount = (data: string): Observable<ReceivedCount[]> => {
     if (!this.referralReceivedListsCount$) {
       const timer$ = timer(0, REFRESH_INTERVAL);
       this.referralReceivedListsCount$ = timer$.pipe(
@@ -535,7 +535,7 @@ export class DocsService {
     }
     return this.referralReceivedListsCount$;
   }
-  referralReceivedListsForCount(data: string): Observable<Array<ReceivedCount>> {
+  referralReceivedListsForCount(data: string): Observable<ReceivedCount[]> {
     const form = new FormData();
     const json = `[{
       "apiType":"Android",
@@ -551,7 +551,7 @@ export class DocsService {
       }]`;
     form.append('json', json);
     return this.http
-      .post<Array<ReceivedCount>>(environment.apiBaseUrl + `${this.referralReceivedUrl}`, form, this.httpOptions)
+      .post<ReceivedCount[]>(environment.apiBaseUrl + `${this.referralReceivedUrl}`, form, this.httpOptions)
       .pipe(retry(2), catchError(this.handleError));
   }
   destroySentList = () => {
@@ -562,7 +562,7 @@ export class DocsService {
     this.reloadSentList$.next();
     this.referralSentLists$ = null;
   }
-  referralSent = (data: string): Observable<Array<SentResponse>> => {
+  referralSent = (data: string): Observable<SentResponse[]> => {
     if (!this.referralSentLists$) {
       const timer$ = timer(0, REFRESH_INTERVAL);
       this.referralSentLists$ = timer$.pipe(
@@ -573,7 +573,7 @@ export class DocsService {
     }
     return this.referralSentLists$;
   }
-  referralSentLists(data: string): Observable<Array<SentResponse>> {
+  referralSentLists(data: string): Observable<SentResponse[]> {
     const form = new FormData();
     const json = `[{
       "apiType": "Android",
@@ -596,14 +596,14 @@ export class DocsService {
     }]`;
     form.append('json', json);
     return this.http
-      .post<Array<SentResponse>>(environment.apiBaseUrl + `${this.referralSentUrl}`, form, this.httpOptions)
+      .post<SentResponse[]>(environment.apiBaseUrl + `${this.referralSentUrl}`, form, this.httpOptions)
       .pipe(retry(2), catchError(this.handleError));
   }
   forceReloadNotify = () => {
     this.reloadNotify$.next();
     this.notifyList$ = null;
   }
-  notifyList = (data: string): Observable<Array<NotifyResponse>> => {
+  notifyList = (data: string): Observable<NotifyResponse[]> => {
     if (!this.notifyList$) {
       const timer$ = timer(0, REFRESH_INTERVAL);
       this.notifyList$ = timer$.pipe(
@@ -614,7 +614,7 @@ export class DocsService {
     }
     return this.notifyList$;
   }
-  notificationLists(data: string): Observable<Array<NotifyResponse>> {
+  notificationLists(data: string): Observable<NotifyResponse[]> {
     const form = new FormData();
     const json = `[{
       "loginuserID":"${JSON.parse(data).loginuserID}",
@@ -627,7 +627,7 @@ export class DocsService {
       }]`;
     form.append('json', json);
     return this.http
-      .post<Array<NotifyResponse>>(environment.apiBaseUrl + `${this.notifyListsUrl}`, form, this.httpOptions)
+      .post<NotifyResponse[]>(environment.apiBaseUrl + `${this.notifyListsUrl}`, form, this.httpOptions)
       .pipe(retry(2), catchError(this.handleError));
   }
   referralReceived(data: string): Observable<any> {
@@ -676,7 +676,7 @@ export class DocsService {
       .post<any>(environment.apiBaseUrl + `${this.updateNotifyUrl}`, form, this.httpOptions)
       .pipe(retry(2), catchError(this.handleError));
   }
-  deleteNotification(data: string): Observable<Array<DeleteResponse>> {
+  deleteNotification(data: string): Observable<DeleteResponse[]> {
     const form = new FormData();
     const json = `[{
       "loginuserID": "${JSON.parse(data).loginuserID}",
@@ -691,7 +691,7 @@ export class DocsService {
     }]`;
     form.append('json', json);
     return this.http
-      .post<Array<DeleteResponse>>(environment.apiBaseUrl + `${this.deleteNotifyUrl}`, form, this.httpOptions)
+      .post<DeleteResponse[]>(environment.apiBaseUrl + `${this.deleteNotifyUrl}`, form, this.httpOptions)
       .pipe(shareReplay(), retry(2), catchError(this.handleError));
   }
   acceptReferral(data: string): Observable<any> {

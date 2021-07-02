@@ -7,6 +7,7 @@ import { HomeService } from 'src/app/home.service';
 import { FacilityService } from '../facility.service';
 import { faShareAlt } from '@fortawesome/free-solid-svg-icons';
 import { environment } from 'src/environments/environment';
+import { ReceivedCount } from '../docs.interface';
 const currentDate = new Date();
 @Component({
   selector: 'app-facility-nav',
@@ -15,7 +16,7 @@ const currentDate = new Date();
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FacilityNavComponent implements OnInit, DoCheck, OnDestroy {
-  scheduledAll$: Observable<Array<any>>;
+  scheduledAll$: Observable<ReceivedCount[]>;
   forceReloadFacility$ = new Subject<void>();
   count = 0;
   pendingCount = 0;
@@ -45,10 +46,10 @@ export class FacilityNavComponent implements OnInit, DoCheck, OnDestroy {
   }
 
   ngOnInit(): void {
-    const initialValue$ = this.getDataOnce();
-    const updates$ = this.forceReloadFacility$.pipe(mergeMap(() => this.getDataOnce()));
+    const initialValue$ = this.getDataOnce() as Observable<ReceivedCount[]>;
+    const updates$ = this.forceReloadFacility$.pipe(mergeMap(() => this.getDataOnce() as Observable<ReceivedCount[]>));
     this.scheduledAll$ = merge(initialValue$, updates$);
-    this.subscription = this.scheduledAll$.subscribe((res: Array<any>) => {
+    this.subscription = this.scheduledAll$.subscribe((res: ReceivedCount[]) => {
       if (res[0].status !== 'false') {
         res[0].data.length > 0 ? this.count = +res[0].data[0].facilityBadgeCount : this.count = 0;
         res[0].count.length > 0 ? this.pendingCount = +res[0].count[0].pendingCount : this.pendingCount = 0;
