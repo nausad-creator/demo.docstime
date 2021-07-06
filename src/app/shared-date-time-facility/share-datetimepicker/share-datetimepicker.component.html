@@ -1,0 +1,39 @@
+<div class="wow zoomIn pt-3" data-wow-delay="0.2s">
+    <div class="calender">
+      <input type="text" id="datetimepicker2">
+    </div>
+    <br>
+    <div class="time-content" *ngIf="scheduledAccepted$ | async as accepted">
+      <h5 *ngIf="accepted.length > 0">Time</h5>
+      <div class="scraoll-time-section">
+        <div class="details-list" *ngFor="let appointed of accepted | sortByTime">
+          <app-shared-ondatetime-scheduled
+          [refercaseVisitTime]="appointed.refercaseVisitTime"
+          [patientFirstName]="appointed.patientFirstName ? appointed.patientFirstName : ''"
+          [patientLastName]="appointed.patientLastName ? appointed.patientLastName : ''"
+          [wholeObj]="appointed"
+          [from]="from ? from : ''"
+          (updateView)="updateReferView()"
+          [refercaseStatus]="appointed.refercaseStatus ? appointed.refercaseStatus : ''"
+          [patientLastName]="appointed.patientLastName ? appointed.patientLastName : ''"
+          [reasonName]="appointed.reasonName ? appointed.reasonName : appointed.reasonNames ? appointed.reasonNames : ''">
+          </app-shared-ondatetime-scheduled>
+        </div>
+      </div>
+    </div>
+    <div class="" style="margin-top: 10px;" *ngIf="(scheduledAccepted$ | async) === null">
+      <div class="row">
+        <div class="col">
+          <ngx-skeleton-loader count="3" [theme]="{ height: '60px' }"></ngx-skeleton-loader>
+        </div>
+      </div>
+    </div>
+    <div class="" style="margin-top: 40px; height: 50px;" *ngIf="(scheduledAccepted$ | async) === undefined || (scheduledAccepted$ | async)?.length === 0">
+      <div class="row">
+        <div class="col">
+          <p class="text-center">No Appointment are Found on this Date.</p>
+        </div>
+      </div>
+    </div>
+    <br>
+  </div>

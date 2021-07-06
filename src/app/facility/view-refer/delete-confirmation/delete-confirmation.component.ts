@@ -33,7 +33,6 @@ import { HomeService } from 'src/app/home.service';
       pointer-events: auto;
       background-color: #fff;
       background-clip: padding-box;
-      /* border: 1px solid rgba(0, 0, 0, .2); */
       border-radius: .3rem;
       outline: 0;
   }`

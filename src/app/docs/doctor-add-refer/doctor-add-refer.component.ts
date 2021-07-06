@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-import { Subject, Observable, concat, of, Subscription } from 'rxjs';
+import { Subject, Observable, concat, of } from 'rxjs';
 import { distinctUntilChanged, tap, switchMap, catchError, map } from 'rxjs/operators';
 import { HomeService } from 'src/app/home.service';
 import { DocsService } from '../docs.service';
@@ -12,6 +12,7 @@ import { Location } from '@angular/common';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { AlertModalComponent } from '../alert-modal/alert-modal.component';
 import { Doctors, Documents, FileUpload, Reasons, Refer, Speciality, Upload } from '../docs.interface';
+import { SubSink } from 'subsink';
 interface Doctor {
   doctorAddress: string;
   doctorFirstName: string;
@@ -48,16 +49,7 @@ export class DoctorAddReferComponent implements OnInit, OnDestroy {
   doctorList$: Observable<Array<Doctors>>;
   @ViewChild('dateOfBirth', { static: true }) dateOfBirth: ElementRef;
   @ViewChild('visitDate', { static: true }) visitDate: ElementRef;
-  subs1: Subscription;
-  subs2: Subscription;
-  subs3: Subscription;
-  subs4: Subscription;
-  subs5: Subscription;
-  subs6: Subscription;
-  subs7: Subscription;
-  subs8: Subscription;
-  subs9: Subscription;
-  subs10: Subscription;
+  subs = new SubSink();
   constructor(
     private docService: DocsService,
     private service: HomeService,
@@ -70,22 +62,22 @@ export class DoctorAddReferComponent implements OnInit, OnDestroy {
     private modalService: BsModalService,
   ) {
     this.referCaseForm = this.fb.group({
-      patientEmail: ['', Validators.compose([Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/), Validators.required])],
-      patientFirstName: ['', Validators.compose([Validators.maxLength(60), Validators.minLength(3), Validators.required])],
-      patientDOB: ['', Validators.compose([Validators.required])],
+      patientEmail: ['', Validators.compose([Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)])],
+      patientFirstName: ['', Validators.compose([Validators.maxLength(60), Validators.minLength(3)])],
+      patientDOB: ['', Validators.compose([this.dateMaximum])],
       patientCountryCode: ['+1'],
-      patientMobile: ['', Validators.compose([Validators.required, this.customValidatorUSnumber])],
-      patientGender: [null, Validators.compose([Validators.required])],
+      patientMobile: ['', Validators.compose([this.customValidatorUSnumber])],
+      patientGender: [null],
       facilityID: ['0'],
-      specialityID: [null, Validators.compose([Validators.required])],
-      insuranceNames: [null, Validators.compose([])],
+      specialityID: [null],
+      insuranceNames: [null],
       reasonID: ['0'],
-      reasonIDs: ['', Validators.compose([Validators.required])],
+      reasonIDs: [''],
       reasonNames: [''],
       refercaseUrgent: [false],
       refercaseNPI: [null, Validators.compose([Validators.pattern('^[0-9]{10}$')])],
       refercaseDescription: [''],
-      refercaseVisitDate: [''],
+      refercaseVisitDate: ['', this.dateMinimum],
       refercaseVisitTime: [''],
       doctorID: [''],
       refercaseHospitalAdmission: [false]
@@ -120,36 +112,7 @@ export class DoctorAddReferComponent implements OnInit, OnDestroy {
       );
   }
   ngOnDestroy(): void {
-    if (this.subs1) {
-      this.subs1.unsubscribe();
-    }
-    if (this.subs2) {
-      this.subs2.unsubscribe();
-    }
-    if (this.subs3) {
-      this.subs3.unsubscribe();
-    }
-    if (this.subs4) {
-      this.subs4.unsubscribe();
-    }
-    if (this.subs5) {
-      this.subs5.unsubscribe();
-    }
-    if (this.subs6) {
-      this.subs6.unsubscribe();
-    }
-    if (this.subs7) {
-      this.subs7.unsubscribe();
-    }
-    if (this.subs8) {
-      this.subs8.unsubscribe();
-    }
-    if (this.subs9) {
-      this.subs9.unsubscribe();
-    }
-    if (this.subs10) {
-      this.subs10.unsubscribe();
-    }
+    this.subs.unsubscribe();
   }
   ngOnInit(): void {
     this.reasonsList$ = this.service.getReasons;
@@ -157,18 +120,18 @@ export class DoctorAddReferComponent implements OnInit, OnDestroy {
     this.docuTypeList$ = this.service.getDocumentTypeLists;
     this.getSpeciality();
     this.getDoctorLists();
-    this.subs1 = this.docuTypeList$.subscribe((response) => {
+    this.subs.add(this.docuTypeList$.subscribe((response) => {
         if (response[0].status === 'true') {
           this.documentTypeList = response[0].data;
           this.documentTypeList.forEach((doc) => doc.file = []);
           this.documentTypeList.forEach((doc) => doc.checked = false);
           this.documentTypeList.sort((a, b) => a.documenttypeID - b.documenttypeID);
         } else { console.error(response[0].message); }
-      }, errror => console.error(errror));
-    this.subs7 = this.referCaseForm.get('refercaseVisitTime').valueChanges.pipe().subscribe(() => { this.check(); });
-    this.subs8 = this.referCaseForm.get('refercaseVisitDate').valueChanges.pipe().subscribe(() => { this.timeAndDate(); });
-    this.subs9 = this.referCaseForm.get('refercaseHospitalAdmission').valueChanges.pipe().subscribe((val) => val ? this.modalService.show(AlertModalComponent, { id: 97, animated: false, ignoreBackdropClick: true, keyboard: false, class: 'modal-sm modal-dialog-centered' }) : '');
-    this.subs10 = this.referCaseForm.get('specialityID').valueChanges.pipe().subscribe((val) => {
+      }, errror => console.error(errror)));
+    this.subs.add(this.referCaseForm.get('refercaseVisitTime').valueChanges.pipe().subscribe(() => { this.check(); }));
+    this.subs.add(this.referCaseForm.get('refercaseVisitDate').valueChanges.pipe().subscribe(() => { this.timeAndDate(); }));
+    this.subs.add(this.referCaseForm.get('refercaseHospitalAdmission').valueChanges.pipe().subscribe((val) => val ? this.modalService.show(AlertModalComponent, { id: 97, animated: false, ignoreBackdropClick: true, keyboard: false, class: 'modal-sm modal-dialog-centered' }) : ''));
+    this.subs.add(this.referCaseForm.get('specialityID').valueChanges.pipe().subscribe((val) => {
         if (val) {
           if (val.length > 1) {
             this.isNPI = false;
@@ -178,8 +141,8 @@ export class DoctorAddReferComponent implements OnInit, OnDestroy {
             this.isNPI = true;
           }
         }
-      });
-    this.subs4 = this.referCaseForm.get('patientMobile').valueChanges.pipe().subscribe(() => { if (this.referCaseForm.get('patientMobile').value && !this.referCaseForm.get('patientMobile').errors) {this.mobile(); }});
+      }));
+    this.subs.add(this.referCaseForm.get('patientMobile').valueChanges.pipe().subscribe(() => { if (this.referCaseForm.get('patientMobile').value && !this.referCaseForm.get('patientMobile').errors) {this.mobile(); }}));
     this.cd.markForCheck();
   }
   mobile = () => {
@@ -187,7 +150,7 @@ export class DoctorAddReferComponent implements OnInit, OnDestroy {
       mobile: this.referCaseForm.get('patientMobile').value.match(/\d/g).join(''),
       languageID: '1'
     };
-    this.subs6 = this.docService.validateNumber(JSON.stringify(data)).subscribe((r: { status: string; }) => {
+    this.subs.add(this.docService.validateNumber(JSON.stringify(data)).subscribe((r: { status: string; }) => {
       try {
         if (r.status === 'true') {
           // valid number
@@ -201,7 +164,7 @@ export class DoctorAddReferComponent implements OnInit, OnDestroy {
     }, () => {
       this.referCaseForm.get('patientMobile').setErrors({ errPhone: true }, {emitEvent: false});
       this.cd.markForCheck();
-    });
+    }));
   }
   check = () => {
     if (this.referCaseForm.get('refercaseVisitDate').value === '') {
@@ -213,22 +176,6 @@ export class DoctorAddReferComponent implements OnInit, OnDestroy {
       this.referCaseForm.get('refercaseVisitTime').updateValueAndValidity({ emitEvent: false });
       this.cd.markForCheck();
     }
-  }
-  customValidatorUSnumber(control: AbstractControl): ValidationErrors {
-    const error = {
-      name: '',
-      message: ''
-    };
-    const phoneRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
-    if (control.value !== '') {
-      if (!phoneRegex.test(control.value)) {
-        error.name = 'invalidPhone';
-        error.message = 'Mobile number must be only 10 digit.';
-        return error;
-      }
-      return null;
-    }
-    return null;
   }
   timeAndDate = () => {
     const date1 = new Date();
@@ -343,9 +290,12 @@ export class DoctorAddReferComponent implements OnInit, OnDestroy {
   }
   onChangeUrgentConsult = ($event: boolean) => {
     if ($event && !this.referCaseForm.get('refercaseVisitDate').value) {
-      this.referCaseForm.get('refercaseVisitDate').setErrors({ emptyDate: true });
+      this.referCaseForm.get(`refercaseVisitDate`).setValidators([Validators.required, this.dateMinimum]);
+      this.referCaseForm.get(`refercaseVisitDate`).updateValueAndValidity({ onlySelf: true, emitEvent: true });
     } else {
-      this.referCaseForm.get('refercaseVisitDate').setErrors(null);
+      this.referCaseForm.get(`refercaseVisitDate`).clearValidators();
+      this.referCaseForm.get(`refercaseVisitDate`).setValidators([this.dateMinimum]);
+      this.referCaseForm.get(`refercaseVisitDate`).updateValueAndValidity({ onlySelf: true, emitEvent: true });
     }
     this.cd.markForCheck();
   }
@@ -381,26 +331,7 @@ export class DoctorAddReferComponent implements OnInit, OnDestroy {
   }
   // refer form submit
   onSubmitRefer = async (post: Refer) => {
-    this.markFormTouched(this.referCaseForm);
-    if (!post.patientDOB && post.refercaseUrgent && !post.refercaseVisitDate) {
-      this.referCaseForm.get('patientDOB').setErrors({ emptyDOB: true });
-      this.referCaseForm.get('refercaseVisitDate').setErrors({ emptyDate: true });
-    }
-    if (post.patientDOB && post.refercaseUrgent && !post.refercaseVisitDate) {
-      this.referCaseForm.get('patientDOB').setErrors(null);
-      this.referCaseForm.get('refercaseVisitDate').setErrors({ emptyDate: true });
-    }
-    if (!post.patientDOB && !post.refercaseUrgent) {
-      this.referCaseForm.get('patientDOB').setErrors({ emptyDOB: true });
-      this.referCaseForm.get('refercaseVisitDate').setErrors(null);
-    }
-    if (post.patientDOB && !post.refercaseUrgent) {
-      this.referCaseForm.get('patientDOB').setErrors(null);
-      this.referCaseForm.get('refercaseVisitDate').setErrors(null);
-    }
-    if (this.referCaseForm.valid && this.findInvalidControls().length === 0) {
-      this.referCaseForm.get('patientDOB').setErrors(null);
-      this.referCaseForm.get('refercaseVisitDate').setErrors(null);
+    if (!this.checkControlPost(post)) {
       this.spinner.show();
       for (const doc of this.documents) {
         doc.documentFilename = await this.uploadFiles(doc).then((res: Array<Upload>) => res[0].fileName).catch(error => error);
@@ -433,9 +364,114 @@ export class DoctorAddReferComponent implements OnInit, OnDestroy {
       };
       this.refer(JSON.stringify(data));
     }
+    if (this.checkControlPost(post)) {
+      this.markFormTouched(this.referCaseForm);
+    }
+  }
+  checkControlPost = (post: Refer) => {
+    let invalid = false;
+    Object.keys(post).forEach((key: string) => {
+      if (key === 'patientFirstName' && !this.referCaseForm.get(`${key}`).value) {
+        this.referCaseForm.get(`${key}`).setValidators([Validators.required, Validators.maxLength(60), Validators.minLength(3)]);
+        this.referCaseForm.get(`${key}`).updateValueAndValidity({ onlySelf: true });
+        return invalid = true;
+      }
+      if (key === 'patientEmail' && !this.referCaseForm.get(`${key}`).value) {
+        this.referCaseForm.get(`${key}`).setValidators([Validators.required, Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)]);
+        this.referCaseForm.get(`${key}`).updateValueAndValidity({ onlySelf: true });
+        return invalid = true;
+      }
+      if (key === 'patientDOB' && !this.referCaseForm.get(`${key}`).value) {
+        this.referCaseForm.get(`${key}`).setValidators([Validators.required, this.dateMaximum]);
+        this.referCaseForm.get(`${key}`).updateValueAndValidity({ onlySelf: true, emitEvent: true });
+        return invalid = true;
+      }
+      if (key === 'patientMobile' && !this.referCaseForm.get(`${key}`).value) {
+        this.referCaseForm.get(`${key}`).setValidators([Validators.required, this.customValidatorUSnumber]);
+        this.referCaseForm.get(`${key}`).updateValueAndValidity({ onlySelf: true });
+        return invalid = true;
+      }
+      if (key === 'patientGender' && !this.referCaseForm.get(`${key}`).value) {
+        this.referCaseForm.get(`${key}`).setValidators([Validators.required]);
+        this.referCaseForm.get(`${key}`).updateValueAndValidity({ onlySelf: true });
+        return invalid = true;
+      }
+      if (key === 'specialityID' && !this.referCaseForm.get(`${key}`).value) {
+        this.referCaseForm.get(`${key}`).setValidators([Validators.required]);
+        this.referCaseForm.get(`${key}`).updateValueAndValidity({ onlySelf: true, emitEvent: false });
+        return invalid = true;
+      }
+      if (key === 'reasonIDs' && !this.referCaseForm.get(`${key}`).value) {
+        this.referCaseForm.get(`${key}`).setValidators([Validators.required]);
+        this.referCaseForm.get(`${key}`).updateValueAndValidity({ onlySelf: true });
+        return invalid = true;
+      }
+      if (key === 'refercaseUrgent' && this.referCaseForm.get(`${key}`).value) {
+        this.referCaseForm.get(`refercaseVisitDate`).setValidators([Validators.required, this.dateMinimum]);
+        this.referCaseForm.get(`refercaseVisitDate`).updateValueAndValidity({ onlySelf: true });
+        return invalid = true;
+      }
+    });
+    return invalid;
+  }
+  customValidatorUSnumber(control: AbstractControl): ValidationErrors {
+    const error = {
+      name: '',
+      message: ''
+    };
+    const phoneRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+    if (control.value !== '') {
+      if (!phoneRegex.test(control.value)) {
+        error.name = 'invalidPhone';
+        error.message = 'Mobile number must be only 10 digit.';
+        return error;
+      }
+      return null;
+    }
+    return null;
+  }
+  dateMaximum(control: AbstractControl): ValidationErrors {
+    const error = {
+      name: '',
+      message: ''
+    };
+    if (control.value == null) {
+      return null;
+    }
+    const controlDate = moment(control.value, 'YYYY-MM-DD');
+    if (!controlDate.isValid()) {
+      return null;
+    }
+    const validationDate = moment(new Date());
+    if (controlDate.isAfter(validationDate)) {
+      error.name = 'invalidDOB';
+      error.message = `Date should not after ${moment(new Date(), 'MM-DD-YYYY').format('MM-DD-YYYY')}.`;
+      return error;
+    }
+    return null;
+  }
+  dateMinimum(control: AbstractControl): ValidationErrors {
+    const error = {
+      name: '',
+      message: ''
+    };
+    if (control.value == null) {
+      return null;
+    }
+    const controlDate = moment(control.value, 'YYYY-MM-DD');
+    if (!controlDate.isValid()) {
+      return null;
+    }
+    const validationDate = moment(new Date(new Date().getFullYear(), new Date().getMonth() - 1, new Date().getDay()));
+    if (controlDate.isBefore(validationDate)) {
+      error.name = 'invalidVisitDate';
+      error.message = `Date should not before ${moment(new Date(new Date().getFullYear(), new Date().getMonth() - 1, new Date().getDay()), 'MM-DD-YYYY').format('MM-DD-YYYY')}.`;
+      return error;
+    }
+    return null;
   }
   refer = (data: string) => {
-    this.subs3 = this.docService.addRefer(data).subscribe((response) => {
+    this.subs.add(this.docService.addRefer(data).subscribe((response) => {
       if (response[0].status === 'true') {
         this.documentTypeList.forEach(doc => doc.file = []);
         this.documentTypeList.forEach((doc) => doc.checked = false);
@@ -454,7 +490,7 @@ export class DoctorAddReferComponent implements OnInit, OnDestroy {
       this.spinner.hide();
       this.toastr.error('some error occured, please try again later');
       console.error(error);
-    });
+    }));
   }
   reasonsConvertString = (post: Array<Reasons>) => {
     const reason = post.map((res: Reasons) => Object.keys(res).length > 1 ? res.reasonID : '0');
@@ -478,16 +514,6 @@ export class DoctorAddReferComponent implements OnInit, OnDestroy {
         control.markAsTouched();
       }
     });
-  }
-  findInvalidControls = () => {
-    const invalid = [];
-    const controls = this.referCaseForm.controls;
-    for (const name in controls) {
-      if (controls[name].invalid) {
-        invalid.push(name);
-      }
-    }
-    return invalid;
   }
   onSelectFile = async ($event: Event, documenttypeID: string) => {
     if (($event.target as HTMLInputElement).files.length > 0) {
@@ -546,13 +572,13 @@ export class DoctorAddReferComponent implements OnInit, OnDestroy {
         filePath: 'doctor',
         logindoctorID: this.service.getDocLocal() ? this.service.getDocLocal().doctorID : this.service.getDocSession().doctorID
       };
-      this.subs2 = this.docService.uploadFile(data).subscribe((response) => {
+      this.subs.add(this.docService.uploadFile(data).subscribe((response) => {
         if (response[0].status === 'true') {
           resolve(response);
         } else {
           reject('Error Occured');
         }
-      }, error => reject(error));
+      }, error => reject(error)));
     });
   }
   onTypeDOB = (value: string) => {
@@ -584,8 +610,7 @@ export class DoctorAddReferComponent implements OnInit, OnDestroy {
     }
     if (output) {
       this.dateOfBirth.nativeElement.value = output.replace(/\s/g, '');
-      this.referCaseForm.get('patientDOB')
-        .setValue(new Date(+output.split('/')[2], +output.split('/')[0] - 1, +output.split('/')[1]), { emitEvent: false });
+      this.referCaseForm.get('patientDOB').setValue(new Date(+output.split('/')[2], +output.split('/')[0] - 1, +output.split('/')[1]), { emitEvent: false });
       this.referCaseForm.get('patientDOB').updateValueAndValidity({ emitEvent: false });
       this.cd.markForCheck();
     }
@@ -625,8 +650,7 @@ export class DoctorAddReferComponent implements OnInit, OnDestroy {
     }
     if (output) {
       this.visitDate.nativeElement.value = output.replace(/\s/g, '');
-      this.referCaseForm.get('refercaseVisitDate')
-        .setValue(new Date(+output.split('/')[2], +output.split('/')[0] - 1, +output.split('/')[1]), { emitEvent: false });
+      this.referCaseForm.get('refercaseVisitDate').setValue(new Date(+output.split('/')[2], +output.split('/')[0] - 1, +output.split('/')[1]), { emitEvent: false });
       this.referCaseForm.get('refercaseVisitDate').updateValueAndValidity({ emitEvent: false });
       this.cd.markForCheck();
     }

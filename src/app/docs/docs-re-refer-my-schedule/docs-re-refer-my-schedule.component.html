@@ -21,16 +21,10 @@
                       <label for="name">Patient Name<span class="required-field"></span></label>
                       <input class="form-control" oninput="this.value = this.value.replace(/^\s+/g, '')"
                         formControlName="patientFirstName" name="patientFirstName" id="name" type="text"
-                        placeholder="Enter Patient name" required>
-                      <small class="text-danger small"
-                        *ngIf="referCaseForm.controls['patientFirstName'].hasError('required') && (referCaseForm.controls['patientFirstName'].dirty || referCaseForm.controls['patientFirstName'].touched)">Please
-                        enter Patient name.</small>
-                      <small class="text-danger small"
-                        *ngIf="referCaseForm.controls['patientFirstName'].hasError('minlength')">Input
-                        fields will not be less than 3 characters.</small>
-                      <small class="text-danger small"
-                        *ngIf="referCaseForm.controls['patientFirstName'].hasError('maxlength')">Input
-                        fields will not be more than 60 characters.</small>
+                        placeholder="Enter Patient name">
+                      <small class="text-danger small" *ngIf="referCaseForm.controls['patientFirstName'].hasError('required')">Please enter Patient name.</small>
+                      <small class="text-danger small" *ngIf="referCaseForm.controls['patientFirstName'].hasError('minlength')">Input fields will not be less than 3 characters.</small>
+                      <small class="text-danger small" *ngIf="referCaseForm.controls['patientFirstName'].hasError('maxlength')">Input fields will not be more than 60 characters.</small>
                     </div>
                   </div>
                   <div class="col-sm-6">
@@ -38,12 +32,9 @@
                       <label for="mobile">Mobile Number<span class="required-field"></span></label>
                       <input class="form-control" mask="(000) 000-0000" maxlength="14" formControlName="patientMobile" name="patientMobile" id="mobile"
                         type="text" placeholder="Enter mobile number">
-                      <small class="text-danger small"
-                        *ngIf=" referCaseForm.controls['patientMobile'].hasError('required') && (referCaseForm.controls['patientMobile'].dirty || referCaseForm.controls['patientMobile'].touched)">Please
-                        enter mobile number</small>
+                      <small class="text-danger small" *ngIf=" referCaseForm.controls['patientMobile'].hasError('required')">Please enter mobile number</small>
                       <small class="text-danger small" *ngIf="referCaseForm.controls.patientMobile.errors">{{referCaseForm.controls.patientMobile.errors.message}}</small>
-                      <small class="text-danger small"
-                            *ngIf="referCaseForm.controls['patientMobile'].hasError('errPhone')">Please enter valid USA number.</small>
+                      <small class="text-danger small" *ngIf="referCaseForm.controls['patientMobile'].hasError('errPhone')">Please enter valid USA number.</small>
                     </div>
                   </div>
                   <div class="col-sm-6">
@@ -51,13 +42,9 @@
                       <label for="Fname">Email Address<span class="required-field"></span></label>
                       <input class="form-control" oninput="this.value = this.value.replace(/^\s+/g, '')"
                         formControlName="patientEmail" name="patientEmail" id="email" type="text"
-                        placeholder="Enter email address" required>
-                      <small class="text-danger small"
-                        *ngIf="referCaseForm.controls['patientEmail'].hasError('pattern') && (referCaseForm.controls['patientEmail'].dirty || referCaseForm.controls['patientEmail'].touched )">Please
-                        enter valid email.</small>
-                      <small class="text-danger small"
-                        *ngIf="referCaseForm.controls['patientEmail'].hasError('required') && (referCaseForm.controls['patientEmail'].dirty || referCaseForm.controls['patientEmail'].touched)">Please
-                        enter email.</small>
+                        placeholder="Enter email address">
+                      <small class="text-danger small" *ngIf="referCaseForm.controls['patientEmail'].hasError('pattern')">Please enter valid email.</small>
+                      <small class="text-danger small" *ngIf="referCaseForm.controls['patientEmail'].hasError('required')">Please enter email.</small>
                     </div>
                   </div>
                   <div class="col-sm-6">
@@ -67,9 +54,7 @@
                         formControlName="patientGender" class="custom" placeholder="Select Gender">
                         <ng-option *ngFor="let gender of genders" [value]="gender">{{gender}}</ng-option>
                       </ng-select>
-                      <small class="text-danger small"
-                        *ngIf="referCaseForm.controls['patientGender'].hasError('required') && (referCaseForm.controls['patientGender'].dirty || referCaseForm.controls['patientGender'].touched)">Please
-                        Select Gender.</small>
+                      <small class="text-danger small" *ngIf="referCaseForm.controls['patientGender'].hasError('required')">Please Select Gender.</small>
                     </div>
                   </div>
                   <div class="col-sm-6">
@@ -78,15 +63,11 @@
                       <div class="form-group inputWithIcon">
                         <input class="form-control" maxlength=14 #dateOfBirth (keyup)="onTypeDOB(dateOfBirth.value)"
                           (blur)="onBlurDOB(dateOfBirth.value)" [max]="maxDate" placeholder="mm/dd/yyyy"
-                          formControlName="patientDOB" id="dob" name="patientDOB" [owlDateTime]="dt5" required>
+                          formControlName="patientDOB" id="dob" name="patientDOB" [owlDateTime]="dt5">
                         <a class="cursr"><i [owlDateTimeTrigger]="dt5" class="ti-calendar cursr"></i></a>
                         <owl-date-time [pickerType]="'calendar'" #dt5></owl-date-time>
-                        <small class="text-danger small"
-                          *ngIf="referCaseForm.get('patientDOB').invalid && referCaseForm.controls['patientDOB'].hasError('owlDateTimeMax')">Date
-                          should not after {{maxDate | date: 'mediumDate'}}</small>
-                        <small class="text-danger small"
-                          *ngIf="referCaseForm.controls['patientDOB'].hasError('emptyDOB')">Please
-                          Select DOB.</small>
+                        <small class="text-danger small" *ngIf="referCaseForm.controls.patientDOB.errors">{{referCaseForm.controls.patientDOB.errors.message}}</small>
+                        <small class="text-danger small" *ngIf="referCaseForm.controls['patientDOB'].hasError('required')">Please Select DOB.</small>
                       </div>
                     </div>
                   </div>
@@ -99,9 +80,6 @@
                         <ng-option *ngFor="let ins of (insuranceList$ | async)" [value]="ins.insuranceName">
                           {{ins.insuranceName}}</ng-option>
                       </ng-select>
-                      <!-- <small class="text-danger small"
-                                    *ngIf="referCaseForm.controls['insuranceName'].hasError('required') && (referCaseForm.controls['insuranceName'].dirty || referCaseForm.controls['insuranceName'].touched)">Please
-                                    Enter Insurance.</small> -->
                     </div>
                   </div>
                   <div class="col-sm-12">
@@ -122,9 +100,7 @@
                         [minTermLength]="1" typeToSearchText="Please enter 1 or more characters" [trackByFn]="trackByFn"
                         [typeahead]="peopleInput$" [loading]="peopleLoading" formControlName="specialityID">
                       </ng-select>
-                      <small class="text-danger small"
-                        *ngIf="referCaseForm.controls['specialityID'].hasError('required') && (referCaseForm.controls['specialityID'].dirty || referCaseForm.controls['specialityID'].touched)">Please
-                        Select Speciality.</small>
+                      <small class="text-danger small" *ngIf="referCaseForm.controls['specialityID'].hasError('required')">Please Select Speciality.</small>
                     </div>
                   </div>
                   <div class="col-sm-12">
@@ -143,9 +119,7 @@
                           </div>
                         </ng-template>
                       </ng-select>
-                      <small class="text-danger small"
-                        *ngIf="referCaseForm.controls['reasonIDs'].hasError('required') && (referCaseForm.controls['reasonIDs'].dirty || referCaseForm.controls['reasonIDs'].touched)">Please
-                        Enter Reason.</small>
+                      <small class="text-danger small" *ngIf="referCaseForm.controls['reasonIDs'].hasError('required')">Please enter Reason.</small>
                     </div>
                   </div>
                   <div class="col-sm-12">
@@ -185,12 +159,8 @@
                         formControlName="refercaseVisitDate" id="dov" name="dov" [owlDateTime]="dt3">
                       <a class="cursr"><i [owlDateTimeTrigger]="dt3" class="ti-calendar cursr"></i></a>
                       <owl-date-time [pickerType]="'calendar'" #dt3></owl-date-time>
-                      <small class="text-danger small"
-                        *ngIf="referCaseForm.get('refercaseVisitDate').invalid && referCaseForm.controls['refercaseVisitDate'].hasError('owlDateTimeMin')">Date
-                        should not before {{min | date: 'mediumDate'}}</small>
-                      <small class="text-danger small"
-                        *ngIf="referCaseForm.controls['refercaseVisitDate'].hasError('emptyDate')">Please
-                        select Date of Visit.</small>
+                      <small class="text-danger small" *ngIf="referCaseForm.controls.refercaseVisitDate.errors">{{referCaseForm.controls.refercaseVisitDate.errors.message}}</small>
+                      <small class="text-danger small" *ngIf="referCaseForm.controls['refercaseVisitDate'].hasError('required')">Please select Date of Visit.</small>
                     </div>
                   </div>
                   <div class="col-sm-6">
@@ -203,12 +173,8 @@
                       <a class="cursr"><i [owlDateTimeTrigger]="dt4" class="ti-time cursr"></i></a>
                       <owl-date-time [hour12Timer]="true" [startAt]="startAt" [stepMinute]="15" [pickerType]="'timer'"
                         #dt4></owl-date-time>
-                      <small class="text-danger small"
-                        *ngIf="referCaseForm.controls['refercaseVisitTime'].hasError('emptyDate')">Please
-                        select Date of visit first.</small>
-                      <small class="text-danger small"
-                        *ngIf="referCaseForm.get('refercaseVisitTime').invalid && referCaseForm.controls['refercaseVisitTime'].hasError('owlDateTimeMin')">Please
-                        enter valid time.</small>
+                      <small class="text-danger small" *ngIf="referCaseForm.controls['refercaseVisitTime'].hasError('emptyDate')">Please select Date of visit first.</small>
+                      <small class="text-danger small" *ngIf="referCaseForm.get('refercaseVisitTime').invalid && referCaseForm.controls['refercaseVisitTime'].hasError('owlDateTimeMin')">Please enter valid time.</small>
                     </div>
                   </div>
                   <div class="col-12">

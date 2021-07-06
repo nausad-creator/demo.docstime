@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { Router } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
@@ -11,8 +10,45 @@ interface Reject {
 }
 @Component({
   selector: 'app-reject-received-modal',
-  templateUrl: './reject-received-modal.component.html',
-  styleUrls: ['./reject-received-modal.component.css'],
+  template: `<div class="modal-contents">
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">{{rejectDefault ? 'Reject-Referral' : 'Alert'}}</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="onClose()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p [hidden]="rejectDefault">Do you want to reject the referral?</p>
+    <form class="" [formGroup]="rejectForm" [hidden]="!rejectDefault">
+      <div class="row">
+        <div class="col-sm-12">
+          <label for="Discription">Remarks</label>
+          <div class="form-group">
+            <textarea class="form-control" formControlName="rejectRemark" name="Discription" id="Discription"
+              type="text" placeholder="Write here...(Optional)" rows="3"></textarea>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="rejectDefault = true"
+      [hidden]="rejectDefault">Reject</button>
+    <button type="button" class="btn btn-primary" (click)="onReject(rejectForm.value)"
+      [hidden]="!rejectDefault">Submit</button>
+  </div>
+</div>`,
+  styles: [`.modal-contents {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    pointer-events: auto;
+    background-color: #fff;
+    background-clip: padding-box;
+    border-radius: .3rem;
+    outline: 0;
+}`],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RejectReceivedModalComponent implements OnInit {
@@ -30,10 +66,8 @@ export class RejectReceivedModalComponent implements OnInit {
     private toastr: ToastrService,
     private facilityService: FacilityService,
     private modalService: BsModalService,
-    private cd: ChangeDetectorRef,
     private service: HomeService,
     private fb: FormBuilder,
-    private router: Router,
   ) {
     this.rejectForm = this.fb.group({
       rejectRemark: ['']
@@ -51,18 +85,6 @@ export class RejectReceivedModalComponent implements OnInit {
   }
   onCloseReject = (modalID: number) => {
     this.modalService.hide(modalID);
-  }
-  onReRefer = () => {
-    if (
-      this.list[0].url.split('?')[0] === '/facility/facility-dashboard' || this.list[0].url === '/facility/facility-dashboard/view-refer'
-    ) {
-      this.router.navigate(['/facility/facility-dashboard/reject-re-refer-case']);
-    }
-    if (
-      this.list[0].url.split('?')[0] === '/facility/facility-referral-received' || this.list[0].url === '/facility/facility-referral-received/view-refer'
-    ) {
-      this.router.navigate(['/facility/facility-referral-received/reject-re-refer-case']);
-    }
   }
   onReject = (rejectRemark: Reject) => {
     this.spinner.show();
@@ -89,7 +111,7 @@ export class RejectReceivedModalComponent implements OnInit {
             this.bsModalRef.hide();
             this.spinner.hide();
             this.toastr.success('Rejected successfully');
-          }, 500);
+          }, 50);
         } else {
           this.spinner.hide();
           setTimeout(() => {

@@ -69,7 +69,6 @@ import { DeleteConfirmationComponent } from './doctor-view-refer/delete-confirma
 import { EditReferralComponent } from './referrals-sent/edit-referral/edit-referral.component';
 import { EditReferGuard } from './edit-refer.guard';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { RejectReReferComponent } from './reject-received-modal/reject-re-refer/reject-re-refer.component';
 import { RejectReferGuard } from './reject-rerefer.guard';
 import { IConfig, NgxMaskModule } from 'ngx-mask';
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
@@ -120,8 +119,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
       TimelineComponent,
       VerificationComponent,
       DeleteConfirmationComponent,
-      EditReferralComponent,
-      RejectReReferComponent
+      EditReferralComponent
     ],
   imports: [
     CommonModule,

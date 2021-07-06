@@ -1,16 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-facility',
-  templateUrl: './facility.component.html',
-  styleUrls: ['./facility.component.css']
+  template: `
+  <app-facility-nav></app-facility-nav>
+  <router-outlet (activate)="onActivate()"></router-outlet>
+  <app-facility-footer></app-facility-footer>
+  `,
+  styles: []
 })
-export class FacilityComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
+export class FacilityComponent {
 
   onActivate = () => {
     window.scroll(0, 0);

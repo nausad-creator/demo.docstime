@@ -47,6 +47,7 @@ import { ListPracticeComponent } from './list-practice/list-practice.component';
 import { ErrorNotFoundComponent } from './error-not-found/error-not-found.component';
 import { ConfirmationPopUpComponent } from './confirmation-pop-up/confirmation-pop-up.component';
 import { IConfig, NgxMaskModule } from 'ngx-mask';
+import { SharedDateTimeFacilityModule } from './shared-date-time-facility/shared-date-time-facility.module';
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 const cookieConfig: NgcCookieConsentConfig = {
   cookie: {
@@ -120,6 +121,7 @@ const cookieConfig: NgcCookieConsentConfig = {
     InfiniteScrollModule,
     NgxCaptchaModule,
     ShareModule,
+    SharedDateTimeFacilityModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyAV0j-imLFwoEcRaCTHDVl0o9Tj6Mj7fZM'
     }),

@@ -9,8 +9,134 @@ import { FacilityService } from '../facility.service';
 
 @Component({
   selector: 'app-confirmed-received-modal',
-  templateUrl: './confirmed-received-modal.component.html',
-  styleUrls: ['./confirmed-received-modal.component.css'],
+  template: `<div class="modal-contents modal-login">
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Referral Details</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="onClose()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <!-- error handler -->
+    <div class="alert alert-danger" role="alert" *ngIf="error">
+      <h5 class="alert-heading text-center">Error!</h5>
+      <p class="mb-0 text-center">{{error}}</p>
+    </div>
+    <!-- handler end -->
+    <div class="reffral-detail">
+      <div class="itme-reffarl">
+        <p>
+          {{(fullName | titlecase) + ' ' + genderAtZero + '/' + age + ' ' + 'yrs' + '' + (refSpecialityName | titlecase)}}
+        </p>
+      </div>
+      <div class="itme-reffarl">
+        <p>{{reasonName | titlecase}}</p>
+      </div>
+      <div class="itme-reffarl">
+        <p>{{(refercaseVisitDate | date : 'mediumDate') + ' ' + convertedTime}}<a
+            style="margin-left: 2px; cursor: pointer; color: #007bff" (click)="editInput = false; onClickChange()"
+            *ngIf="editInput">Edit</a></p>
+      </div>
+      <div [hidden]="editInput">
+        <div class="" [formGroup]="confirmForm">
+          <div class="row">
+            <div class="col-sm-6">
+              <label for="dov">Date of Visit</label>
+              <div class="form-group inputWithIcon">
+                <input class="form-control" maxlength=14 #visitDate (keyup)="onTypeVisitDate(visitDate.value)"
+                  (blur)="onBlurVisitDate(visitDate.value)" [min]="min" placeholder="mm/dd/yyyy"
+                  formControlName="refercaseVisitDate" id="dov" name="dov" [owlDateTime]="dt3">
+                <a class="cursr"><i [owlDateTimeTrigger]="dt3" class="ti-calendar cursr"></i></a>
+                <owl-date-time [pickerType]="'calendar'" #dt3></owl-date-time>
+                <small class="text-danger small"
+                  *ngIf="confirmForm.get('refercaseVisitDate').invalid && confirmForm.controls['refercaseVisitDate'].hasError('owlDateTimeMin')">Date
+                  should not before {{min | date: 'mediumDate'}}</small>
+                <small class="text-danger small"
+                  *ngIf="confirmForm.controls['refercaseVisitDate'].hasError('emptyDate')">Please
+                  select Date of Visit.</small>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <label for="dov">Time of Visit</label>
+              <div class="form-group inputWithIcon">
+                <input class="form-control" oninput="this.value = this.value.replace(/^\s+/g, '')" [min]="minTime"
+                  placeholder="hh:mm am/pm" formControlName="refercaseVisitTime" name="time" id="time"
+                  [owlDateTime]="dt4">
+                <a class="cursr"><i [owlDateTimeTrigger]="dt4" class="ti-time cursr"></i></a>
+                <owl-date-time [hour12Timer]="true" [startAt]="startAt" [stepMinute]="15" [pickerType]="'timer'" #dt4></owl-date-time>
+                <small class="text-danger small"
+                  *ngIf="confirmForm.controls['refercaseVisitTime'].hasError('emptyDate')">Please
+                  select Date of visit first.</small>
+                <small class="text-danger small"
+                  *ngIf="confirmForm.get('refercaseVisitTime').invalid && confirmForm.controls['refercaseVisitTime'].hasError('owlDateTimeMin')">Please
+                  enter valid time.</small>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pr-3 pb-3 pt-3 pl-0" [ngClass]="{'pl-3': !editInput}"> <br>
+      <button type="button" class="btn btn-primary btn-lg" [ngClass]="{'btn-block': !editInput, 'btn-mrgin': editInput}"
+        (click)="onConfirm()">{{editInput ? 'Yes, I Confirm' : 'Confirm'}}</button>
+      <button type="button" class="btn btn-primary btn-lg" (click)="editInput = false; onClickChange()"
+        [hidden]="!editInput">Reschedule</button>
+    </div>
+  </div>
+</div>
+`,
+  styles: [`.form{
+    display: block;
+    width: 35%;
+    height: calc(1.5em + .75rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+::ng-deep .cdk-overlay-container {
+    z-index: 1200 !important;
+  }
+  .modal-contents {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    pointer-events: auto;
+    background-color: #fff;
+    background-clip: padding-box;
+    border-radius: .3rem;
+    outline: 0;
+}
+.inputWithIcon input [id="dov"] {
+  padding-right: 40px;
+}
+
+.inputWithIcon input [id="time"] {
+  padding-right: 40px;
+}
+.inputWithIcon {
+  position: relative;
+}
+.inputWithIcon i {
+  position: absolute;
+  right: 0px;
+  top: 3px;
+  padding: 9px 7px;
+}
+input[name="dov"] {
+  word-spacing:-3px;
+}
+.btn-mrgin{
+  margin-right: 15px;
+}`],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ConfirmedReceivedModalComponent implements OnInit {

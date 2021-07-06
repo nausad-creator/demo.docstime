@@ -1,37 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { FacilityGuard } from '../facility.guard';
-import { AddReferFormComponent } from './add-refer-form/add-refer-form.component';
-import { CancelledComponent } from './cancelled/cancelled.component';
-import { DoctorsListingComponent } from './doctors-listing/doctors-listing.component';
 import { EditReferGuard } from './edit-refer.guard';
-import { FacAboutUsComponent } from './fac-about-us/fac-about-us.component';
-import { FacContactUsComponent } from './fac-contact-us/fac-contact-us.component';
-import { FacFaqComponent } from './fac-faq/fac-faq.component';
-import { FacJoinsComponent } from './fac-joins/fac-joins.component';
-import { FacPrivacyDoctorComponent } from './fac-privacy-doctor/fac-privacy-doctor.component';
-import { FacPrivacyPolicyComponent } from './fac-privacy-policy/fac-privacy-policy.component';
-import { FacTermsComponent } from './fac-terms/fac-terms.component';
-import { FacilityChangePasswordComponent } from './facility-change-password/facility-change-password.component';
-import { FacilityDashboardComponent } from './facility-dashboard/facility-dashboard.component';
-import { FacilityMyProfileComponent } from './facility-my-profile/facility-my-profile.component';
-import { FacilityMyScheduleComponent } from './facility-my-schedule/facility-my-schedule.component';
-import { FacilityNotificationSettingComponent } from './facility-notification-setting/facility-notification-setting.component';
-import { FacilityReferralReceivedComponent } from './facility-referral-received/facility-referral-received.component';
-import { EditReferralComponent } from './facility-referral-sent/edit-referral/edit-referral.component';
-import { FacilityReferralSentComponent } from './facility-referral-sent/facility-referral-sent.component';
 import { FacilityComponent } from './facility/facility.component';
-import { MyScheduledReReferComponent } from './my-scheduled-re-refer/my-scheduled-re-refer.component';
-import { MyScheduledViewReferComponent } from './my-scheduled-view-refer/my-scheduled-view-refer.component';
-import { NotificationFacilityComponent } from './notification-facility/notification-facility.component';
-import { PreviousComponent } from './previous/previous.component';
-import { ReReferFormComponent } from './re-refer-form/re-refer-form.component';
 import { ReReferStoreGuard } from './re-refer-store.guard';
-import { RejectReReferComponent } from './reject-received-modal/reject-re-refer/reject-re-refer.component';
-import { RejectReferGuard } from './reject-rerefer.guard';
 import { StoreGuard } from './store.guard';
-import { UpcommingComponent } from './upcomming/upcomming.component';
-import { ViewReferComponent } from './view-refer/view-refer.component';
 
 const routes: Routes = [
     {
@@ -41,21 +14,16 @@ const routes: Routes = [
             {
                 path: 'facility-dashboard',
                 children: [
-                    { path: '', component: FacilityDashboardComponent },
+                    { path: '', loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule) },
                     {
                         path: 'view-refer',
-                        component: ViewReferComponent,
+                        loadChildren: () => import('./view-refer/view-refer.module').then(m => m.ViewReferModule),
                         canActivate: [StoreGuard],
                     },
                     {
                         path: 're-refer-case',
-                        component: ReReferFormComponent,
+                        loadChildren: () => import('./re-refer/re-refer.module').then(m => m.ReReferModule),
                         canActivate: [ReReferStoreGuard],
-                    },
-                    {
-                        path: 'reject-re-refer-case',
-                        component: RejectReReferComponent,
-                        canActivate: [RejectReferGuard],
                     }
                 ],
                 data: {
@@ -73,15 +41,15 @@ const routes: Routes = [
             {
                 path: 'facility-doctors-list',
                 children: [
-                    { path: '', component: DoctorsListingComponent },
+                    { path: '', loadChildren: () => import('./doctor-list/doctor-list.module').then(m => m.DoctorListModule) },
                     {
                         path: 'view-refer',
-                        component: ViewReferComponent,
+                        loadChildren: () => import('./view-refer/view-refer.module').then(m => m.ViewReferModule),
                         canActivate: [StoreGuard],
                     },
                     {
                         path: 're-refer-case',
-                        component: ReReferFormComponent,
+                        loadChildren: () => import('./re-refer/re-refer.module').then(m => m.ReReferModule),
                         canActivate: [ReReferStoreGuard],
                     },
                 ],
@@ -99,69 +67,21 @@ const routes: Routes = [
             },
             {
                 path: 'facility-my-schedule',
-                component: FacilityMyScheduleComponent,
-                children: [
-                    { path: '', redirectTo: 'upcomming', pathMatch: 'full' },
-                    {
-                        path: 'upcomming',
-                        component: UpcommingComponent,
-                        data: {
-                            seo: {
-                                title: 'My-Schedule-Upcomming | DocsTime',
-                                metaTags: [
-                                    { name: 'keywords', content: 'online doctor appointment in USA, doctor appointment booking system USA, online doctor appointment system USA, online doctor appointment system website USA, family physicians appointment booking system, online medical appointment booking system USA, doctors accepting new patients in USA, top primary care physicians appointment booking, child specialist doctor online appointment US, free online doctor consultation appointment USA' },
-                                    { name: 'description', content: 'DocsTime specializes in developing Online Doctor Appointment System in USA. Our highly experienced team of Doctor understands your requirements well, contact us today.' },
-                                    { name: 'robots', content: 'index, follow' }
-                                ]
-                            }
-                        },
-                        canActivate: [FacilityGuard],
-                    },
-                    {
-                        path: 'previous',
-                        component: PreviousComponent,
-                        data: {
-                            seo: {
-                                title: 'My-Schedule-Previous | DocsTime',
-                                metaTags: [
-                                    { name: 'keywords', content: 'online doctor appointment in USA, doctor appointment booking system USA, online doctor appointment system USA, online doctor appointment system website USA, family physicians appointment booking system, online medical appointment booking system USA, doctors accepting new patients in USA, top primary care physicians appointment booking, child specialist doctor online appointment US, free online doctor consultation appointment USA' },
-                                    { name: 'description', content: 'DocsTime specializes in developing Online Doctor Appointment System in USA. Our highly experienced team of Doctor understands your requirements well, contact us today.' },
-                                    { name: 'robots', content: 'index, follow' }
-                                ]
-                            }
-                        },
-                        canActivate: [FacilityGuard],
-                    },
-                    {
-                        path: 'cancelled',
-                        component: CancelledComponent,
-                        data: {
-                            seo: {
-                                title: 'My-Schedule-Cancelled | DocsTime',
-                                metaTags: [
-                                    { name: 'keywords', content: 'online doctor appointment in USA, doctor appointment booking system USA, online doctor appointment system USA, online doctor appointment system website USA, family physicians appointment booking system, online medical appointment booking system USA, doctors accepting new patients in USA, top primary care physicians appointment booking, child specialist doctor online appointment US, free online doctor consultation appointment USA' },
-                                    { name: 'description', content: 'DocsTime specializes in developing Online Doctor Appointment System in USA. Our highly experienced team of Doctor understands your requirements well, contact us today.' },
-                                    { name: 'robots', content: 'index, follow' }
-                                ]
-                            }
-                        },
-                        canActivate: [FacilityGuard],
-                    }
-                ],
+                loadChildren: () => import('./my-schedule/my-schedule.module').then(m => m.MyScheduleModule),
                 canActivate: [FacilityGuard]
             },
             {
                 path: 'facility-notifications',
                 children: [
-                    { path: '', component: NotificationFacilityComponent },
+                    { path: '', loadChildren: () => import('./notification/notification.module').then(m => m.NotificationModule) },
                     {
                         path: 'view-refer',
-                        component: ViewReferComponent,
+                        loadChildren: () => import('./view-refer/view-refer.module').then(m => m.ViewReferModule),
                         canActivate: [StoreGuard],
                     },
                     {
                         path: 're-refer-case',
-                        component: ReReferFormComponent,
+                        loadChildren: () => import('./re-refer/re-refer.module').then(m => m.ReReferModule),
                         canActivate: [ReReferStoreGuard],
                     },
                 ],
@@ -180,21 +100,16 @@ const routes: Routes = [
             {
                 path: 'facility-referral-received',
                 children: [
-                    { path: '', component: FacilityReferralReceivedComponent },
+                    { path: '', loadChildren: () => import('./refferal-received/refferal-received.module').then(m => m.RefferalReceivedModule) },
                     {
                         path: 'view-refer',
-                        component: ViewReferComponent,
+                        loadChildren: () => import('./view-refer/view-refer.module').then(m => m.ViewReferModule),
                         canActivate: [StoreGuard],
                     },
                     {
                         path: 're-refer-case',
-                        component: ReReferFormComponent,
+                        loadChildren: () => import('./re-refer/re-refer.module').then(m => m.ReReferModule),
                         canActivate: [ReReferStoreGuard],
-                    },
-                    {
-                        path: 'reject-re-refer-case',
-                        component: RejectReReferComponent,
-                        canActivate: [RejectReferGuard],
                     }
                 ],
                 data: {
@@ -212,20 +127,20 @@ const routes: Routes = [
             {
                 path: 'facility-referral-sent',
                 children: [
-                    { path: '', component: FacilityReferralSentComponent },
+                    { path: '', loadChildren: () => import('./refferal-sent/refferal-sent.module').then(m => m.RefferalSentModule)},
                     {
                         path: 'view-refer',
-                        component: ViewReferComponent,
+                        loadChildren: () => import('./view-refer/view-refer.module').then(m => m.ViewReferModule),
                         canActivate: [StoreGuard],
                     },
                     {
                         path: 're-refer-case',
-                        component: ReReferFormComponent,
+                        loadChildren: () => import('./re-refer/re-refer.module').then(m => m.ReReferModule),
                         canActivate: [ReReferStoreGuard],
                     },
                     {
                         path: 'edit-refer-case',
-                        component: EditReferralComponent,
+                        loadChildren: () => import('./refferal-sent/edit-referral/edit-referral.module').then(m => m.EditReferralModule),
                         canActivate: [EditReferGuard],
                     }
                 ],
@@ -244,15 +159,15 @@ const routes: Routes = [
             {
                 path: 'facility-add-refer-case',
                 children: [
-                    { path: '', component: AddReferFormComponent },
+                    { path: '', loadChildren: () => import('./add-refer/add-refer.module').then(m => m.AddReferModule) },
                     {
                         path: 'view-refer',
-                        component: ViewReferComponent,
+                        loadChildren: () => import('./view-refer/view-refer.module').then(m => m.ViewReferModule),
                         canActivate: [StoreGuard],
                     },
                     {
                         path: 're-refer-case',
-                        component: ReReferFormComponent,
+                        loadChildren: () => import('./re-refer/re-refer.module').then(m => m.ReReferModule),
                         canActivate: [ReReferStoreGuard],
                     },
                 ],
@@ -269,37 +184,7 @@ const routes: Routes = [
                 canActivate: [FacilityGuard]
             },
             {
-                path: 'my-schedule-view-refer',
-                component: MyScheduledViewReferComponent,
-                data: {
-                    seo: {
-                        title: 'My-Schedule-View | DocsTime',
-                        metaTags: [
-                            { name: 'keywords', content: 'online doctor appointment in USA, doctor appointment booking system USA, online doctor appointment system USA, online doctor appointment system website USA, family physicians appointment booking system, online medical appointment booking system USA, doctors accepting new patients in USA, top primary care physicians appointment booking, child specialist doctor online appointment US, free online doctor consultation appointment USA' },
-                            { name: 'description', content: 'DocsTime specializes in developing Online Doctor Appointment System in USA. Our highly experienced team of Doctor understands your requirements well, contact us today.' },
-                            { name: 'robots', content: 'index, follow' }
-                        ]
-                    }
-                },
-                canActivate: [StoreGuard],
-            },
-            {
-                path: 'my-schedule-re-refer-case',
-                component: MyScheduledReReferComponent,
-                data: {
-                    seo: {
-                        title: 'My-Schedule-Re-Refer | DocsTime',
-                        metaTags: [
-                            { name: 'keywords', content: 'online doctor appointment in USA, doctor appointment booking system USA, online doctor appointment system USA, online doctor appointment system website USA, family physicians appointment booking system, online medical appointment booking system USA, doctors accepting new patients in USA, top primary care physicians appointment booking, child specialist doctor online appointment US, free online doctor consultation appointment USA' },
-                            { name: 'description', content: 'DocsTime specializes in developing Online Doctor Appointment System in USA. Our highly experienced team of Doctor understands your requirements well, contact us today.' },
-                            { name: 'robots', content: 'index, follow' }
-                        ]
-                    }
-                },
-                canActivate: [ReReferStoreGuard],
-            },
-            {
-                path: 'facility-change-password', component: FacilityChangePasswordComponent,
+                path: 'facility-change-password', loadChildren: () => import('./change-password/change-password.module').then(m => m.ChangePasswordModule),
                 canActivate: [FacilityGuard], data: {
                     seo: {
                         title: 'Change-Password | DocsTime',
@@ -312,7 +197,7 @@ const routes: Routes = [
                 }
             },
             {
-                path: 'facility-notification-settings', component: FacilityNotificationSettingComponent,
+                path: 'facility-notification-settings', loadChildren: () => import('./notification-settings/notification-settings.module').then(m => m.NotificationSettingsModule),
                 canActivate: [FacilityGuard], data: {
                     seo: {
                         title: 'Notification-Settings | DocsTime',
@@ -325,7 +210,7 @@ const routes: Routes = [
                 }
             },
             {
-                path: 'facility-my-profile', component: FacilityMyProfileComponent, data: {
+                path: 'facility-my-profile', loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule), data: {
                     seo: {
                         title: 'Profile | DocsTime',
                         metaTags: [
@@ -337,7 +222,7 @@ const routes: Routes = [
                 },
             },
             {
-                path: 'about-us', component: FacAboutUsComponent, canActivate: [FacilityGuard], data: {
+                path: 'about-us', loadChildren: () => import('./cms-pages/about/about.module').then(m => m.AboutModule), canActivate: [FacilityGuard], data: {
                     seo: {
                         title: 'About-Us | DocsTime',
                         metaTags: [
@@ -349,7 +234,7 @@ const routes: Routes = [
                 },
             },
             {
-                path: 'contact-us', component: FacContactUsComponent, canActivate: [FacilityGuard], data: {
+                path: 'contact-us', loadChildren: () => import('./cms-pages/contact-us/contact-us.module').then(m => m.ContactUsModule), canActivate: [FacilityGuard], data: {
                     seo: {
                         title: 'Contact-Us | DocsTime',
                         metaTags: [
@@ -361,7 +246,7 @@ const routes: Routes = [
                 },
             },
             {
-                path: 'terms-and-conditions', component: FacTermsComponent, canActivate: [FacilityGuard], data: {
+                path: 'terms-and-conditions', loadChildren: () => import('./cms-pages/terms/terms.module').then(m => m.TermsModule), canActivate: [FacilityGuard], data: {
                     seo: {
                         title: 'Terms-And-Conditions | DocsTime',
                         metaTags: [
@@ -373,7 +258,7 @@ const routes: Routes = [
                 },
             },
             {
-                path: 'privacy-policy', component: FacPrivacyPolicyComponent, canActivate: [FacilityGuard], data: {
+                path: 'privacy-policy', loadChildren: () => import('./cms-pages/privacy/privacy.module').then(m => m.PrivacyModule), canActivate: [FacilityGuard], data: {
                     seo: {
                         title: 'Privacy-Policy | DocsTime',
                         metaTags: [
@@ -385,7 +270,7 @@ const routes: Routes = [
                 },
             },
             {
-                path: 'doctors-privacy-policy', component: FacPrivacyDoctorComponent, canActivate: [FacilityGuard], data: {
+                path: 'doctors-privacy-policy', loadChildren: () => import('./cms-pages/privacy-doctor/privacy-doctor.module').then(m => m.PrivacyDoctorModule), canActivate: [FacilityGuard], data: {
                     seo: {
                         title: 'Doctors-Privacy-Policy | DocsTime',
                         metaTags: [
@@ -397,7 +282,7 @@ const routes: Routes = [
                 },
             },
             {
-                path: 'join-docs-time', component: FacJoinsComponent, canActivate: [FacilityGuard], data: {
+                path: 'join-docs-time', loadChildren: () => import('./cms-pages/join/join.module').then(m => m.JoinModule), canActivate: [FacilityGuard], data: {
                     seo: {
                         title: 'Join-DocsTime | DocsTime',
                         metaTags: [
@@ -409,7 +294,7 @@ const routes: Routes = [
                 },
             },
             {
-                path: 'faq', component: FacFaqComponent, canActivate: [FacilityGuard], data: {
+                path: 'faq', loadChildren: () => import('./cms-pages/faqs/faqs.module').then(m => m.FaqsModule), canActivate: [FacilityGuard], data: {
                     seo: {
                         title: 'FAQs | DocsTime',
                         metaTags: [

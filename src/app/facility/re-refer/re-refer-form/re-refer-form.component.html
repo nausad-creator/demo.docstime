@@ -1,0 +1,240 @@
+<body class="dashbord-section">
+  <div class="spacetop"></div>
+  <section class="section-dashbord overflow-hidden">
+    <div class="container">
+      <div class="row">
+        <div class="col-xl-8 col-lg-8 appointment-conten order-2 order-lg-1 pt-3">
+          <div class="refrred-cases-add card show-add wow fadeInRight"
+            style="width: 100%; min-height: 100%; position: relative;" data-wow-delay="0.1s">
+            <div class="titlecases d-flex">
+              <h4 class="mb-0">Re-Refer Cases Add</h4>
+              <p class="ml-auto"><a style="cursor: pointer;" (click)="onClickBack()" class="referred-btn"> <i
+                    class="ti-angle-left"></i> Back</a></p>
+            </div>
+            <hr>
+            <div class="">
+              <form class="form-contact contact_form" [formGroup]="referCaseForm" method="post" id="contactForm"
+                novalidate="novalidate">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label for="dname">Doctor Name<span class="required-field"></span></label>
+                      <ng-select [items]="doctorList$ | async" [closeOnSelect]="true" bindLabel="doctorFullName"
+                        class="custom" labelForId="dname" placeholder="Select Doctor" [minTermLength]="0"
+                        typeToSearchText="Please enter 1 or more characters" [trackByFn]="trackByFnDoctor"
+                        [typeahead]="doctorInput$" [loading]="loading" formControlName="doctorFullName">
+                      </ng-select>
+                      <small class="text-danger small" *ngIf="referCaseForm.controls['doctorFullName'].hasError('required')">Please select Doctor name.</small>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label for="name">Patient Name<span class="required-field"></span></label>
+                      <input class="form-control" oninput="this.value = this.value.replace(/^\s+/g, '')"
+                        formControlName="patientFirstName" name="patientFirstName" id="name" type="text"
+                        placeholder="Enter Patient name">
+                      <small class="text-danger small" *ngIf="referCaseForm.controls['patientFirstName'].hasError('required')">Please enter Patient name.</small>
+                      <small class="text-danger small" *ngIf="referCaseForm.controls['patientFirstName'].hasError('minlength')">Input fields will not be less than 3 characters.</small>
+                      <small class="text-danger small" *ngIf="referCaseForm.controls['patientFirstName'].hasError('maxlength')">Input fields will not be more than 60 characters.</small>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label for="mobile">Mobile Number<span class="required-field"></span></label>
+                      <input class="form-control" mask="(000) 000-0000" maxlength="14" formControlName="patientMobile" name="patientMobile" id="mobile"
+                        type="text" placeholder="Enter mobile number">
+                      <small class="text-danger small" *ngIf=" referCaseForm.controls['patientMobile'].hasError('required')">Please enter mobile number</small>
+                      <small class="text-danger small" *ngIf="referCaseForm.controls.patientMobile.errors">{{referCaseForm.controls.patientMobile.errors.message}}</small>
+                      <small class="text-danger small" *ngIf="referCaseForm.controls['patientMobile'].hasError('errPhone')">Please enter valid USA number.</small>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label for="Fname">Email Address<span class="required-field"></span></label>
+                      <input class="form-control" oninput="this.value = this.value.replace(/^\s+/g, '')"
+                        formControlName="patientEmail" name="patientEmail" id="email" type="text"
+                        placeholder="Enter email address">
+                      <small class="text-danger small" *ngIf="referCaseForm.controls['patientEmail'].hasError('pattern')">Please enter valid email.</small>
+                      <small class="text-danger small" *ngIf="referCaseForm.controls['patientEmail'].hasError('required')">Please enter email.</small>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label for="gender">Gender<span class="required-field"></span></label>
+                      <ng-select appearance="outline" [searchable]="false" [clearable]="false"
+                        formControlName="patientGender" class="custom" placeholder="Select Gender">
+                        <ng-option *ngFor="let gender of genders" [value]="gender">{{gender}}</ng-option>
+                      </ng-select>
+                      <small class="text-danger small" *ngIf="referCaseForm.controls['patientGender'].hasError('required')">Please Select Gender.</small>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label for="dob">Date of Birth<span class="required-field"></span></label>
+                      <div class="form-group inputWithIcon">
+                        <input class="form-control" maxlength=14 #dateOfBirth (keyup)="onTypeDOB(dateOfBirth.value)"
+                          (blur)="onBlurDOB(dateOfBirth.value)" [max]="maxDate" placeholder="mm/dd/yyyy"
+                          formControlName="patientDOB" id="dob" name="patientDOB" [owlDateTime]="dt5">
+                        <a class="cursr"><i [owlDateTimeTrigger]="dt5" class="ti-calendar cursr"></i></a>
+                        <owl-date-time [pickerType]="'calendar'" #dt5></owl-date-time>
+                        <small class="text-danger small" *ngIf="referCaseForm.controls.patientDOB.errors">{{referCaseForm.controls.patientDOB.errors.message}}</small>
+                        <small class="text-danger small" *ngIf="referCaseForm.controls['patientDOB'].hasError('required')">Please Select DOB.</small>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <label for="Insurance">Insurance</label>
+                    <div class="form-group">
+                      <ng-select [closeOnSelect]="true" [addTag]="true" [addTagText]="'Add'" [searchable]="true"
+                        appearance="outline" placeholder="Enter Insurance" formControlName="insuranceNames"
+                        class="custom" labelForId="Insurance" name="insuranceNames">
+                        <ng-option *ngFor="let ins of (insuranceList$ | async)" [value]="ins.insuranceName">
+                          {{ins.insuranceName}}</ng-option>
+                      </ng-select>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <div class="custom-control custom-checkbox">
+                        <input type="checkbox" (click)="onChangeHospital($event.target.checked)"
+                          formControlName="refercaseHospitalAdmission" class="custom-control-input" id="Facility"
+                          name="Facilitys">
+                        <label class="custom-control-label" for="Facility">Hospital/Facility admission required</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <label for="Specialty">Speciality<span class="required-field"></span></label>
+                    <div class="form-group custommulti-select">
+                      <ng-select [items]="specialityList$ | async" [multiple]="true" [closeOnSelect]="true"
+                        bindLabel="specialityName" class="customSpeciality" placeholder="Select speciality"
+                        [minTermLength]="1" typeToSearchText="Please enter 1 or more characters" [trackByFn]="trackByFn"
+                        [typeahead]="peopleInput$" [loading]="peopleLoading" formControlName="specialityID">
+                      </ng-select>
+                      <small class="text-danger small" *ngIf="referCaseForm.controls['specialityID'].hasError('required')">Please Select Speciality.</small>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <label for="Reason">Reason for Consultation<span class="required-field"></span></label>
+                    <div class="form-group">
+                      <ng-select [items]="reasonsList$ | async" [addTag]="true" [addTagText]="'Add'" [multiple]="true"
+                        [closeOnSelect]="true" [searchable]="true" bindLabel="reasonName" class="custom2"
+                        placeholder="Enter Reason" formControlName="reasonIDs">
+                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                          <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                            <span class="ng-value-label">{{item.reasonName}}</span>
+                            <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                          </div>
+                          <div class="ng-value" *ngIf="items.length > 2">
+                            <span class="ng-value-label">{{items.length - 2}} more...</span>
+                          </div>
+                        </ng-template>
+                      </ng-select>
+                      <small class="text-danger small" *ngIf="referCaseForm.controls['reasonIDs'].hasError('required')">Please Enter Reason.</small>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <div class="custom-control custom-checkbox">
+                        <input type="checkbox" (click)="onChangeUrgentConsult($event.target.checked)"
+                          formControlName="refercaseUrgent" class="custom-control-input" id="Consult" name="Consult">
+                        <label class="custom-control-label" for="Consult">Urgent Consult</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <label for="Discription">Description</label>
+                    <div class="form-group">
+                      <textarea class="form-control" formControlName="refercaseDescription" name="Discription"
+                        id="Discription" type="text" placeholder="Write here..." rows="3"></textarea>
+                    </div>
+                  </div>
+                  <div class="col-sm-6" *ngIf="isNPI">
+                    <label for="npi">Referred to NPI</label>
+                    <div class="form-group">
+                      <ng-select [items]="doctorListNPI$ | async" [closeOnSelect]="true" bindLabel="doctorFullName"
+                        bindValue="doctorNPI" class="custom" labelForId="npi" placeholder="Enter NPI or name"
+                        [minTermLength]="1" typeToSearchText="Please enter 1 or more characters"
+                        [trackByFn]="trackByFnDoctorNPI" [typeahead]="doctorInputNPI$" [loading]="loadingDoctors"
+                        formControlName="refercaseNPI">
+                      </ng-select>
+                    </div>
+                  </div>
+                  <div class="col-sm-12"></div>
+                  <div class="col-sm-6">
+                    <label for="dov">Date of Visit</label>
+                    <div class="form-group inputWithIcon">
+                      <input class="form-control" maxlength=14 #visitDate (keyup)="onTypeVisitDate(visitDate.value)"
+                        (blur)="onBlurVisitDate(visitDate.value)" [min]="min" placeholder="mm/dd/yyyy (Optional)"
+                        formControlName="refercaseVisitDate" id="dov" name="dov" [owlDateTime]="dt3">
+                      <a class="cursr"><i [owlDateTimeTrigger]="dt3" class="ti-calendar cursr"></i></a>
+                      <owl-date-time [pickerType]="'calendar'" #dt3></owl-date-time>
+                      <small class="text-danger small" *ngIf="referCaseForm.controls.refercaseVisitDate.errors">{{referCaseForm.controls.refercaseVisitDate.errors.message}}</small>
+                      <small class="text-danger small" *ngIf="referCaseForm.controls['refercaseVisitDate'].hasError('required')">Please select Date of Visit.</small>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="dov">Time of Visit</label>
+                    <div class="form-group inputWithIcon">
+                      <input class="form-control" oninput="this.value = this.value.replace(/^\s+/g, '')" [min]="minTime"
+                        placeholder="hh:mm am/pm (Optional)" formControlName="refercaseVisitTime" name="time" id="time"
+                        [owlDateTime]="dt4">
+                      <a class="cursr"><i [owlDateTimeTrigger]="dt4" class="ti-time cursr"></i></a>
+                      <owl-date-time [hour12Timer]="true" [startAt]="startAt" [stepMinute]="15" [pickerType]="'timer'"
+                        #dt4></owl-date-time>
+                      <small class="text-danger small"
+                        *ngIf="referCaseForm.controls['refercaseVisitTime'].hasError('emptyDate')">Please
+                        select Date of visit first.</small>
+                      <small class="text-danger small"
+                        *ngIf="referCaseForm.get('refercaseVisitTime').invalid && referCaseForm.controls['refercaseVisitTime'].hasError('owlDateTimeMin')">Please
+                        enter valid time.</small>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <label for="Fname">Attach Documents</label>
+                    <div class="row" *ngIf="documentTypeList.length>0">
+                      <div class="col-lg-4 form-group" *ngFor="let document of documentTypeList;">
+                        <div class="custom-control custom-checkbox">
+                          <input type="checkbox" (change)="onChangeCheckBox(document.documenttypeID)"
+                            [checked]="document.checked" class="custom-control-input" id=doc{{document.documenttypeID}}
+                            name="{{document.documenttypeName}}">
+                          <label class="custom-control-label cursr"
+                            for="doc{{document.documenttypeID}}">{{document.documenttypeName | titlecase}}</label>
+                        </div>
+                        <div class="custom-file-upload mt-3" [ngClass]="{'cursr': document.checked}" (click)="fileUpload.click()">
+                          <input type="file" accept="image/*" #fileUpload (click)="$event.target.value=null" multiple [disabled]="!document.checked"
+                            (change)="onSelectFile($event, document.documenttypeID)" class="custom-file-input d-none">
+                          <label class="custom-file-label2" [ngClass]="{'cursr': document.checked}"><i
+                              class="ti-cloud-up"></i>
+                            <p>Upload</p>
+                          </label>
+                        </div>
+                        <span *ngIf="document.file.length > 0">
+                          <div class="uploded-img custom-file-upload" *ngFor="let file of document.file"><span
+                              class="close cursr"
+                              (click)="onClose(document.documenttypeID, file.documentFilename)">&times;</span> <img
+                              style="width: 171px; height: 90px; margin-bottom: 3px;" [src]="file.src" alt="file">
+                          </div>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group mt-3">
+                  <button type="submit" [disabled]="isReffered === 'Yes'" (click)="onClickReRefer(referCaseForm.value)"
+                    class="button button-contactForm btn_1">Refer</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-4 col-lg-4 uploadfile-conten order-1 order-lg-2 card" style="border-radius:0;">
+          <div class=" wow zoomIn pt-3" data-wow-delay="0.2s">
+            <app-share-datetimepicker [from]="'reReferCase'"></app-share-datetimepicker>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <br>
+</body>

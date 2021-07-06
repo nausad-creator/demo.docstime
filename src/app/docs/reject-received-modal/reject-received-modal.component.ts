@@ -48,14 +48,6 @@ export class RejectReceivedModalComponent implements OnInit {
   onCloseReject = (modalID: number) => {
     this.modalService.hide(modalID);
   }
-  onReRefer = () => {
-    if (this.list[0].url.split('?')[0] === '/doctor/dashboard' || this.list[0].url === '/doctor/dashboard/view-refer') {
-      this.router.navigate(['/doctor/dashboard/reject-re-refer-case']);
-    }
-    if (this.list[0].url.split('?')[0] === '/doctor/referrals-received' || this.list[0].url === '/doctor/referrals-received/view-refer') {
-      this.router.navigate(['/doctor/referrals-received/reject-re-refer-case']);
-    }
-  }
   onReject = (rejectRemark: Reject) => {
     this.spinner.show();
     const data = {
@@ -81,7 +73,7 @@ export class RejectReceivedModalComponent implements OnInit {
             this.bsModalRef.hide();
             this.spinner.hide();
             this.toastr.success('Rejected successfully');
-          }, 500);
+          }, 100);
         } else {
           this.spinner.hide();
           setTimeout(() => {
